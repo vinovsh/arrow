@@ -1,0 +1,15 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      §18 — the release app runs without INTERNET. Metro's dev server and the React
+      Native dev menu do need it, so the permission is declared for debug builds only
+      and is merged out of the release manifest entirely.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+      android:usesCleartextTraffic="true"
+      tools:targetApi="28"
+      tools:ignore="GoogleAppIndexingWarning"
+      xmlns:tools="http://schemas.android.com/tools" />
+</manifest>

@@ -1,0 +1,15 @@
+{
+  "//": "The pipeline runs on Node's native TypeScript support, not through Metro, so it needs ESM module resolution and import.meta. The app's tsconfig cannot provide those without changing how src/ is compiled.",
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "es2022",
+    "lib": ["es2023"],
+    "types": ["node"],
+    "jsx": "react-jsx",
+    "noEmit": true
+  },
+  "include": ["../tools", "../src"],
+  "exclude": ["../node_modules", "../android", "../tools/out"]
+}

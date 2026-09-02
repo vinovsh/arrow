@@ -1,0 +1,58 @@
+{
+  "name": "ArrowEscape",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "start": "react-native start",
+    "lint": "eslint .",
+    "test": "jest",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tools/tsconfig.json",
+    "levels:generate": "node --import ./tools/register.mjs tools/generateLevels.ts",
+    "levels:validate": "node --import ./tools/register.mjs tools/validateLevels.ts",
+    "levels:curve": "node --import ./tools/register.mjs tools/curveReport.ts",
+    "levels:contactsheet": "node --import ./tools/register.mjs tools/renderContactSheet.ts",
+    "shapes:preview": "node --import ./tools/register.mjs tools/previewShapes.ts",
+    "verify": "npm run typecheck && npm run lint && npm test && npm run levels:validate"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^2.1.0",
+    "@react-navigation/native": "^7.0.14",
+    "@react-navigation/native-stack": "^7.1.14",
+    "react": "18.3.1",
+    "react-native": "0.76.5",
+    "react-native-gesture-handler": "^2.20.2",
+    "react-native-haptic-feedback": "^2.3.3",
+    "react-native-linear-gradient": "^2.8.3",
+    "react-native-reanimated": "^3.16.7",
+    "react-native-safe-area-context": "^4.14.0",
+    "react-native-screens": "^4.3.0",
+    "react-native-sound": "^0.11.2",
+    "react-native-svg": "^15.8.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
+    "@babel/runtime": "^7.25.0",
+    "@react-native-community/cli": "15.0.1",
+    "@react-native-community/cli-platform-android": "15.0.1",
+    "@react-native-community/cli-platform-ios": "15.0.1",
+    "@react-native/babel-preset": "0.76.5",
+    "@react-native/eslint-config": "0.76.5",
+    "@react-native/metro-config": "0.76.5",
+    "@react-native/typescript-config": "0.76.5",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.20.1",
+    "@types/react": "^18.2.6",
+    "@types/react-test-renderer": "^18.0.0",
+    "babel-jest": "^29.6.3",
+    "eslint": "^8.19.0",
+    "jest": "^29.6.3",
+    "prettier": "2.8.8",
+    "react-test-renderer": "18.3.1",
+    "typescript": "5.0.4"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
