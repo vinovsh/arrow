@@ -1,10 +1,12 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import Svg, {G, Path} from 'react-native-svg';
+import Svg, {G} from 'react-native-svg';
 import type {ArrowPath} from '../models/types';
-import {theme} from '../../theme/theme';
 import type {RenderTier} from '../../app/featureFlags';
+import {withOwnUnderlay} from '../../app/featureFlags';
+import {ArrowShape} from './ArrowShape';
 import {
+  EXIT_MARGIN_CELLS,
   buildRopeGeometry,
   escapeDurationMs,
   exitTravelDistance,
@@ -16,6 +18,12 @@ interface Props {
   gridSize: number;
   cellSize: number;
   tier: RenderTier;
+  /**
+   * §9.2 — dp from the board edge to the viewport clip, in this arrow's direction.
+   * The arrow is not finished when it leaves the board, it is finished when it stops
+   * being visible, and only the screen knows how far apart those two are.
+   */
+  clearance: number;
   onComplete: (index: number) => void;
 }
 
@@ -42,12 +50,13 @@ export function EscapingArrow({
   gridSize,
   cellSize,
   tier,
+  clearance,
   onComplete,
 }: Props): React.JSX.Element {
   const size = cellSize * gridSize;
   const travel = useMemo(
-    () => exitTravelDistance(arrow, gridSize, cellSize),
-    [arrow, gridSize, cellSize],
+    () => exitTravelDistance(arrow, gridSize, cellSize, clearance),
+    [arrow, gridSize, cellSize, clearance],
   );
   const [progress, setProgress] = useState(0);
   const done = useRef(false);
@@ -86,26 +95,32 @@ export function EscapingArrow({
       cellSize,
       eased * travel,
       stretch,
+      clearance,
     );
-  }, [arrow, gridSize, cellSize, progress, travel]);
+  }, [arrow, gridSize, cellSize, progress, travel, clearance]);
 
   // An SVG always clips to its own viewBox, so a canvas the size of the board would
   // cut the arrow off at the very edge it is trying to leave — the exact thing this
-  // animation exists to avoid. The canvas is therefore extended in the one direction
-  // the arrow travels, far enough to carry it out of sight, and capped at a board's
-  // width because beyond that it is off-screen anyway.
-  const pad = Math.min(travel + cellSize, size);
+  // animation exists to avoid. The canvas is extended in the one direction the arrow
+  // travels, out to the viewport's own clip and no further: past that the viewport
+  // hides it anyway, and the head runs a whole body-length ahead of the tail, so
+  // sizing this to the full travel would buy a canvas several boards wide to draw
+  // pixels nobody can see.
+  const pad = clearance + EXIT_MARGIN_CELLS * cellSize;
   const padLeft = arrow.direction === 'L' ? pad : 0;
   const padTop = arrow.direction === 'U' ? pad : 0;
   const canvasWidth = size + padLeft + (arrow.direction === 'R' ? pad : 0);
   const canvasHeight = size + padTop + (arrow.direction === 'D' ? pad : 0);
 
-  const colour = theme.arrow[arrow.color];
-  const hasBody = geometry.body !== '';
-  // Fully opaque across the board; it only gives up its last stretch, by which point
-  // it is already outside the frame. The player sees it leave, not dissolve.
-  const opacity = progress < 0.82 ? 1 : 1 - (progress - 0.82) / 0.18;
+  // §13 — the baked underlay has already dropped this arrow, so it draws its own.
+  const ownTier = useMemo(() => withOwnUnderlay(tier), [tier]);
 
+  // No fade, at any point. There used to be one over the last 18% of the animation,
+  // on the assumption that the arrow was outside the frame by then — it was not. The
+  // easing puts the arrow only 72% of the way along its travel at that moment, so on
+  // anything but a very short path the fade began while the arrow was still well
+  // inside the board and the player watched it dissolve in place. The arrow now
+  // simply leaves, and the viewport's clip is what ends it.
   return (
     <Svg
       width={canvasWidth}
@@ -117,54 +132,11 @@ export function EscapingArrow({
       // boundary reads as deleted rather than as having left, so this one is not.
       style={[styles.layer, {left: -padLeft, top: -padTop}]}
       pointerEvents="none">
-      <G opacity={opacity}>
-        {!tier.bakedGlowUnderlay && (
-          <>
-            {hasBody && (
-              <Path
-                d={geometry.body}
-                stroke={colour}
-                strokeWidth={geometry.strokeWidth * 1.9}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-                strokeOpacity={0.34 * tier.glowOpacityScale}
-              />
-            )}
-            <Path
-              d={geometry.head}
-              fill={colour}
-              stroke={colour}
-              strokeWidth={geometry.strokeWidth * 0.85}
-              strokeLinejoin="round"
-              opacity={0.34 * tier.glowOpacityScale}
-            />
-          </>
-        )}
-
-        {hasBody && (
-          <Path
-            d={geometry.body}
-            stroke={colour}
-            strokeWidth={geometry.strokeWidth}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-          />
-        )}
-        <Path d={geometry.head} fill={colour} />
-
-        {tier.layersPerArrow === 3 && hasBody && (
-          <Path
-            d={geometry.body}
-            stroke={theme.arrow.white}
-            strokeWidth={geometry.strokeWidth * 0.22}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-            opacity={0.25}
-          />
-        )}
+      <G>
+        {/* Drawn through the same component the resting board uses, so the arrow that
+            lifts off is the one that was sitting there — every width, the casing and
+            the gloss included, follows the geometry it is handed. */}
+        <ArrowShape arrow={arrow} geometry={geometry} tier={ownTier} />
       </G>
     </Svg>
   );

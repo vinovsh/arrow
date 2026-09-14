@@ -1,5 +1,6 @@
 import type {ArrowPath, GridPoint} from '../models/types';
 import {DIR_VECTORS} from '../models/types';
+import type {ArrowHeadSize} from '../../utils/layout';
 import {arrowHeadSizeFor, strokeWidthFor} from '../../utils/layout';
 
 /**
@@ -8,90 +9,129 @@ import {arrowHeadSizeFor, strokeWidthFor} from '../../utils/layout';
  * serves the board, the hint pulse and the contact-sheet renderer in tools/.
  */
 
-export interface ArrowGeometry {
+interface Point {
+  x: number;
+  y: number;
+}
+
+/** Everything a renderer needs to draw an arrow: two paths and the width between them. */
+export interface ArrowStrokes {
   /** Polyline through cell centres, stopping short of the head for the triangle. */
   body: string;
   /** Filled triangle at the head, aligned to `direction`. */
   head: string;
   strokeWidth: number;
-  headSize: number;
+  headSize: ArrowHeadSize;
+}
+
+export interface ArrowGeometry extends ArrowStrokes {
   /** Head cell centre, used to centre a hint's auto-pan (§3.4). */
-  headCentre: {x: number; y: number};
+  headCentre: Point;
   /** Board-space bounds, used by the off-screen blocker chevron (§9.3). */
   bounds: {minX: number; minY: number; maxX: number; maxY: number};
 }
 
-const centreOf = (
-  cell: GridPoint,
-  cellSize: number,
-): {x: number; y: number} => ({
+const centreOf = (cell: GridPoint, cellSize: number): Point => ({
   x: (cell.x + 0.5) * cellSize,
   y: (cell.y + 0.5) * cellSize,
 });
+
+const distanceBetween = (a: Point, b: Point): number =>
+  Math.hypot(b.x - a.x, b.y - a.y);
+
+/**
+ * A single-cell arrow has no run between cell centres to draw, and a bare triangle
+ * floating in a cell does not read as an arrow — it reads as a caret. It gets a stub
+ * of body behind the head instead, as a fraction of a cell, so the whole board speaks
+ * one visual language: a line with a small head on it.
+ */
+export const SINGLE_CELL_STUB = 0.34;
+
+/**
+ * The centreline an arrow is drawn along, tail first.
+ *
+ * For a real path this is just the cell centres. For a single cell it is a stub
+ * reaching back from the centre against the direction of travel — which is what makes
+ * the stub travel with the arrow rather than being tacked on at draw time, since the
+ * exit slides along this same polyline.
+ */
+export function bodyPolyline(arrow: ArrowPath, cellSize: number): Point[] {
+  const centres = arrow.cells.map(cell => centreOf(cell, cellSize));
+  if (centres.length > 1) {
+    return centres;
+  }
+  const step = DIR_VECTORS[arrow.direction];
+  const only = centres[0];
+  const stub = cellSize * SINGLE_CELL_STUB;
+  return [{x: only.x - step.x * stub, y: only.y - step.y * stub}, only];
+}
+
+/**
+ * The head triangle, straddling `nose`: it reaches 55% of its length ahead and 45%
+ * behind, so the arrow's tip sits just past the cell centre while the base stays
+ * inside it.
+ */
+function headTriangle(
+  nose: Point,
+  step: GridPoint,
+  headSize: ArrowHeadSize,
+): string {
+  const tip = {
+    x: nose.x + step.x * headSize.length * 0.55,
+    y: nose.y + step.y * headSize.length * 0.55,
+  };
+  const base = {
+    x: nose.x - step.x * headSize.length * 0.45,
+    y: nose.y - step.y * headSize.length * 0.45,
+  };
+  const perp = {x: -step.y, y: step.x};
+  const w = headSize.halfWidth;
+  return (
+    `M ${tip.x.toFixed(2)} ${tip.y.toFixed(2)} ` +
+    `L ${(base.x + perp.x * w).toFixed(2)} ${(base.y + perp.y * w).toFixed(2)} ` +
+    `L ${(base.x - perp.x * w).toFixed(2)} ${(base.y - perp.y * w).toFixed(2)} Z`
+  );
+}
+
+/**
+ * The body as an SVG path, with its last point pulled back inside the triangle's
+ * base. A round cap then fills the join invisibly at any stroke width, so the line and
+ * the head read as one object rather than as a stick with a blob on the end.
+ */
+function bodyPath(points: Point[], headSize: ArrowHeadSize): string {
+  if (points.length < 2) {
+    return '';
+  }
+  const drawn = points.map(p => ({...p}));
+  const last = drawn[drawn.length - 1];
+  const previous = drawn[drawn.length - 2];
+  const dx = last.x - previous.x;
+  const dy = last.y - previous.y;
+  const length = Math.hypot(dx, dy) || 1;
+  const shortenBy = Math.min(length * 0.45, headSize.length * 0.45);
+  last.x -= (dx / length) * shortenBy;
+  last.y -= (dy / length) * shortenBy;
+  return drawn
+    .map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(2)} ${p.y.toFixed(2)}`)
+    .join(' ');
+}
 
 export function buildArrowGeometry(
   arrow: ArrowPath,
   cellSize: number,
 ): ArrowGeometry {
   const strokeWidth = strokeWidthFor(cellSize);
-  const headSize = arrowHeadSizeFor(cellSize, arrow.cells.length);
+  const headSize = arrowHeadSizeFor(cellSize, strokeWidth, arrow.cells.length);
   const step = DIR_VECTORS[arrow.direction];
+  const points = bodyPolyline(arrow, cellSize);
   const head = centreOf(arrow.cells[arrow.cells.length - 1], cellSize);
-
-  // The triangle sits ahead of where the body stops, so the two read as one arrow
-  // rather than as a line with a blob welded on.
-  const tipDistance = headSize * 0.55;
-  const baseDistance = headSize * 0.45;
-  const tip = {
-    x: head.x + step.x * tipDistance,
-    y: head.y + step.y * tipDistance,
-  };
-  const base = {
-    x: head.x - step.x * baseDistance,
-    y: head.y - step.y * baseDistance,
-  };
-  const perp = {x: -step.y, y: step.x};
-  const half = headSize * 0.62;
-
-  const headPath =
-    `M ${tip.x.toFixed(2)} ${tip.y.toFixed(2)} ` +
-    `L ${(base.x + perp.x * half).toFixed(2)} ${(
-      base.y +
-      perp.y * half
-    ).toFixed(2)} ` +
-    `L ${(base.x - perp.x * half).toFixed(2)} ${(
-      base.y -
-      perp.y * half
-    ).toFixed(2)} Z`;
-
-  let body = '';
-  if (arrow.cells.length > 1) {
-    const points = arrow.cells.map(cell => centreOf(cell, cellSize));
-    // Stop the stroke just inside the triangle's base; a round cap then fills the
-    // join invisibly at any stroke width.
-    const last = points[points.length - 1];
-    const previous = points[points.length - 2];
-    const dx = last.x - previous.x;
-    const dy = last.y - previous.y;
-    const length = Math.hypot(dx, dy) || 1;
-    const shortenBy = Math.min(length * 0.45, baseDistance);
-    points[points.length - 1] = {
-      x: last.x - (dx / length) * shortenBy,
-      y: last.y - (dy / length) * shortenBy,
-    };
-    body = points
-      .map(
-        (p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(2)} ${p.y.toFixed(2)}`,
-      )
-      .join(' ');
-  }
 
   const xs = arrow.cells.map(c => c.x);
   const ys = arrow.cells.map(c => c.y);
 
   return {
-    body,
-    head: headPath,
+    body: bodyPath(points, headSize),
+    head: headTriangle(head, step, headSize),
     strokeWidth,
     headSize,
     headCentre: head,
@@ -127,31 +167,44 @@ export function buildArrowGeometry(
 // gone, which is what makes it read as flexible rather than as a shape being dragged.
 // ---------------------------------------------------------------------------
 
-interface Point {
-  x: number;
-  y: number;
-}
-
 /** How far past the board edge the tail is pulled before the arrow is retired. */
 export const EXIT_MARGIN_CELLS = 2;
 
-/** Length of the arrow's own body, tail centre to head centre. */
-export const bodyLengthOf = (arrow: ArrowPath, cellSize: number): number =>
-  (arrow.cells.length - 1) * cellSize;
-
-const distanceBetween = (a: Point, b: Point): number =>
-  Math.hypot(b.x - a.x, b.y - a.y);
+/**
+ * Length of the arrow's own body, tail to head. Measured off the drawn polyline
+ * rather than assumed from the cell count, so a single cell's stub is carried out of
+ * the board like any other body instead of vanishing at the boundary.
+ */
+export const bodyLengthOf = (arrow: ArrowPath, cellSize: number): number => {
+  const points = bodyPolyline(arrow, cellSize);
+  let total = 0;
+  for (let i = 1; i < points.length; i++) {
+    total += distanceBetween(points[i - 1], points[i]);
+  }
+  return total;
+};
 
 /**
- * Distance the tail travels along the extended path for the whole arrow to clear the
- * board: the body's own length, which carries the tail to where the head started,
- * plus the head's run to the edge, plus a margin so the arrow is gone rather than
- * resting on the boundary.
+ * Distance the tail travels for the whole arrow to be *out of sight*.
+ *
+ * Clearing the board is not enough, and that is the trap this walked into twice. The
+ * board sits centred in a viewport that clips (`overflow: 'hidden'`), so there is a
+ * band of empty space between the board edge and the point where an arrow actually
+ * stops being visible — on a width-fitted board that band is a couple of dp at the
+ * sides and around 90dp above and below. An arrow retired at the board edge is
+ * retired in open space, in full view, which reads as the arrow being deleted rather
+ * than leaving. `clearance` is the dp from the board edge to the clip in the
+ * direction of travel; the caller measures it because only the screen knows it.
+ *
+ * The sum: the body's own length, which carries the tail to where the head started,
+ * plus the head's run to the board edge, plus the clearance, plus a margin so the
+ * arrow is gone rather than resting on the boundary.
  */
 export function exitTravelDistance(
   arrow: ArrowPath,
   gridSize: number,
   cellSize: number,
+  clearance = 0,
 ): number {
   const head = centreOf(arrow.cells[arrow.cells.length - 1], cellSize);
   const size = gridSize * cellSize;
@@ -171,7 +224,10 @@ export function exitTravelDistance(
       break;
   }
   return (
-    bodyLengthOf(arrow, cellSize) + headToEdge + EXIT_MARGIN_CELLS * cellSize
+    bodyLengthOf(arrow, cellSize) +
+    headToEdge +
+    clearance +
+    EXIT_MARGIN_CELLS * cellSize
   );
 }
 
@@ -186,17 +242,18 @@ function extendedPath(
   arrow: ArrowPath,
   gridSize: number,
   cellSize: number,
+  clearance: number,
 ): ExtendedPath {
   const step = DIR_VECTORS[arrow.direction];
-  const centres = arrow.cells.map(cell => centreOf(cell, cellSize));
-  const head = centres[centres.length - 1];
+  const centreline = bodyPolyline(arrow, cellSize);
+  const head = centreline[centreline.length - 1];
   const runway =
-    exitTravelDistance(arrow, gridSize, cellSize) +
+    exitTravelDistance(arrow, gridSize, cellSize, clearance) +
     bodyLengthOf(arrow, cellSize) +
     cellSize;
 
   const vertices: Point[] = [
-    ...centres,
+    ...centreline,
     {x: head.x + step.x * runway, y: head.y + step.y * runway},
   ];
   const cumulative = [0];
@@ -240,12 +297,8 @@ function sliceBetween(path: ExtendedPath, from: number, to: number): Point[] {
   );
 }
 
-export interface RopeGeometry {
-  body: string;
-  head: string;
-  strokeWidth: number;
-  headSize: number;
-}
+/** A rope-deformed arrow: the same two paths a resting one has. */
+export type RopeGeometry = ArrowStrokes;
 
 /**
  * The arrow's shape after being pulled `travelled` dp along its extended path.
@@ -259,10 +312,11 @@ export function buildRopeGeometry(
   cellSize: number,
   travelled: number,
   stretch = 1,
+  clearance = 0,
 ): RopeGeometry {
-  const path = extendedPath(arrow, gridSize, cellSize);
+  const path = extendedPath(arrow, gridSize, cellSize, clearance);
   const strokeWidth = strokeWidthFor(cellSize);
-  const headSize = arrowHeadSizeFor(cellSize, arrow.cells.length);
+  const headSize = arrowHeadSizeFor(cellSize, strokeWidth, arrow.cells.length);
   const step = DIR_VECTORS[arrow.direction];
 
   const points = sliceBetween(
@@ -273,51 +327,12 @@ export function buildRopeGeometry(
 
   // The curve is straight past the head, so the moment the arrow moves at all its
   // head points the way it was pointing when tapped, and keeps doing so (§2.1).
-  const nose = points[points.length - 1];
-  const tipDistance = headSize * 0.55;
-  const baseDistance = headSize * 0.45;
-  const tip = {
-    x: nose.x + step.x * tipDistance,
-    y: nose.y + step.y * tipDistance,
+  return {
+    body: bodyPath(points, headSize),
+    head: headTriangle(points[points.length - 1], step, headSize),
+    strokeWidth,
+    headSize,
   };
-  const base = {
-    x: nose.x - step.x * baseDistance,
-    y: nose.y - step.y * baseDistance,
-  };
-  const perp = {x: -step.y, y: step.x};
-  const half = headSize * 0.62;
-  const headPath =
-    `M ${tip.x.toFixed(2)} ${tip.y.toFixed(2)} ` +
-    `L ${(base.x + perp.x * half).toFixed(2)} ${(
-      base.y +
-      perp.y * half
-    ).toFixed(2)} ` +
-    `L ${(base.x - perp.x * half).toFixed(2)} ${(
-      base.y -
-      perp.y * half
-    ).toFixed(2)} Z`;
-
-  let body = '';
-  if (points.length > 1) {
-    const drawn = points.map(p => ({...p}));
-    // Stop the stroke inside the triangle's base, as the resting arrow does, so the
-    // join stays invisible at any stroke width.
-    const last = drawn[drawn.length - 1];
-    const previous = drawn[drawn.length - 2];
-    const dx = last.x - previous.x;
-    const dy = last.y - previous.y;
-    const length = Math.hypot(dx, dy) || 1;
-    const shortenBy = Math.min(length * 0.45, baseDistance);
-    last.x -= (dx / length) * shortenBy;
-    last.y -= (dy / length) * shortenBy;
-    body = drawn
-      .map(
-        (p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(2)} ${p.y.toFixed(2)}`,
-      )
-      .join(' ');
-  }
-
-  return {body, head: headPath, strokeWidth, headSize};
 }
 
 /**

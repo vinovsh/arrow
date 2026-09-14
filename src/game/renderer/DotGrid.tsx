@@ -1,6 +1,7 @@
 import React from 'react';
 import {Path} from 'react-native-svg';
 import {theme} from '../../theme/theme';
+import {dotRadiusFor} from '../../utils/layout';
 
 interface Props {
   gridSize: number;
@@ -15,7 +16,7 @@ interface Props {
  * string, which the renderer treats as a single node.
  */
 function DotGridBase({gridSize, cellSize}: Props): React.JSX.Element {
-  const radius = Math.max(1.1, cellSize * 0.045);
+  const radius = dotRadiusFor(cellSize);
   let d = '';
   for (let y = 0; y < gridSize; y++) {
     for (let x = 0; x < gridSize; x++) {

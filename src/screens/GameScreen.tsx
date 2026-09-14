@@ -134,6 +134,27 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
     [level?.arrows.length],
   );
 
+  /**
+   * §9.2 — how far past the board edge an escaping arrow has to travel before the
+   * viewport stops drawing it, per direction.
+   *
+   * `BoardViewport` clips, and the board is centred inside it, so the gap between the
+   * board edge and that clip is exactly the centring offset. On a width-fitted board
+   * that is a few dp at the sides but around 90dp top and bottom — an arrow retired
+   * at the board edge is retired in plain sight. Measured at scale 1 on purpose:
+   * zooming in pushes the board edge off-screen, which only makes an arrow leave
+   * sooner, so the unzoomed board is the case that has to be right.
+   */
+  const clearance = useMemo(
+    () => ({
+      L: metrics.originX,
+      R: metrics.originX,
+      U: metrics.originY,
+      D: metrics.originY,
+    }),
+    [metrics.originX, metrics.originY],
+  );
+
   const patchVisual = useCallback(
     (index: number, patch: Partial<ArrowVisualState>) => {
       setVisuals(previous => {
@@ -531,6 +552,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
                     gridSize={level.gridSize}
                     cellSize={metrics.cellSize}
                     tier={tier}
+                    clearance={clearance[level.arrows[index].direction]}
                     onComplete={onEscapeComplete}
                   />
                 );

@@ -97,24 +97,33 @@ describe('every shipped level is playable (§20)', () => {
     expect(over).toEqual([]);
   });
 
-  it('matches the §4.1 grid and arrow-count table exactly', () => {
+  /**
+   * §4.1's arrow counts, unchanged, against the grid sizes the §4.2 maze refit needed.
+   *
+   * The published grid column ran 5..14. It was sized for a mean path length of about
+   * 2, and cells = arrows x length, so holding the arrow counts while tripling the
+   * path length had to be paid for in board size — otherwise occupancy goes past 100%
+   * and the mask cannot be fitted at all. The arrow counts are the half of §4.1 that
+   * carries the difficulty and scoring intent, so they are the half that was kept.
+   */
+  it('matches the §4.1 arrow-count table, on the refit grid sizes', () => {
     const rows: [number, number, number, number, number][] = [
       // from, to, grid, minArrows, maxArrows
-      [1, 1, 5, 3, 4],
-      [2, 2, 5, 4, 5],
-      [3, 3, 6, 5, 7],
-      [4, 10, 7, 8, 12],
-      [11, 25, 8, 16, 22],
-      [26, 50, 9, 20, 28],
-      [51, 100, 10, 26, 36],
-      [101, 150, 11, 32, 42],
-      [151, 200, 11, 36, 48],
-      [201, 250, 12, 42, 54],
-      [251, 300, 12, 46, 60],
-      [301, 350, 13, 52, 66],
-      [351, 400, 13, 58, 72],
-      [401, 450, 14, 64, 80],
-      [451, 500, 14, 70, 90],
+      [1, 1, 6, 3, 4],
+      [2, 2, 6, 4, 5],
+      [3, 3, 7, 5, 7],
+      [4, 10, 8, 8, 12],
+      [11, 25, 10, 16, 22],
+      [26, 50, 12, 20, 28],
+      [51, 100, 14, 26, 36],
+      [101, 150, 15, 32, 42],
+      [151, 200, 16, 36, 48],
+      [201, 250, 17, 42, 54],
+      [251, 300, 18, 46, 60],
+      [301, 350, 19, 52, 66],
+      [351, 400, 20, 58, 72],
+      [401, 450, 21, 64, 80],
+      [451, 500, 22, 70, 90],
     ];
     const wrong: string[] = [];
     for (const [from, to, grid, min, max] of rows) {

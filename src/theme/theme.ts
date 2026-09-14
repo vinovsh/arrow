@@ -10,7 +10,9 @@ export const theme = {
     border: 'rgba(255,255,255,0.08)',
     vignette: 'rgba(0,0,0,0.55)',
   },
-  grid: {dot: 'rgba(255,255,255,0.10)', dotActive: 'rgba(255,255,255,0.18)'},
+  // Dimmer than it looks it should be, on purpose: the dots are a positioning aid
+  // under thin arrows, and at the old 0.10 they competed with a 3dp line.
+  grid: {dot: 'rgba(255,255,255,0.06)', dotActive: 'rgba(255,255,255,0.12)'},
   text: {
     primary: '#EAF1FF',
     secondary: 'rgba(234,241,255,0.62)',
@@ -51,6 +53,18 @@ export const theme = {
     danger: '#FF4D5E',
     success: '#3ACB63',
     currentLevel: '#FFD34A',
+  },
+
+  /**
+   * Ink shared by every arrow whatever its colour (§10.2). Deliberately not inside
+   * `arrow`, which is exactly the palette `ArrowColorKey` indexes — a `casing` key in
+   * there would typecheck as a legal arrow colour.
+   */
+  arrowInk: {
+    /** A dark hairline under the line, so two paths running close still read as two. */
+    casing: 'rgba(3,7,16,0.62)',
+    /** The specular sliver along the stroke that keeps a thin line from looking flat. */
+    gloss: '#F2F6FF',
   },
 
   radius: {sm: 10, md: 16, lg: 22, panel: 26, pill: 999},

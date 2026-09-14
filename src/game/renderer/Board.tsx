@@ -45,23 +45,22 @@ function BoardBase({
   // while a level is being played, so it is built once rather than per state change.
   const geometries = useMemo(
     () =>
-      tier.bakedGlowUnderlay
-        ? arrows.map(a => buildArrowGeometry(a, cellSize))
-        : [],
-    [tier.bakedGlowUnderlay, arrows, cellSize],
+      tier.bakedUnderlay ? arrows.map(a => buildArrowGeometry(a, cellSize)) : [],
+    [tier.bakedUnderlay, arrows, cellSize],
   );
 
-  // §13 — above 60 arrows every arrow's glow collapses into a single static underlay.
-  // Ninety individually glowing paths is both a node count the frame budget cannot
-  // carry and, visually, a haze that hides the picture. Keying the memo on the set of
-  // still-active arrows rather than on the whole visual-state array means a shake or a
-  // blocker highlight does not rebuild the underlay.
+  // §13 — above 60 arrows every arrow's casing collapses into a single static
+  // underlay. Ninety separately decorated paths is a node count the frame budget
+  // cannot carry, and the choice of casing over glow is the point: at 14x14 the win is
+  // being able to tell two adjacent lines apart, not making them bloom. Keying the
+  // memo on the set of still-active arrows rather than on the whole visual-state array
+  // means a shake or a blocker highlight does not rebuild the underlay.
   const activeKey = arrowStates
     .map(v => (v.state === 'active' && !v.shaking ? '1' : '0'))
     .join('');
 
-  const bakedGlow = useMemo(() => {
-    if (!tier.bakedGlowUnderlay) {
+  const bakedUnderlay = useMemo(() => {
+    if (!tier.bakedUnderlay) {
       return null;
     }
     return arrows.map((arrow, i) => {
@@ -74,20 +73,26 @@ function BoardBase({
           {geometry.body !== '' && (
             <Path
               d={geometry.body}
-              stroke={theme.arrow[arrow.color]}
-              strokeWidth={geometry.strokeWidth * 1.8}
+              stroke={theme.arrowInk.casing}
+              strokeWidth={geometry.strokeWidth * 1.75}
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
             />
           )}
-          <Path d={geometry.head} fill={theme.arrow[arrow.color]} />
+          <Path
+            d={geometry.head}
+            fill={theme.arrowInk.casing}
+            stroke={theme.arrowInk.casing}
+            strokeWidth={geometry.strokeWidth * 0.7}
+            strokeLinejoin="round"
+          />
         </React.Fragment>
       );
     });
     // activeKey stands in for arrowStates on purpose: it is exactly the part of it
     // this layer depends on, so a shake or a highlight does not rebuild the underlay.
-  }, [tier.bakedGlowUnderlay, arrows, geometries, activeKey]);
+  }, [tier.bakedUnderlay, arrows, geometries, activeKey]);
 
   // §13 — the board is rasterised at `resolution` and displayed at 1.0. The scaling
   // has to happen on a plain RN View: react-native-svg treats a `transform` in the
@@ -127,11 +132,7 @@ function BoardBase({
             <DotGrid gridSize={gridSize} cellSize={cellSize} />
             {level.decor && <DecorLayer decor={level.decor} boardSize={size} />}
 
-            {bakedGlow && (
-              <G opacity={0.3 * tier.glowOpacityScale} pointerEvents="none">
-                {bakedGlow}
-              </G>
-            )}
+            {bakedUnderlay && <G pointerEvents="none">{bakedUnderlay}</G>}
 
             {arrows.map((arrow, index) => {
               const visual = arrowStates[index];

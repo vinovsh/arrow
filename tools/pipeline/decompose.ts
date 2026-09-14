@@ -11,16 +11,28 @@
  *     afterwards.
  */
 import type {GridPoint} from '../../src/game/models/types.ts';
+import {MAX_PATH_CELLS} from '../../src/game/models/types.ts';
 import type {Rng} from '../../src/utils/rng.ts';
 import type {Mask} from '../shapes/dsl.ts';
 import type {LengthMix} from './plan.ts';
 import {contourCells} from './mask.ts';
 
-export const MAX_PATH_LENGTH = 8;
-export const MAX_TURNS = 3;
+/**
+ * §4.2 — the carver's range.
+ *
+ * Both of these used to be the binding constraint on how a board reads. At 8 cells
+ * and 3 turns the longest path could cross half a small board and bend three times,
+ * which sounds generous until the length mix is weighted so that lengths 1-2 win 64%
+ * of the draws — the range was there, and the mix never spent it. Now that the mix is
+ * built from a target mean, the range is what actually decides whether a path can
+ * snake across the board and double back, so it is set for the maze the levels are
+ * meant to be rather than for the scatter they were.
+ */
+export const MAX_PATH_LENGTH = MAX_PATH_CELLS;
+export const MAX_TURNS = 6;
 /** §4.2 — every band keeps at least this many long, turning "feature paths". */
 export const FEATURE_PATHS = 3;
-export const FEATURE_MIN_LENGTH = 4;
+export const FEATURE_MIN_LENGTH = 6;
 
 export interface CarvedPath {
   cells: GridPoint[];
@@ -166,10 +178,25 @@ function isTurn(a: GridPoint, b: GridPoint, c: GridPoint): boolean {
 }
 
 /**
+ * A bend needs a straight run behind it. Without this the walker takes a corner at
+ * every opportunity and the path staircases — which occupies the same cells but reads
+ * as a diagonal smear rather than as a route, and is the one shape a maze must not
+ * have. Runs longer than `MAX_STRAIGHT_RUN` are nudged the other way, so a path that
+ * has been going straight for a while starts looking for its next corner.
+ */
+const MIN_RUN_BEFORE_TURN = 2;
+const MAX_STRAIGHT_RUN = 4;
+const TURN_REWARD = 4;
+
+/**
  * Walk one path from `start` up to `targetLength`. Candidate scoring keeps the
  * remaining mask carvable: stepping into a cell that would strand a neighbour with
  * no free neighbours of its own is penalised, since that neighbour then costs a
  * length-1 path and skews the distribution.
+ *
+ * Turning used to cost -1 per bend after the first, so the walker went straight
+ * whenever it could and 80% of the shipped arrows had no bend at all. Bends are now
+ * what the score is looking for; keeping the board carvable is still the first term.
  */
 function walk(
   c: Carver,
@@ -180,6 +207,9 @@ function walk(
 ): CarvedPath {
   const path: GridPoint[] = [start];
   let turns = 0;
+  // Segments travelled since the last bend, so the scorer can tell a path that has
+  // just turned from one that has been running straight long enough to earn a corner.
+  let run = 0;
   c.owner[idx(c, start.x, start.y)] = -3; // reserved while walking
 
   while (path.length < targetLength) {
@@ -205,7 +235,15 @@ function walk(
       ).length;
       let score = onward * 2;
       if (turning) {
-        score += wantTurn && turns === 0 ? 6 : -1;
+        score +=
+          run < MIN_RUN_BEFORE_TURN
+            ? -8
+            : TURN_REWARD + Math.min(3, run - MIN_RUN_BEFORE_TURN);
+        if (wantTurn && turns === 0) {
+          score += 6;
+        }
+      } else if (run >= MAX_STRAIGHT_RUN) {
+        score -= 3;
       }
       score += rng.next() * 1.5;
       if (score > bestScore) {
@@ -218,6 +256,9 @@ function walk(
     }
     if (path.length >= 2 && isTurn(path[path.length - 2], last, best)) {
       turns++;
+      run = 1;
+    } else {
+      run++;
     }
     path.push(best);
     c.owner[idx(c, best.x, best.y)] = -3;

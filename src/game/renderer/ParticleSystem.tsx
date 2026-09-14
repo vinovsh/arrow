@@ -104,7 +104,15 @@ function ParticleSystemBase(
   useFrameCallback(frame => {
     'worklet';
     const now = frame.timeSinceFirstFrame;
-    const dt = lastFrame.value === 0 ? 16 : Math.min(48, now - lastFrame.value);
+    // Clamped at BOTH ends. The ceiling keeps a dropped frame from teleporting the
+    // field; the floor is what stops a runaway. `timeSinceFirstFrame` restarts from
+    // zero whenever the frame callback is re-armed — a remount, or a Fast Refresh —
+    // while `lastFrame` survives in a shared value, so `now - lastFrame` goes
+    // negative. `p.life -= dt` then *adds* life, the sprite never dies, and
+    // `scale: 0.6 + t * 0.6` grows it without bound until one particle covers the
+    // screen. Particles are the top layer, so that reads as the app going blank.
+    const raw = lastFrame.value === 0 ? 16 : now - lastFrame.value;
+    const dt = raw < 0 ? 0 : raw > 48 ? 48 : raw;
     lastFrame.value = now;
     const next = particles.value;
     let alive = false;

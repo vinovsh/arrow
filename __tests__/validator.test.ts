@@ -6,6 +6,7 @@ import {
   validate,
 } from '../src/game/engine/LevelValidator';
 import type {ArrowPath, Level} from '../src/game/models/types';
+import {MAX_PATH_CELLS} from '../src/game/models/types';
 import {createRng} from '../src/utils/rng';
 
 const arrow = (
@@ -83,10 +84,33 @@ describe('structural validation (§8.4)', () => {
     }
   });
 
-  it('rejects a path longer than eight cells', () => {
-    const cells: [number, number][] = Array.from({length: 9}, (_, i) => [i, 0]);
-    const errors = structuralErrors(10, [arrow('a', cells, 'R')]);
-    expect(errors.some(e => e.includes('outside 1..8'))).toBe(true);
+  /**
+   * The limit is asserted against `MAX_PATH_CELLS` rather than against a literal,
+   * because the generator's carver reads the same constant. Pinning the number here
+   * is what let the two drift apart during the §4.2 maze refit: the carver was
+   * widened, this test still said eight, and 2,840 legal paths came back fatal.
+   */
+  it('rejects a path longer than the shared maximum', () => {
+    const tooLong: [number, number][] = Array.from(
+      {length: MAX_PATH_CELLS + 1},
+      (_, i) => [i, 0],
+    );
+    const errors = structuralErrors(MAX_PATH_CELLS + 3, [
+      arrow('a', tooLong, 'R'),
+    ]);
+    expect(
+      errors.some(e => e.includes(`outside 1..${MAX_PATH_CELLS}`)),
+    ).toBe(true);
+
+    // ...and accepts one exactly at the limit, so the boundary is pinned both ways.
+    const atLimit: [number, number][] = Array.from(
+      {length: MAX_PATH_CELLS},
+      (_, i) => [i, 0],
+    );
+    const ok = structuralErrors(MAX_PATH_CELLS + 3, [
+      arrow('a', atLimit, 'R'),
+    ]);
+    expect(ok.some(e => e.includes('outside'))).toBe(false);
   });
 });
 

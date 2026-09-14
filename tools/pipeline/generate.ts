@@ -136,14 +136,25 @@ const STALL_EPSILON = 0.05;
  * magnitude cheaper than one on a 14x14. Small boards can afford to keep looking;
  * large ones cannot, and are also the ones whose targets sit closest to the floor.
  */
+/**
+ * Attempts per level, and how long to keep going without improvement.
+ *
+ * The big-board budget used to be 12 attempts, which at `attempt / 6` is only two
+ * distinct silhouettes. That was enough while paths were 2 cells long and almost
+ * always straight; a board of 80 interlocking snakes at 80% occupancy is a far harder
+ * search for a solvable escape order, and two shapes is not enough rope — levels 467
+ * and 494 simply ran out of attempts. Six shapes and a longer stall window is what it
+ * costs. The stall counter still cuts a hopeless level short, so the extra budget is
+ * only spent where it is actually needed.
+ */
 function attemptBudget(targetArrows: number): {max: number; stall: number} {
   if (targetArrows <= 20) {
     return {max: 28, stall: 28};
   }
   if (targetArrows <= 40) {
-    return {max: 20, stall: 9};
+    return {max: 24, stall: 12};
   }
-  return {max: 12, stall: 5};
+  return {max: 36, stall: 14};
 }
 
 export function generateLevel(

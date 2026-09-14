@@ -1,4 +1,8 @@
-import {HitTester, HIT_RADIUS_DP} from '../src/game/engine/HitTester';
+import {
+  HitTester,
+  HIT_RADIUS_DP,
+  MAX_HIT_RADIUS_CELLS,
+} from '../src/game/engine/HitTester';
 import {GameEngine} from '../src/game/engine/GameEngine';
 import {
   computeBoardMetrics,
@@ -86,6 +90,25 @@ describe('hit-testing under zoom (§4.4, Phase 5 exit criterion)', () => {
     // Sanity: the radius really is HIT_RADIUS_DP scaled by cellSize x scale.
     expect(HIT_RADIUS_DP / (cellSize * 1)).toBeGreaterThan(offBy);
     expect(HIT_RADIUS_DP / (cellSize * 3.5)).toBeLessThan(offBy);
+  });
+
+  /**
+   * §4.4 on a fine grid. Parallel paths are one cell apart at every grid size, so the
+   * dp slop has to be capped in cell units or a 22x22 board hands taps to the
+   * neighbouring path.
+   */
+  it('never reaches past the neighbouring path on a fine grid', () => {
+    const engine = new GameEngine(level);
+    const fineCell = 14; // a 22x22 board on a 328dp viewport
+
+    // Unclamped, 22dp over a 14dp cell would be a 1.57-cell reach.
+    expect(HIT_RADIUS_DP / fineCell).toBeGreaterThan(1);
+    expect(MAX_HIT_RADIUS_CELLS).toBeLessThan(1);
+
+    // A touch 0.9 cells away — nearer to a neighbouring row than to arrow a — misses.
+    expect(engine.hitTest(1.5, 1.5 + 0.9, fineCell, 1)).toBe(-1);
+    // A touch well inside the same cell still lands.
+    expect(engine.hitTest(1.5, 1.5 + 0.3, fineCell, 1)).toBe(0);
   });
 
   it('maps a screen tap back to the same board point it was taken from', () => {

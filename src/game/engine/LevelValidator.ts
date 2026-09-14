@@ -1,5 +1,5 @@
 import type {ArrowPath, Level} from '../models/types';
-import {directionFromCells} from '../models/types';
+import {MAX_PATH_CELLS, directionFromCells} from '../models/types';
 import {clamp, roundTo} from '../../utils/math';
 import {CollisionDetector} from './CollisionDetector';
 
@@ -173,9 +173,9 @@ export function structuralErrors(
   const errors: string[] = [];
   const seen = new Map<string, string>();
   for (const arrow of arrows) {
-    if (arrow.cells.length < 1 || arrow.cells.length > 8) {
+    if (arrow.cells.length < 1 || arrow.cells.length > MAX_PATH_CELLS) {
       errors.push(
-        `${arrow.id}: path length ${arrow.cells.length} outside 1..8`,
+        `${arrow.id}: path length ${arrow.cells.length} outside 1..${MAX_PATH_CELLS}`,
       );
     }
     for (let i = 0; i < arrow.cells.length; i++) {

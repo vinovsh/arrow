@@ -3,6 +3,7 @@ import {HintService} from '../src/game/engine/HintService';
 import {computeScore} from '../src/game/engine/ScoreManager';
 import {getLevel} from '../src/game/levels';
 import {buildArrowGeometry} from '../src/game/renderer/arrowGeometry';
+import {arrowHeadSizeFor, strokeWidthFor} from '../src/utils/layout';
 import {createRng} from '../src/utils/rng';
 import type {Level} from '../src/game/models/types';
 
@@ -159,21 +160,38 @@ describe('playing a real level to completion', () => {
   });
 
   it('renders geometry for every arrow shape, including single cells', () => {
+    const CELL = 24;
     for (const id of [1, 250, 500]) {
       const level = getLevel(id) as Level;
       for (const arrow of level.arrows) {
-        const geometry = buildArrowGeometry(arrow, 24);
-        // A single-cell arrow has no body but must still have a head, drawn larger so
-        // it stays clearly directional at 14x14 (§4.4, §10.2).
+        const geometry = buildArrowGeometry(arrow, CELL);
+        // Every arrow is a line with a head on it — a single cell included, which
+        // gets a stub of body rather than being left as a bare floating triangle.
         expect(geometry.head).toMatch(/^M /);
-        expect(geometry.strokeWidth).toBeGreaterThanOrEqual(8);
-        if (arrow.cells.length === 1) {
-          expect(geometry.body).toBe('');
-          expect(geometry.headSize).toBeCloseTo(24 * 0.7, 5);
-        } else {
-          expect(geometry.body).toMatch(/^M /);
-        }
+        expect(geometry.body).toMatch(/^M /);
       }
+    }
+  });
+
+  /**
+   * §10.2 — the arrow is a line, not a pipe, and the head terminates it rather than
+   * replacing it. Both of those are ratios, so they are asserted as ratios: a future
+   * tweak to the constants is free, going back to a tube is not.
+   */
+  it('draws a thin line with a small head at every grid size', () => {
+    // Every cell size the fit calculation produces from 5x5 up to 14x14.
+    for (const cell of [16, 24, 32, 46, 65]) {
+      const stroke = strokeWidthFor(cell);
+      expect(stroke).toBeLessThanOrEqual(cell * 0.16);
+      expect(stroke).toBeGreaterThanOrEqual(2.5);
+
+      const head = arrowHeadSizeFor(cell, stroke, 4);
+      // The head is a terminator: a couple of line-widths across, nowhere near the
+      // five-to-eight it becomes if it is sized off the cell instead.
+      expect(head.halfWidth / stroke).toBeLessThanOrEqual(2);
+      expect(head.length / stroke).toBeLessThanOrEqual(3);
+      // ...and never wide enough to reach into the neighbouring path.
+      expect(head.halfWidth * 2).toBeLessThan(cell * 0.6);
     }
   });
 });

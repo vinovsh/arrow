@@ -5,6 +5,7 @@
  * decision rather than an emergent property of the generator.
  */
 import type {Band} from '../../src/game/models/types.ts';
+import {MAX_PATH_LENGTH} from './decompose.ts';
 
 export interface BandRow {
   from: number;
@@ -22,7 +23,7 @@ export const BAND_TABLE: readonly BandRow[] = [
   {
     from: 1,
     to: 1,
-    gridSize: 5,
+    gridSize: 6,
     minArrows: 3,
     maxArrows: 4,
     band: 'Tutorial',
@@ -31,7 +32,7 @@ export const BAND_TABLE: readonly BandRow[] = [
   {
     from: 2,
     to: 2,
-    gridSize: 5,
+    gridSize: 6,
     minArrows: 4,
     maxArrows: 5,
     band: 'Tutorial',
@@ -40,7 +41,7 @@ export const BAND_TABLE: readonly BandRow[] = [
   {
     from: 3,
     to: 3,
-    gridSize: 6,
+    gridSize: 7,
     minArrows: 5,
     maxArrows: 7,
     band: 'Tutorial',
@@ -49,7 +50,7 @@ export const BAND_TABLE: readonly BandRow[] = [
   {
     from: 4,
     to: 10,
-    gridSize: 7,
+    gridSize: 8,
     minArrows: 8,
     maxArrows: 12,
     band: 'Easy',
@@ -58,7 +59,7 @@ export const BAND_TABLE: readonly BandRow[] = [
   {
     from: 11,
     to: 25,
-    gridSize: 8,
+    gridSize: 10,
     minArrows: 16,
     maxArrows: 22,
     band: 'Easy',
@@ -67,7 +68,7 @@ export const BAND_TABLE: readonly BandRow[] = [
   {
     from: 26,
     to: 50,
-    gridSize: 9,
+    gridSize: 12,
     minArrows: 20,
     maxArrows: 28,
     band: 'Medium',
@@ -76,7 +77,7 @@ export const BAND_TABLE: readonly BandRow[] = [
   {
     from: 51,
     to: 100,
-    gridSize: 10,
+    gridSize: 14,
     minArrows: 26,
     maxArrows: 36,
     band: 'Medium+',
@@ -85,7 +86,7 @@ export const BAND_TABLE: readonly BandRow[] = [
   {
     from: 101,
     to: 150,
-    gridSize: 11,
+    gridSize: 15,
     minArrows: 32,
     maxArrows: 42,
     band: 'Hard',
@@ -94,7 +95,7 @@ export const BAND_TABLE: readonly BandRow[] = [
   {
     from: 151,
     to: 200,
-    gridSize: 11,
+    gridSize: 16,
     minArrows: 36,
     maxArrows: 48,
     band: 'Hard+',
@@ -103,7 +104,7 @@ export const BAND_TABLE: readonly BandRow[] = [
   {
     from: 201,
     to: 250,
-    gridSize: 12,
+    gridSize: 17,
     minArrows: 42,
     maxArrows: 54,
     band: 'Very Hard',
@@ -112,7 +113,7 @@ export const BAND_TABLE: readonly BandRow[] = [
   {
     from: 251,
     to: 300,
-    gridSize: 12,
+    gridSize: 18,
     minArrows: 46,
     maxArrows: 60,
     band: 'Expert',
@@ -121,7 +122,7 @@ export const BAND_TABLE: readonly BandRow[] = [
   {
     from: 301,
     to: 350,
-    gridSize: 13,
+    gridSize: 19,
     minArrows: 52,
     maxArrows: 66,
     band: 'Expert+',
@@ -130,7 +131,7 @@ export const BAND_TABLE: readonly BandRow[] = [
   {
     from: 351,
     to: 400,
-    gridSize: 13,
+    gridSize: 20,
     minArrows: 58,
     maxArrows: 72,
     band: 'Master',
@@ -139,7 +140,7 @@ export const BAND_TABLE: readonly BandRow[] = [
   {
     from: 401,
     to: 450,
-    gridSize: 14,
+    gridSize: 21,
     minArrows: 64,
     maxArrows: 80,
     band: 'Extreme',
@@ -148,7 +149,7 @@ export const BAND_TABLE: readonly BandRow[] = [
   {
     from: 451,
     to: 500,
-    gridSize: 14,
+    gridSize: 22,
     minArrows: 70,
     maxArrows: 90,
     band: 'Insane',
@@ -166,50 +167,105 @@ export function bandRowFor(levelId: number): BandRow {
 }
 
 /**
- * §4.2 — path-length mix per band. Index 0 is length 1. The published table's
- * "len 5-8" bucket is spread 5 > 6 > 7 > 8 so long snaking accents stay rare.
+ * §4.2 — path-length mix per band, as a probability per length.
  */
 export interface LengthMix {
-  /** Probability per length, index 0 = length 1 ... index 7 = length 8. */
+  /** Index 0 = length 1 ... index MAX_PATH_LENGTH-1 = the longest path allowed. */
   weights: number[];
   mean: number;
 }
 
-const spreadTail = (tail: number): number[] => [
-  tail * 0.5,
-  tail * 0.27,
-  tail * 0.15,
-  tail * 0.08,
-];
+/**
+ * §4.2 — the mix is generated from a target mean rather than typed out per band.
+ *
+ * The old table listed four head weights and spread a small tail over lengths 5-8,
+ * which put 64% of every draw into lengths 1-2 and produced boards of stubby, mostly
+ * straight arrows: measured across the shipped 500, mean length was 2.1 and 80% of
+ * arrows had no bend at all. A maze does not read as a maze at that mean.
+ *
+ * Weights follow `w(k) = k * q^k` over 1..MAX_PATH_LENGTH — a hump rather than a
+ * monotone decay, so length 1 is uncommon, the mass sits around 3-5, and the tail
+ * reaches far enough for the occasional path that crosses most of the board. `q` is
+ * solved by bisection for the mean the band asks for, which makes the curve one
+ * number per band instead of five hand-tuned probabilities that have to re-sum to 1.
+ */
+function mixForMean(targetMean: number, maxLength: number): LengthMix {
+  const weightsAt = (q: number): number[] =>
+    Array.from({length: maxLength}, (_, i) => (i + 1) * Math.pow(q, i + 1));
+  const meanAt = (w: number[]): number => {
+    const total = w.reduce((a, b) => a + b, 0);
+    return w.reduce((sum, x, i) => sum + x * (i + 1), 0) / total;
+  };
 
-function mix(
-  l1: number,
-  l2: number,
-  l3: number,
-  l4: number,
-  tail: number,
-): LengthMix {
-  const weights = [l1, l2, l3, l4, ...spreadTail(tail)];
-  const total = weights.reduce((a, b) => a + b, 0);
-  const normalised = weights.map(w => w / total);
-  const mean = normalised.reduce((sum, w, i) => sum + w * (i + 1), 0);
-  return {weights: normalised, mean};
+  let lo = 1e-6;
+  let hi = 1 - 1e-9;
+  // 60 halvings takes the bracket well below the precision the mean is quoted to.
+  for (let i = 0; i < 60; i++) {
+    const mid = (lo + hi) / 2;
+    if (meanAt(weightsAt(mid)) < targetMean) {
+      lo = mid;
+    } else {
+      hi = mid;
+    }
+  }
+  const raw = weightsAt((lo + hi) / 2);
+  const total = raw.reduce((a, b) => a + b, 0);
+  const normalised = raw.map(w => w / total);
+  return {weights: normalised, mean: meanAt(raw)};
+}
+
+/**
+ * §4.2 — mean path length per band, the single knob behind how maze-like a board
+ * reads. It climbs with the grid so that occupancy stays in the same 75-88% range the
+ * curve was tuned at: cells = arrows x mean length, and the arrow counts in
+ * `BAND_TABLE` are unchanged, so every increase here had to be paid for with a bigger
+ * grid rather than with fewer arrows.
+ */
+export function meanLengthFor(levelId: number): number {
+  if (levelId <= 1) {
+    return 2.2;
+  }
+  if (levelId <= 2) {
+    return 2.4;
+  }
+  if (levelId <= 3) {
+    return 2.6;
+  }
+  if (levelId <= 10) {
+    return 3.0;
+  }
+  if (levelId <= 25) {
+    return 3.4;
+  }
+  if (levelId <= 50) {
+    return 3.7;
+  }
+  if (levelId <= 100) {
+    return 4.0;
+  }
+  if (levelId <= 150) {
+    return 4.2;
+  }
+  if (levelId <= 200) {
+    return 4.3;
+  }
+  if (levelId <= 250) {
+    return 4.4;
+  }
+  if (levelId <= 300) {
+    return 4.5;
+  }
+  if (levelId <= 350) {
+    return 4.6;
+  }
+  if (levelId <= 400) {
+    return 4.7;
+  }
+  return 4.8;
 }
 
 export function lengthMixFor(levelId: number): LengthMix {
-  if (levelId <= 3) {
-    return mix(0.0, 0.1, 0.35, 0.35, 0.2);
-  }
-  if (levelId <= 10) {
-    return mix(0.05, 0.25, 0.35, 0.25, 0.1);
-  }
-  if (levelId <= 100) {
-    return mix(0.28, 0.36, 0.22, 0.1, 0.04);
-  }
-  if (levelId <= 300) {
-    return mix(0.3, 0.36, 0.22, 0.09, 0.03);
-  }
-  return mix(0.32, 0.37, 0.21, 0.08, 0.02);
+  return mixForMean(meanLengthFor(levelId), MAX_PATH_LENGTH);
 }
 
 export const SHOWCASE_EVERY = 10;
@@ -249,19 +305,30 @@ export const D_TOLERANCE = 0.4;
  * the rhythm to the measured floor instead is what makes the showcase actually read
  * as a rest and the milestone as a spike.
  *
- * Re-measure with `curveReport` after the §7.2 refit and update this table.
+ * Re-measure after any change to the grid table, the length mix or the carver: D's
+ * turn and span terms both feed the floor, so longer, bendier paths raise it. These
+ * numbers are from the §4.2 maze refit — each grid generated at three level ids with
+ * the slot target pinned to 1.0, taking the easiest board the annealer could find.
+ *
+ * The floors are not monotone in grid size and are not meant to be: grid 8 carries
+ * only 8-12 arrows at 56% fill and is genuinely the easiest board in the set, while
+ * grid 10 carries 22. Occupancy, not size, is what D reacts to.
  */
 const MEASURED_FLOOR: Record<number, number> = {
-  5: 2.2,
-  6: 2.5,
-  7: 2.2,
-  8: 2.6,
-  9: 3.0,
-  10: 3.4,
-  11: 3.9,
-  12: 4.5,
-  13: 5.0,
-  14: 5.4,
+  6: 2.0,
+  7: 2.5,
+  8: 1.5,
+  10: 2.7,
+  12: 3.0,
+  14: 3.5,
+  15: 4.0,
+  16: 4.1,
+  17: 4.5,
+  18: 5.0,
+  19: 5.0,
+  20: 5.7,
+  21: 5.4,
+  22: 5.9,
 };
 
 /**

@@ -54,7 +54,7 @@ interface Props {
 const SPRING = {damping: 20, stiffness: 180, mass: 0.6} as const;
 
 /**
- * §5.5 — pinch, pan, double-tap and fit.
+ * §5.5 — pinch, pan, two-finger-tap zoom and fit.
  *
  * The load-bearing detail is that **the container view transforms, not the SVG**.
  * Reanimated drives `scale`/`translateX`/`translateY` as shared values on this
@@ -287,17 +287,36 @@ function BoardViewportBase(
       );
     });
 
-  const doubleTap = Gesture.Tap()
+  // §5.5 — the zoom toggle is a two-finger tap, not a double tap, and that is the
+  // whole point. A double tap cannot be ruled out until the window for the second tap
+  // closes, so Exclusive(doubleTap, tap) sat on every board tap for RNGH's maxDelay —
+  // 200ms of nothing between the finger lifting and the arrow so much as twitching,
+  // long enough to read as the game having ignored the tap and only then relented.
+  // Tapping an arrow *is* the game and has to answer as the finger comes up, so the
+  // gesture it was competing with moved to one that cannot be confused with a tap at
+  // all. Zoom keeps pinch, this, and the Fit button; only the double tap is gone.
+  const zoomToggle = Gesture.Tap()
     .enabled(!locked)
-    .numberOfTaps(2)
+    .numberOfTaps(1)
+    .minPointers(2)
     .maxDuration(TAP_MAX_MS)
-    .onEnd(event => {
+    // The board tap still has to wait for this one to fail — a two-finger tap ends
+    // with the same ACTION_UP a one-finger tap does, so without the wait, zooming
+    // would also play a move. maxDelay is what that wait costs, and RNGH's 200ms
+    // default is the whole bug in miniature; at 0 the handler gives up on the next
+    // run of the main loop instead, which is too short to see.
+    .maxDelay(0)
+    .onEnd((event, success) => {
       'worklet';
+      if (!success) {
+        return;
+      }
       if (scale.value > MIN_SCALE + 0.01) {
         springTo(MIN_SCALE, 0, 0);
         return;
       }
-      // Zoom toward the tapped point, not the centre.
+      // Zoom toward the tapped point, not the centre. With two pointers down the
+      // event carries their centroid, which is the point between the fingers.
       const focalX = event.x - viewportWidth / 2;
       const focalY = event.y - viewportHeight / 2;
       springTo(
@@ -325,12 +344,14 @@ function BoardViewportBase(
       runOnJS(onTap)(boardX, boardY, scale.value);
     });
 
-  // §5.5 — Exclusive(doubleTap, tap) so a double tap never also fires a selection,
-  // composed simultaneously with pinch and pan so zooming and panning can overlap.
+  // §5.5 — pinch and pan run alongside everything, since zooming and panning overlap
+  // and neither can be mistaken for a tap that does not travel. The board tap is the
+  // only gesture that defers to another, and only to the zoom toggle, which gives up
+  // within a main-loop tick when a second finger never arrives.
   const gesture = Gesture.Simultaneous(
     pinch,
     pan,
-    Gesture.Exclusive(doubleTap, singleTap),
+    Gesture.Exclusive(zoomToggle, singleTap),
   );
 
   const style = useAnimatedStyle(() => ({

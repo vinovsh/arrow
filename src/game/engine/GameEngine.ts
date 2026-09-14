@@ -1,6 +1,10 @@
 import type {ArrowState, Level} from '../models/types';
 import {CollisionDetector} from './CollisionDetector';
-import {HitTester, HIT_RADIUS_DP} from './HitTester';
+import {
+  HitTester,
+  HIT_RADIUS_DP,
+  MAX_HIT_RADIUS_CELLS,
+} from './HitTester';
 import {blockedTapsPerHeart} from './ScoreManager';
 import {FEATURES} from '../../app/featureFlags';
 
@@ -140,7 +144,10 @@ export class GameEngine {
     cellSize: number,
     scale: number,
   ): number {
-    const radiusCells = HIT_RADIUS_DP / Math.max(1, cellSize * scale);
+    const radiusCells = Math.min(
+      HIT_RADIUS_DP / Math.max(1, cellSize * scale),
+      MAX_HIT_RADIUS_CELLS,
+    );
     return this.hitTester.hitTest(boardX, boardY, radiusCells, i =>
       this.detector.isActive(i),
     );

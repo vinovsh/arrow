@@ -18,6 +18,7 @@ import {join} from 'node:path';
 import type {Level} from '../src/game/models/types.ts';
 import {theme} from '../src/theme/theme.ts';
 import {buildArrowGeometry} from '../src/game/renderer/arrowGeometry.ts';
+import {dotRadiusFor} from '../src/utils/layout.ts';
 import {loadAllLevels} from './validateLevels.ts';
 import {planLevel} from './pipeline/plan.ts';
 
@@ -37,7 +38,7 @@ function boardSvg(level: Level, sizePx: number): string {
   const parts: string[] = [];
 
   let dots = '';
-  const radius = Math.max(1.1, cellSize * 0.045);
+  const radius = dotRadiusFor(cellSize);
   for (let y = 0; y < level.gridSize; y++) {
     for (let x = 0; x < level.gridSize; x++) {
       const cx = (x + 0.5) * cellSize;
@@ -64,17 +65,31 @@ function boardSvg(level: Level, sizePx: number): string {
     parts.push(`<g opacity="0.7" transform="scale(${sizePx})">${inner}</g>`);
   }
 
+  // Casing first, for every arrow, then the lines: interleaving them would let one
+  // arrow's casing cut a hole in the neighbour drawn before it.
+  const line = (d: string, stroke: string, width: number): string =>
+    `<path d="${d}" stroke="${stroke}" stroke-width="${width.toFixed(2)}" ` +
+    'stroke-linecap="round" stroke-linejoin="round" fill="none"/>';
+
+  for (const arrow of level.arrows) {
+    const geometry = buildArrowGeometry(arrow, cellSize);
+    const casing = theme.arrowInk.casing;
+    if (geometry.body !== '') {
+      parts.push(line(geometry.body, casing, geometry.strokeWidth * 1.75));
+    }
+    parts.push(
+      `<path d="${geometry.head}" fill="${casing}" stroke="${casing}" ` +
+        `stroke-width="${(geometry.strokeWidth * 0.7).toFixed(
+          2,
+        )}" stroke-linejoin="round"/>`,
+    );
+  }
+
   for (const arrow of level.arrows) {
     const geometry = buildArrowGeometry(arrow, cellSize);
     const colour = theme.arrow[arrow.color];
     if (geometry.body !== '') {
-      parts.push(
-        `<path d="${
-          geometry.body
-        }" stroke="${colour}" stroke-width="${geometry.strokeWidth.toFixed(
-          2,
-        )}" ` + 'stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
-      );
+      parts.push(line(geometry.body, colour, geometry.strokeWidth));
     }
     parts.push(`<path d="${geometry.head}" fill="${colour}"/>`);
   }

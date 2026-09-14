@@ -122,3 +122,14 @@ export function pointsEqual(a: GridPoint, b: GridPoint): boolean {
 
 export const cellIndex = (p: GridPoint, gridSize: number): number =>
   p.y * gridSize + p.x;
+
+/**
+ * §4.2 — the longest path an arrow may occupy, and the one place the number lives.
+ *
+ * The generator's carver and the runtime validator both have to agree on it: they
+ * disagreed once, when the carver was widened for the maze refit and this limit was
+ * still the literal "1..8" of the original spec, and every long path in the pack came
+ * back as a fatal structural error. `tools/pipeline/decompose.ts` re-exports it rather
+ * than keeping a second copy.
+ */
+export const MAX_PATH_CELLS = 16;

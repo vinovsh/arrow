@@ -28,8 +28,13 @@ export interface RenderTier {
   particlesMin: number;
   particlesMax: number;
   glowOpacityScale: number;
-  /** Above 60 arrows the static glow is baked into a single underlay <G>. */
-  bakedGlowUnderlay: boolean;
+  /**
+   * Above 60 arrows the per-arrow glow and casing collapse into a single underlay
+   * <G>, and what gets baked there is the *casing*, not the glow: on a board that
+   * dense, telling two neighbouring paths apart is worth far more than a bloom, and
+   * eighty haloes is a haze over the picture rather than an effect.
+   */
+  bakedUnderlay: boolean;
 }
 
 export function renderTierFor(arrowCount: number): RenderTier {
@@ -40,7 +45,7 @@ export function renderTierFor(arrowCount: number): RenderTier {
       particlesMin: 12,
       particlesMax: 18,
       glowOpacityScale: 1,
-      bakedGlowUnderlay: false,
+      bakedUnderlay: false,
     };
   }
   if (arrowCount <= 60) {
@@ -50,7 +55,7 @@ export function renderTierFor(arrowCount: number): RenderTier {
       particlesMin: 8,
       particlesMax: 12,
       glowOpacityScale: 0.6,
-      bakedGlowUnderlay: false,
+      bakedUnderlay: false,
     };
   }
   return {
@@ -59,6 +64,21 @@ export function renderTierFor(arrowCount: number): RenderTier {
     particlesMin: 6,
     particlesMax: 10,
     glowOpacityScale: 0.6,
-    bakedGlowUnderlay: true,
+    bakedUnderlay: true,
   };
+}
+
+/**
+ * The tier an arrow should be drawn at once it has left the board's static layer.
+ *
+ * The baked underlay only covers arrows that are still resting and active, so the
+ * moment one starts escaping or shaking it loses the casing every other arrow still
+ * has — a visible pop at exactly the moment the player is watching that arrow. A
+ * moving arrow is one path, not eighty, so it can simply carry its own.
+ *
+ * The tier is returned unchanged when it already draws per-arrow, so `ArrowShape`'s
+ * memo still sees a stable reference.
+ */
+export function withOwnUnderlay(tier: RenderTier): RenderTier {
+  return tier.bakedUnderlay ? {...tier, bakedUnderlay: false} : tier;
 }
