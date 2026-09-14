@@ -2,9 +2,11 @@ import {
   blockedTapsPerHeart,
   computeScore,
   computeStars,
+  speedAccolade,
   threeStarThreshold,
   twoStarThreshold,
 } from '../src/game/engine/ScoreManager';
+import {formatDuration} from '../src/utils/time';
 
 /** §9 exit criterion — the §11 formulas are unit-tested at n=12 and n=90. */
 describe('scoring (§11)', () => {
@@ -127,5 +129,72 @@ describe('scoring (§11)', () => {
   it('scales the heart cost with arrow count (§3.2)', () => {
     expect(blockedTapsPerHeart(9)).toBe(4);
     expect(blockedTapsPerHeart(90)).toBe(11);
+  });
+});
+
+describe('speed accolade', () => {
+  it('gives the rare awards to sub-second and sub-two-second solves', () => {
+    expect(speedAccolade(0.4, 60).key).toBe('lightning');
+    expect(speedAccolade(0.99, 60).key).toBe('lightning');
+    expect(speedAccolade(1, 60).key).toBe('blazing');
+    expect(speedAccolade(1.99, 60).key).toBe('blazing');
+    expect(speedAccolade(0.4, 60).rare).toBe(true);
+    expect(speedAccolade(1.5, 60).rare).toBe(true);
+  });
+
+  it('still recognises a fast solve on a level nobody clears in two seconds', () => {
+    // A big board: par 120s. Two seconds is impossible, half of par is not.
+    expect(speedAccolade(40, 120).key).toBe('swift');
+    expect(speedAccolade(110, 120).key).toBe('ahead');
+  });
+
+  it('encourages rather than scolds when the solve was slow', () => {
+    const slow = speedAccolade(300, 60);
+    expect(slow.key).toBe('steady');
+    expect(slow.rare).toBe(false);
+    expect(slow.label).toBe('SOLVED');
+    expect(slow.blurb.length).toBeGreaterThan(0);
+  });
+
+  it('never divides by a zero par time', () => {
+    expect(() => speedAccolade(30, 0)).not.toThrow();
+    expect(speedAccolade(30, 0).key).toBe('steady');
+  });
+
+  it('rides along on the score breakdown', () => {
+    const breakdown = computeScore({
+      n: 8,
+      blockedTaps: 0,
+      hintsUsed: 0,
+      elapsedSeconds: 0.8,
+      parTime: 40,
+    });
+    expect(breakdown.elapsedSeconds).toBe(0.8);
+    expect(breakdown.speed.key).toBe('lightning');
+  });
+});
+
+describe('duration formatting', () => {
+  it('keeps a decimal while the tenths still matter', () => {
+    expect(formatDuration(0.84)).toBe('0.8s');
+    // Not 1.45: that is not exactly representable and rounds down, which would be a
+    // test about floating point rather than about formatting.
+    expect(formatDuration(1.46)).toBe('1.5s');
+    expect(formatDuration(9.9)).toBe('9.9s');
+  });
+
+  it('drops to whole seconds, then to m:ss', () => {
+    expect(formatDuration(10)).toBe('10s');
+    expect(formatDuration(59.4)).toBe('59s');
+    expect(formatDuration(60)).toBe('1:00');
+    expect(formatDuration(125)).toBe('2:05');
+  });
+
+  it('never prints a sixtieth second', () => {
+    expect(formatDuration(119.7)).toBe('2:00');
+  });
+
+  it('treats a negative clock as zero', () => {
+    expect(formatDuration(-3)).toBe('0.0s');
   });
 });

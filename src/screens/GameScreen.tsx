@@ -20,7 +20,9 @@ import {HintModal} from '../components/HintModal';
 import {PauseOverlay} from '../components/PauseOverlay';
 import {OutOfLivesOverlay} from '../components/OutOfLivesOverlay';
 import {LevelCompleteOverlay} from '../components/LevelCompleteOverlay';
-import {ScoreSummaryOverlay} from '../components/ScoreSummaryOverlay';
+import {LeaderboardOverlay} from '../components/LeaderboardOverlay';
+import {climbFor} from '../game/leaderboard/board';
+import type {Climb} from '../game/leaderboard/board';
 import {Board} from '../game/renderer/Board';
 import {EscapingArrow} from '../game/renderer/EscapingArrow';
 import {ShakingArrow} from '../game/renderer/ShakingArrow';
@@ -42,7 +44,7 @@ import {TutorialController} from '../game/tutorial/TutorialController';
 import type {ActiveCoachMark} from '../game/tutorial/TutorialController';
 import {getLevel, preloadAround, TOTAL_LEVELS} from '../game/levels';
 import {computeBoardMetrics} from '../utils/layout';
-import {renderTierFor, FEATURES} from '../app/featureFlags';
+import {renderTierFor} from '../app/featureFlags';
 import {SaveStore} from '../storage/SaveStore';
 import {Audio} from '../audio/AudioService';
 import {Haptics} from '../haptics/HapticService';
@@ -111,7 +113,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
   const [outOfLives, setOutOfLives] = useState(false);
   const [complete, setComplete] = useState<ScoreBreakdown | null>(null);
   const [newHighScore, setNewHighScore] = useState(false);
-  const [summary, setSummary] = useState(false);
+  const [climb, setClimb] = useState<Climb | null>(null);
   const [coachMark, setCoachMark] = useState<ActiveCoachMark | null>(null);
   const [hintPillPulsing, setHintPillPulsing] = useState(false);
   const [offscreenBlocker, setOffscreenBlocker] = useState<{
@@ -259,11 +261,18 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
       parTime: engine.level.parTime,
     });
     const isHigh = SaveStore.isNewHighScore(engine.level.id, breakdown.total);
+    // The standings are read either side of the write: `bestScore` is the lifetime
+    // total (§11) and moves by this level's gain, so these two numbers are exactly
+    // what the climb animation needs. One `Date.now()` for both, so the only thing
+    // that differs between the two boards is the player.
+    const lifetimeBefore = SaveStore.data.bestScore;
     SaveStore.recordCompletion(
       engine.level.id,
       breakdown.stars,
       breakdown.total,
     );
+    const lifetimeAfter = SaveStore.data.bestScore;
+    setClimb(climbFor(lifetimeBefore, lifetimeAfter, Date.now()));
     // §15 — always flushed on level complete, never left to the debounce.
     void SaveStore.flush();
 
@@ -483,7 +492,8 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
     }
     const next = level.id + 1;
     setComplete(null);
-    setSummary(false);
+    setShowLeaderboard(false);
+    setClimb(null);
     // §16 — the only interstitial seam in the game, and it sits *between* levels:
     // never during play, never during an animation, never during the win sequence.
     // NoopAdService is the only binding in v1, so this resolves immediately.
@@ -495,19 +505,19 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
     navigation.replace('Game', {levelId: next});
   }, [level, navigation]);
 
+  // Level complete hands over to the standings, every level. The old score-breakdown
+  // step between them was one more CONTINUE to press for a table of numbers the
+  // player had already watched count up; the leaderboard is where the level's points
+  // actually go somewhere.
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
+
   const onCompleteNext = useCallback(() => {
-    // §5.8 — the summary is shown on milestones and new high scores, and otherwise
-    // NEXT LEVEL goes straight through.
-    const milestone =
-      FEATURES.scoreSummaryOnMilestones &&
-      level &&
-      level.id % FEATURES.milestoneEvery === 0;
-    if (milestone || newHighScore) {
-      setSummary(true);
+    if (climb) {
+      setShowLeaderboard(true);
       return;
     }
     goToNextLevel();
-  }, [level, newHighScore, goToNextLevel]);
+  }, [climb, goToNextLevel]);
 
   if (!level || !engine) {
     return (
@@ -714,12 +724,11 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
 
       {complete && (
         <LevelCompleteOverlay
-          visible={complete !== null && !summary}
+          visible={complete !== null && !showLeaderboard}
           breakdown={complete}
           newHighScore={newHighScore}
           onNext={onCompleteNext}
           onHome={() => navigation.navigate('Home')}
-          onOpenSummary={() => setSummary(true)}
         />
       )}
 
@@ -752,12 +761,12 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
         />
       )}
 
-      {complete && (
-        <ScoreSummaryOverlay
-          visible={summary}
-          breakdown={complete}
-          bestScore={SaveStore.data.bestScore}
-          onContinue={goToNextLevel}
+      {climb && (
+        <LeaderboardOverlay
+          visible={showLeaderboard}
+          climb={climb}
+          onNext={goToNextLevel}
+          onHome={() => navigation.navigate('Home')}
         />
       )}
     </View>

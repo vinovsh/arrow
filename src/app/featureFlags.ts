@@ -9,10 +9,6 @@ export const FEATURES = {
   tutorialLastScriptedLevel: 10,
   zoomCoachMarkLevel: 11,
   heartsCoachMarkLevel: 26,
-  /** §5.8 — Score Summary is shown selectively so it never taxes fast play. */
-  scoreSummaryOnMilestones: true,
-  milestoneEvery: 25,
-  showcaseEvery: 10,
   /** §16 — no ad SDK ships in v1; the rewarded life is granted immediately. */
   adsEnabled: false,
   /** §8.7 — 7 taps on the version string, and only in a debug build. */

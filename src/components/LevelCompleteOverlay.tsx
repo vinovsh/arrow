@@ -4,6 +4,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withDelay,
+  withSequence,
   withTiming,
 } from 'react-native-reanimated';
 import {theme} from '../theme/theme';
@@ -15,6 +16,7 @@ import {StarRow} from './StarRow';
 import {Audio} from '../audio/AudioService';
 import {Haptics} from '../haptics/HapticService';
 import type {ScoreBreakdown} from '../game/engine/ScoreManager';
+import {formatDuration} from '../utils/time';
 
 interface Props {
   visible: boolean;
@@ -22,7 +24,6 @@ interface Props {
   newHighScore: boolean;
   onNext: () => void;
   onHome: () => void;
-  onOpenSummary: () => void;
 }
 
 /**
@@ -50,6 +51,7 @@ const T_RIBBON = 600;
 const T_STARS = 850;
 const T_PRAISE = 1100;
 const T_SCORE = 1200;
+const T_TIME = 1400;
 const T_INTERACTIVE = 1600;
 const SCORE_COUNT_MS = 700;
 
@@ -59,14 +61,17 @@ export function LevelCompleteOverlay({
   newHighScore,
   onNext,
   onHome,
-  onOpenSummary,
 }: Props): React.JSX.Element | null {
   const [elapsed, setElapsed] = useState(0);
   const [displayScore, setDisplayScore] = useState(0);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const praise = useSharedValue(0);
+  // §9.4 — the clock arrives after the score, so the two numbers land one at a time
+  // rather than competing. A rare award pops; an ordinary one simply fades up.
+  const timeIn = useSharedValue(0);
 
   const ready = elapsed >= T_INTERACTIVE;
+  const rare = breakdown.speed.rare;
 
   const finish = React.useCallback(() => {
     for (const timer of timers.current) {
@@ -76,13 +81,15 @@ export function LevelCompleteOverlay({
     setElapsed(T_INTERACTIVE);
     setDisplayScore(breakdown.total);
     praise.value = 1;
-  }, [breakdown.total, praise]);
+    timeIn.value = 1;
+  }, [breakdown.total, praise, timeIn]);
 
   useEffect(() => {
     if (!visible) {
       setElapsed(0);
       setDisplayScore(0);
       praise.value = 0;
+      timeIn.value = 0;
       return;
     }
 
@@ -111,6 +118,19 @@ export function LevelCompleteOverlay({
       Audio.play('score_tick');
       tick();
     });
+    schedule(T_TIME, () => {
+      timeIn.value = rare
+        ? withSequence(
+            withTiming(1.12, {duration: 200}),
+            withTiming(1, {duration: 160}),
+          )
+        : withTiming(1, {duration: 240});
+      if (rare) {
+        // The two sub-two-second awards are the only ones that get their own cue.
+        Audio.play('score_tick');
+        Haptics.light();
+      }
+    });
     schedule(T_INTERACTIVE, () => setElapsed(T_INTERACTIVE));
 
     return () => {
@@ -120,11 +140,16 @@ export function LevelCompleteOverlay({
       timers.current = [];
       Audio.duckMusic(false);
     };
-  }, [visible, breakdown.total, praise]);
+  }, [visible, breakdown.total, praise, timeIn, rare]);
 
   const praiseStyle = useAnimatedStyle(() => ({
     opacity: praise.value,
     transform: [{translateY: (1 - praise.value) * 8}],
+  }));
+
+  const timeStyle = useAnimatedStyle(() => ({
+    opacity: Math.min(1, timeIn.value),
+    transform: [{scale: 0.94 + Math.min(1.12, timeIn.value) * 0.06}],
   }));
 
   const badgeStyle = useAnimatedStyle(() => ({
@@ -159,14 +184,32 @@ export function LevelCompleteOverlay({
         {breakdown.praise}
       </Animated.Text>
 
-      <Pressable
-        onPress={ready ? onOpenSummary : finish}
-        accessibilityRole="button"
-        accessibilityLabel="Score breakdown"
-        style={styles.scoreBox}>
+      <View style={styles.scoreBox}>
         <Text style={styles.scoreLabel}>SCORE</Text>
         <Text style={styles.scoreValue}>{displayScore.toLocaleString()}</Text>
-      </Pressable>
+      </View>
+
+      <Animated.View
+        style={[
+          styles.timeBox,
+          rare && {borderColor: theme.state.star},
+          timeStyle,
+        ]}>
+        <View style={styles.timeRow}>
+          <Text style={styles.timeLabel}>TIME</Text>
+          <Text style={styles.timeValue}>
+            {formatDuration(breakdown.elapsedSeconds)}
+          </Text>
+          <Text
+            style={[
+              styles.speedLabel,
+              {color: rare ? theme.state.star : theme.brand.tagline},
+            ]}>
+            {breakdown.speed.label}
+          </Text>
+        </View>
+        <Text style={styles.speedBlurb}>{breakdown.speed.blurb}</Text>
+      </Animated.View>
 
       <Animated.Text style={[styles.highScore, badgeStyle]}>
         NEW HIGH SCORE!
@@ -219,6 +262,26 @@ const styles = StyleSheet.create({
     letterSpacing: 2.5,
   },
   scoreValue: {...typography.display(28), color: theme.state.star},
+  timeBox: {
+    borderWidth: 1,
+    borderColor: theme.bg.border,
+    backgroundColor: theme.bg.panel,
+    borderRadius: theme.radius.md,
+    paddingHorizontal: theme.space.lg,
+    paddingVertical: theme.space.sm,
+    alignItems: 'center',
+    gap: 2,
+    maxWidth: 340,
+  },
+  timeRow: {flexDirection: 'row', alignItems: 'baseline', gap: theme.space.sm},
+  timeLabel: {...typography.body(11), color: theme.text.dim, letterSpacing: 2.5},
+  timeValue: {...typography.display(18), color: theme.text.primary},
+  speedLabel: {...typography.ui(12), letterSpacing: 1.6},
+  speedBlurb: {
+    ...typography.body(11),
+    color: theme.text.secondary,
+    textAlign: 'center',
+  },
   highScore: {
     ...typography.ui(14),
     color: theme.state.success,

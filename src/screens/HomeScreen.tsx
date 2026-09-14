@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -7,6 +7,10 @@ import {theme} from '../theme/theme';
 import {type as typography} from '../theme/typography';
 import {Button} from '../components/Button';
 import {Wordmark} from '../components/Wordmark';
+import {TierBadge} from '../components/TierBadge';
+import {climbFor} from '../game/leaderboard/board';
+import {standingsFor} from '../game/leaderboard/board';
+import {LeaderboardOverlay} from '../components/LeaderboardOverlay';
 import {SaveStore} from '../storage/SaveStore';
 import type {SaveData} from '../storage/SaveStore';
 import {TOTAL_LEVELS, preloadAround} from '../game/levels';
@@ -20,6 +24,22 @@ export function HomeScreen({navigation}: Props): React.JSX.Element {
   useEffect(() => SaveStore.subscribe(setSave), []);
 
   const level = Math.min(save.currentLevel, TOTAL_LEVELS);
+
+  // Recomputed when the score changes, not on every render: the roster is 24 seeded
+  // rivals and a sort. `Date.now()` is read here rather than inside so a rerender for
+  // some other reason cannot quietly reshuffle the board under the player.
+  const standing = useMemo(
+    () => standingsFor(save.bestScore, Date.now()),
+    [save.bestScore],
+  );
+
+  const [boardOpen, setBoardOpen] = useState(false);
+  // The same score either side, so the overlay has no climb to play and simply shows
+  // the table as it stands.
+  const resting = useMemo(
+    () => climbFor(save.bestScore, save.bestScore, Date.now()),
+    [save.bestScore],
+  );
 
   useEffect(() => {
     preloadAround(level);
@@ -39,6 +59,26 @@ export function HomeScreen({navigation}: Props): React.JSX.Element {
         <Wordmark size={40} />
         <Text style={styles.progress}>LEVEL {level}</Text>
         <Text style={styles.best}>BEST {save.bestScore.toLocaleString()}</Text>
+
+        {/* The ladder, kept in front of the player between sessions rather than only
+            at the end of a level. Standings are a pure function of the lifetime score
+            and the clock, so this costs a sort of 25 rows and no storage. */}
+        <Pressable
+          onPress={() => setBoardOpen(true)}
+          accessibilityRole="button"
+          accessibilityLabel={`${standing.tier.tier.label} badge, rank ${standing.playerRank} in ${standing.leagueName} league`}
+          style={styles.standing}>
+          <TierBadge tier={standing.tier.tier} size={34} />
+          <View>
+            <Text
+              style={[styles.tierLabel, {color: standing.tier.tier.colour}]}>
+              {standing.tier.tier.label}
+            </Text>
+            <Text style={styles.leagueLine}>
+              #{standing.playerRank} · {standing.leagueName} LEAGUE
+            </Text>
+          </View>
+        </Pressable>
         <Pressable onPress={() => navigation.navigate('HowToPlay')}>
           <Text style={styles.howTo}>HOW TO PLAY</Text>
         </Pressable>
@@ -73,6 +113,12 @@ export function HomeScreen({navigation}: Props): React.JSX.Element {
         <Text style={styles.silhouette}>✦</Text>
         <Text style={styles.silhouette}>❤</Text>
       </View>
+      <LeaderboardOverlay
+        visible={boardOpen}
+        climb={resting}
+        onNext={() => setBoardOpen(false)}
+        primaryLabel="CLOSE"
+      />
     </SafeAreaView>
   );
 }
@@ -105,6 +151,24 @@ const styles = StyleSheet.create({
     color: theme.text.secondary,
     letterSpacing: 2,
     marginTop: theme.space.lg,
+  },
+  standing: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.space.sm,
+    marginTop: theme.space.md,
+    paddingVertical: theme.space.sm,
+    paddingHorizontal: theme.space.md,
+    borderRadius: theme.radius.pill,
+    backgroundColor: theme.bg.panel,
+    borderWidth: 1,
+    borderColor: theme.bg.border,
+  },
+  tierLabel: {...typography.ui(12), letterSpacing: 2},
+  leagueLine: {
+    ...typography.body(11),
+    color: theme.text.dim,
+    letterSpacing: 1.1,
   },
   best: {...typography.body(13), color: theme.text.dim, letterSpacing: 1.5},
   howTo: {
