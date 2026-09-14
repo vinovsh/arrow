@@ -26,6 +26,11 @@ interface Props {
    * being visible, and only the screen knows how far apart those two are.
    */
   clearance: number;
+  /**
+   * When the tap landed (Date.now()) — not when this component mounted. See the note
+   * on the animation clock below.
+   */
+  startedAt?: number;
   onComplete: (index: number) => void;
 }
 
@@ -53,6 +58,7 @@ export function EscapingArrow({
   cellSize,
   tier,
   clearance,
+  startedAt: tappedAt,
   onComplete,
 }: Props): React.JSX.Element {
   const size = cellSize * gridSize;
@@ -60,14 +66,34 @@ export function EscapingArrow({
     () => exitTravelDistance(arrow, gridSize, cellSize, clearance),
     [arrow, gridSize, cellSize, clearance],
   );
-  const [progress, setProgress] = useState(0);
+  const duration = useMemo(() => escapeDurationMs(travel, size), [travel, size]);
+
+  // The flight is clocked from the tap, not from this component's first render.
+  //
+  // Between those two moments sit a hop off the gesture thread, a React render, a
+  // commit and a native mount — on a real device, the better part of two hundred
+  // milliseconds. Clocked from the mount, every one of them was time the arrow spent
+  // sitting exactly where it had always been, with the player's finger already lifted:
+  // the first frame anyone saw was the resting pose, and motion only began a frame
+  // after that. Clocked from the tap, that setup is spent *along the path* instead, so
+  // the first frame to reach the screen already shows the arrow on its way out.
+  //
+  // Nothing about the animation itself changes — same curve, same duration, same
+  // geometry. Only the question "how far along is it by now?" gets an honest answer.
+  // Read once into a ref, because a clock that re-read its own start on every
+  // re-render would never advance.
+  const startedAt = useRef(tappedAt ?? Date.now()).current;
+
+  // Seeded, not zero, for that same reason: the first painted frame should show where
+  // the arrow has got to, not where it was when the finger came down.
+  const [progress, setProgress] = useState(() =>
+    Math.min(1, (Date.now() - startedAt) / duration),
+  );
   const done = useRef(false);
   const traced = useRef(false);
   const displaced = useRef(false);
 
   useEffect(() => {
-    const duration = escapeDurationMs(travel, size);
-    const startedAt = Date.now();
     let frame = 0;
 
     const tick = (): void => {
@@ -84,10 +110,23 @@ export function EscapingArrow({
         onComplete(index);
       }
     };
-    trace('EscapingArrow mounted, rAF scheduled');
+    trace(
+      'EscapingArrow mounted, rAF scheduled — canvas ' +
+        Math.round(bounds.width) +
+        'x' +
+        Math.round(bounds.height) +
+        'dp (board ' +
+        Math.round(size) +
+        'dp, was ' +
+        Math.round(size) +
+        'x' +
+        Math.round(size + clearance + EXIT_MARGIN_CELLS * cellSize) +
+        ')',
+    );
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [travel, size, index, onComplete]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startedAt, duration, index, onComplete]);
 
   // TEMPORARY — the number that matters: when a frame showing the arrow somewhere
   // other than where it was resting actually reached the screen.
@@ -117,18 +156,54 @@ export function EscapingArrow({
     );
   }, [arrow, gridSize, cellSize, progress, travel, clearance]);
 
-  // An SVG always clips to its own viewBox, so a canvas the size of the board would
-  // cut the arrow off at the very edge it is trying to leave — the exact thing this
-  // animation exists to avoid. The canvas is extended in the one direction the arrow
-  // travels, out to the viewport's own clip and no further: past that the viewport
-  // hides it anyway, and the head runs a whole body-length ahead of the tail, so
-  // sizing this to the full travel would buy a canvas several boards wide to draw
-  // pixels nobody can see.
-  const pad = clearance + EXIT_MARGIN_CELLS * cellSize;
-  const padLeft = arrow.direction === 'L' ? pad : 0;
-  const padTop = arrow.direction === 'U' ? pad : 0;
-  const canvasWidth = size + padLeft + (arrow.direction === 'R' ? pad : 0);
-  const canvasHeight = size + padTop + (arrow.direction === 'D' ? pad : 0);
+  // An SVG always clips to its own viewBox, so this canvas has to cover every
+  // position the arrow will occupy on its way out — but *only* those positions.
+  //
+  // It used to be the whole board plus the run-off, which on a phone came to about
+  // 360x582dp: some 990x1600 device pixels, a six-megabyte surface allocated fresh on
+  // every tap and repainted every frame, to draw an arrow one column wide. That
+  // allocation was the single largest thing standing between the tap and the first
+  // frame of motion.
+  //
+  // A tight box is just as correct and a great deal cheaper. The arrow's own cells
+  // bound it to start with; `travel` is by definition how far it moves before it is
+  // out of sight, so extending by that in the one direction it goes covers the rest.
+  // It never grows the other way: the rope straightens toward the head as it unwinds,
+  // so its reach across the direction of travel only shrinks. The cell of slack on
+  // every side is for the ink rather than the path — the widest stroke is the glow at
+  // 2.4x, spilling 1.2 stroke-widths from the centreline, and a stroke is capped at
+  // 7dp, so half a cell already clears it on any board this game draws.
+  const bounds = useMemo(() => {
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+    for (const cell of arrow.cells) {
+      minX = Math.min(minX, cell.x * cellSize);
+      minY = Math.min(minY, cell.y * cellSize);
+      maxX = Math.max(maxX, (cell.x + 1) * cellSize);
+      maxY = Math.max(maxY, (cell.y + 1) * cellSize);
+    }
+    minX -= cellSize;
+    minY -= cellSize;
+    maxX += cellSize;
+    maxY += cellSize;
+    switch (arrow.direction) {
+      case 'R':
+        maxX += travel;
+        break;
+      case 'L':
+        minX -= travel;
+        break;
+      case 'D':
+        maxY += travel;
+        break;
+      case 'U':
+        minY -= travel;
+        break;
+    }
+    return {x: minX, y: minY, width: maxX - minX, height: maxY - minY};
+  }, [arrow, cellSize, travel]);
 
   // §13 — the baked underlay has already dropped this arrow, so it draws its own.
   const ownTier = useMemo(() => withOwnUnderlay(tier), [tier]);
@@ -141,14 +216,14 @@ export function EscapingArrow({
   // simply leaves, and the viewport's clip is what ends it.
   return (
     <Svg
-      width={canvasWidth}
-      height={canvasHeight}
-      // Negative origin keeps the geometry in board coordinates while the canvas
-      // reaches past the board, so nothing here needs to know it has been extended.
-      viewBox={`${-padLeft} ${-padTop} ${canvasWidth} ${canvasHeight}`}
+      width={bounds.width}
+      height={bounds.height}
+      // The viewBox carries the box's own origin, so the geometry inside stays in
+      // board coordinates and nothing downstream needs to know the canvas moved.
+      viewBox={`${bounds.x} ${bounds.y} ${bounds.width} ${bounds.height}`}
       // §9.2 has escaping paths slip under the board frame; an arrow cut off at the
       // boundary reads as deleted rather than as having left, so this one is not.
-      style={[styles.layer, {left: -padLeft, top: -padTop}]}
+      style={[styles.layer, {left: bounds.x, top: bounds.y}]}
       pointerEvents="none">
       <G>
         {/* Drawn through the same component the resting board uses, so the arrow that

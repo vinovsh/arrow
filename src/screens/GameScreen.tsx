@@ -284,6 +284,10 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
 
   const handleTap = useCallback(
     (boardX: number, boardY: number, scale: number) => {
+      // Stamped first, before anything else in this handler can cost time. This is
+      // the instant the player means by "when I tap", and the flight is measured
+      // from it.
+      const tappedAt = Date.now();
       trace('handleTap entered');
       if (!engine || complete || paused) {
         return;
@@ -313,21 +317,44 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
         // only then reports back. The engine has already cleared its cells, so the
         // arrow cannot be tapped again and whatever it was blocking is free to tap
         // immediately rather than waiting out the flight.
-        patchVisual(outcome.arrowIndex, {state: 'escaping'});
+        patchVisual(outcome.arrowIndex, {
+          state: 'escaping',
+          escapeStartedAt: tappedAt,
+        });
         trace('setState escaping dispatched');
         Audio.playArrowMove(arrow.cells.length);
         trace('Audio.playArrowMove returned');
-        Haptics.light();
-        trace('Haptics.light returned');
-        particlesRef.current?.trail(
-          geometry.headCentre.x,
-          geometry.headCentre.y,
-          step.x,
-          step.y,
-          arrow.color,
-          Math.round((tier.particlesMin + tier.particlesMax) / 2),
+        // No haptic on a successful tap, deliberately. The buzz cost about 3ms, so
+        // this is not where the time went — but it fired the moment the finger lifted
+        // and the arrow does not start moving until a couple of hundred milliseconds
+        // later, so all it actually did was announce the gap and then leave the player
+        // waiting on it. A cue that arrives before the thing it is meant to confirm is
+        // worse than no cue. The blocked bump (§9.3) and the lost-life knock keep
+        // theirs: those answer taps where nothing moves, so the haptic *is* the
+        // feedback rather than a trailer for it.
+        // The trail is spawned on the *next* frame rather than this one. Filling the
+        // particle field costs tens of milliseconds of marshalling between the JS and
+        // UI runtimes, and every one of them used to be spent before React was allowed
+        // to render the arrow — the move queued behind its own decoration. A frame
+        // later the particles are in the same place doing the same thing, and the
+        // arrow no longer waits on them.
+        const trailX = geometry.headCentre.x;
+        const trailY = geometry.headCentre.y;
+        const trailColour = arrow.color;
+        const trailCount = Math.round(
+          (tier.particlesMin + tier.particlesMax) / 2,
         );
-        trace('particles.trail returned — handleTap done, React now owns the time');
+        requestAnimationFrame(() => {
+          particlesRef.current?.trail(
+            trailX,
+            trailY,
+            step.x,
+            step.y,
+            trailColour,
+            trailCount,
+          );
+        });
+        trace('handleTap done, React now owns the time');
         return;
       }
 
@@ -563,6 +590,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
                     cellSize={metrics.cellSize}
                     tier={tier}
                     clearance={clearance[level.arrows[index].direction]}
+                    startedAt={visual.escapeStartedAt}
                     onComplete={onEscapeComplete}
                   />
                 );

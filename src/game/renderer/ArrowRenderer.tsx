@@ -24,6 +24,12 @@ export interface ArrowVisualState {
   highlighted: boolean;
   /** §3.3, §3.4 — pulsing for a hint or the silent assist. */
   pulsing: boolean;
+  /**
+   * When the tap that freed this arrow landed, in ms. The exit flight is timed from
+   * here rather than from the moment its component mounts, so the setup between the
+   * two is spent moving the arrow instead of leaving it parked.
+   */
+  escapeStartedAt?: number;
 }
 
 interface Props {
