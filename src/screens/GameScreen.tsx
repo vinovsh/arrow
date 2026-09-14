@@ -121,6 +121,20 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
   const [devOpen, setDevOpen] = useState(false);
   const [liveScale, setLiveScale] = useState(1);
 
+  /**
+   * §9.4 — how many arrows are still flying off the board.
+   *
+   * The engine cannot answer this. `resolveTap` clears an arrow's cells the moment it
+   * is tapped — that is deliberate, so whatever it was blocking is free immediately
+   * rather than after the flight — which means `activeCount` reaches zero when the
+   * last arrow is *resolved*, not when it has finished leaving. Tap two arrows in
+   * quick succession and the short one lands first: the win used to fire on its
+   * completion, throwing the Level Complete overlay up over the other arrow still
+   * visibly in flight. Counted here instead, so the sequence waits for the board to
+   * actually be empty.
+   */
+  const inFlight = useRef(0);
+
   const assistUsed = useRef(false);
   const assistEscalated = useRef(false);
   const firstBlockSeen = useRef(false);
@@ -176,6 +190,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
     }
     preloadAround(level.id);
     setVisuals(level.arrows.map(freshVisual));
+    inFlight.current = 0;
     setHearts(engine.hearts);
     // §5.4 — hearts fade in only after the first blocked tap on levels 1-25, and do
     // not exist at all below the lives threshold (§3.2).
@@ -261,13 +276,14 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
     particlesRef.current?.burst(metrics.size / 2, metrics.size / 2, 60);
   }, [engine, metrics.size]);
 
-  // Only once the arrow is fully clear of the board does it stop being drawn at all,
-  // and only then does an emptied board count as a win — so the completion sequence
-  // never fires over an arrow still in flight.
+  // An emptied board counts as a win only once every arrow has finished leaving it:
+  // nothing left for the player to tap (`activeCount`) *and* nothing left on screen
+  // (`inFlight`). Both conditions are needed — see the note on `inFlight`.
   const onEscapeComplete = useCallback(
     (index: number) => {
       patchVisual(index, {state: 'escaped'});
-      if (engine && engine.activeCount === 0) {
+      inFlight.current = Math.max(0, inFlight.current - 1);
+      if (engine && engine.activeCount === 0 && inFlight.current === 0) {
         finishLevel();
       }
     },
@@ -314,6 +330,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
         // only then reports back. The engine has already cleared its cells, so the
         // arrow cannot be tapped again and whatever it was blocking is free to tap
         // immediately rather than waiting out the flight.
+        inFlight.current += 1;
         patchVisual(outcome.arrowIndex, {
           state: 'escaping',
           escapeStartedAt: tappedAt,
@@ -448,6 +465,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
     engine.restart();
     hintsRef.current.reset();
     setVisuals(level.arrows.map(freshVisual));
+    inFlight.current = 0;
     setHearts(engine.hearts);
     setHintsRemaining(hintsRef.current.remaining);
     setHeartsVisible(engine.livesEnabled && firstBlockSeen.current);
