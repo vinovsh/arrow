@@ -48,6 +48,8 @@ import {SaveStore} from '../storage/SaveStore';
 import {Audio} from '../audio/AudioService';
 import {Haptics} from '../haptics/HapticService';
 import {Ads} from '../ads/AdService';
+// TEMPORARY — tap-latency instrumentation, see src/utils/tapTrace.ts.
+import {trace} from '../utils/tapTrace';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Game'>;
 
@@ -70,6 +72,7 @@ const freshVisual = (): ArrowVisualState => ({
 });
 
 export function GameScreen({route, navigation}: Props): React.JSX.Element {
+  trace('GameScreen render body');
   const {levelId} = route.params;
   const {width, height} = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -281,6 +284,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
 
   const handleTap = useCallback(
     (boardX: number, boardY: number, scale: number) => {
+      trace('handleTap entered');
       if (!engine || complete || paused) {
         return;
       }
@@ -297,7 +301,9 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
         metrics.cellSize,
         scale,
       );
+      trace('hitTest done');
       const outcome = engine.resolveTap(index);
+      trace('resolveTap done');
 
       if (outcome.kind === 'escaped') {
         const arrow = engine.level.arrows[outcome.arrowIndex];
@@ -308,8 +314,11 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
         // arrow cannot be tapped again and whatever it was blocking is free to tap
         // immediately rather than waiting out the flight.
         patchVisual(outcome.arrowIndex, {state: 'escaping'});
+        trace('setState escaping dispatched');
         Audio.playArrowMove(arrow.cells.length);
+        trace('Audio.playArrowMove returned');
         Haptics.light();
+        trace('Haptics.light returned');
         particlesRef.current?.trail(
           geometry.headCentre.x,
           geometry.headCentre.y,
@@ -318,6 +327,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
           arrow.color,
           Math.round((tier.particlesMin + tier.particlesMax) / 2),
         );
+        trace('particles.trail returned — handleTap done, React now owns the time');
         return;
       }
 

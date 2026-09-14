@@ -135,12 +135,28 @@ function ParticleSystemBase(
     }
   }, true);
 
-  const spawn = useCallback(
-    (state: ParticleState) => {
-      const slot = cursor.current % MAX_PARTICLES;
-      cursor.current = slot + 1;
+  /**
+   * Places a whole batch of particles in one read and one write.
+   *
+   * Touching `particles.value` is what crosses between the JS and UI runtimes, and
+   * the crossing is charged per access, not per particle. Spawning a trail one at a
+   * time meant fifteen reads and fifteen writes of the entire eighty-slot field, all
+   * synchronous, all inside the tap handler, before React was allowed to start
+   * rendering the arrow the player had just asked to move. On a real device that
+   * measured 313ms of a 379ms tap. Reading once into a local array, filling every
+   * slot there, and publishing once brings it to two crossings for any batch size.
+   *
+   * The field still lands in a single frame, so nothing about how the trail looks
+   * changes — only how long the game sits still while producing it.
+   */
+  const spawnAll = useCallback(
+    (batch: readonly ParticleState[]) => {
       const next = particles.value;
-      next[slot] = state;
+      for (let i = 0; i < batch.length; i++) {
+        const slot = cursor.current % MAX_PARTICLES;
+        cursor.current = slot + 1;
+        next[slot] = batch[i];
+      }
       particles.value = [...next];
     },
     [particles],
@@ -151,10 +167,11 @@ function ParticleSystemBase(
     () => ({
       trail: (x, y, dx, dy, color, count) => {
         const colour = theme.arrow[color];
+        const batch: ParticleState[] = [];
         for (let i = 0; i < count; i++) {
           const spread = (Math.random() - 0.5) * 90;
           const speed = 60 + Math.random() * 110;
-          spawn({
+          batch.push({
             x: x + (Math.random() - 0.5) * 10,
             y: y + (Math.random() - 0.5) * 10,
             vx: -dx * speed + -dy * spread,
@@ -164,13 +181,16 @@ function ParticleSystemBase(
             colour,
           });
         }
+        spawnAll(batch);
       },
       burst: (x, y, count) => {
         const palette = Object.values(theme.arrow);
-        for (let i = 0; i < Math.min(count, BURST_MAX); i++) {
-          const angle = (i / Math.min(count, BURST_MAX)) * Math.PI * 2;
+        const total = Math.min(count, BURST_MAX);
+        const batch: ParticleState[] = [];
+        for (let i = 0; i < total; i++) {
+          const angle = (i / total) * Math.PI * 2;
           const speed = 140 + Math.random() * 180;
-          spawn({
+          batch.push({
             x,
             y,
             vx: Math.cos(angle) * speed,
@@ -180,12 +200,13 @@ function ParticleSystemBase(
             colour: palette[i % palette.length],
           });
         }
+        spawnAll(batch);
       },
       clear: () => {
         particles.value = Array.from({length: MAX_PARTICLES}, emptyParticle);
       },
     }),
-    [particles, spawn],
+    [particles, spawnAll],
   );
 
   const sprites = useMemo(

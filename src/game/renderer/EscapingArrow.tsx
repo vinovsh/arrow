@@ -11,6 +11,8 @@ import {
   escapeDurationMs,
   exitTravelDistance,
 } from './arrowGeometry';
+// TEMPORARY — tap-latency instrumentation, see src/utils/tapTrace.ts.
+import {trace} from '../../utils/tapTrace';
 
 interface Props {
   arrow: ArrowPath;
@@ -60,6 +62,8 @@ export function EscapingArrow({
   );
   const [progress, setProgress] = useState(0);
   const done = useRef(false);
+  const traced = useRef(false);
+  const displaced = useRef(false);
 
   useEffect(() => {
     const duration = escapeDurationMs(travel, size);
@@ -67,6 +71,10 @@ export function EscapingArrow({
     let frame = 0;
 
     const tick = (): void => {
+      if (!traced.current) {
+        traced.current = true;
+        trace('EscapingArrow first animation frame');
+      }
       const t = Math.min(1, (Date.now() - startedAt) / duration);
       setProgress(t);
       if (t < 1) {
@@ -76,9 +84,19 @@ export function EscapingArrow({
         onComplete(index);
       }
     };
+    trace('EscapingArrow mounted, rAF scheduled');
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
   }, [travel, size, index, onComplete]);
+
+  // TEMPORARY — the number that matters: when a frame showing the arrow somewhere
+  // other than where it was resting actually reached the screen.
+  useEffect(() => {
+    if (progress > 0 && !displaced.current) {
+      displaced.current = true;
+      trace('first committed frame with the arrow displaced');
+    }
+  }, [progress]);
 
   const geometry = useMemo(() => {
     // Immediate response, then acceleration: slope 0.35 at the start so the tap is

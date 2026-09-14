@@ -10,6 +10,8 @@ import {DecorLayer} from './DecorLayer';
 import {ArrowRenderer} from './ArrowRenderer';
 import type {ArrowVisualState} from './ArrowRenderer';
 import {buildArrowGeometry} from './arrowGeometry';
+// TEMPORARY — tap-latency instrumentation, see src/utils/tapTrace.ts.
+import {trace} from '../../utils/tapTrace';
 
 interface Props {
   level: Level;
@@ -36,6 +38,7 @@ function BoardBase({
   arrowStates,
   renderScale,
 }: Props): React.JSX.Element {
+  trace('Board render body');
   const {gridSize, arrows} = level;
   const size = cellSize * gridSize;
   const tier = useMemo(() => renderTierFor(arrows.length), [arrows.length]);
@@ -59,14 +62,16 @@ function BoardBase({
     .map(v => (v.state === 'active' && !v.shaking ? '1' : '0'))
     .join('');
 
-  const bakedUnderlay = useMemo(() => {
+  // Each arrow's casing is built once and thereafter handed out by reference. The
+  // geometry behind it cannot change while a level is being played — only which
+  // arrows are still on the board can — so expressing "one of them left" by rebuilding
+  // every Path in the layer was work with no output: at 86 arrows it measured ~15ms of
+  // a ~22ms re-render, on the critical path of every single tap.
+  const underlayNodes = useMemo(() => {
     if (!tier.bakedUnderlay) {
       return null;
     }
     return arrows.map((arrow, i) => {
-      if (activeKey[i] !== '1') {
-        return null;
-      }
       const geometry = geometries[i];
       return (
         <React.Fragment key={arrow.id}>
@@ -90,9 +95,21 @@ function BoardBase({
         </React.Fragment>
       );
     });
-    // activeKey stands in for arrowStates on purpose: it is exactly the part of it
-    // this layer depends on, so a shake or a highlight does not rebuild the underlay.
-  }, [tier.bakedUnderlay, arrows, geometries, activeKey]);
+  }, [tier.bakedUnderlay, arrows, geometries]);
+
+  // Which of those casings are currently on the board. This is the part that changes
+  // per tap, and all it costs now is an array walk: every surviving arrow hands back
+  // the identical element it gave last time, which React skips without descending.
+  //
+  // activeKey stands in for arrowStates on purpose: it is exactly the part of it this
+  // layer depends on, so a shake or a highlight does not disturb the underlay.
+  const bakedUnderlay = useMemo(
+    () =>
+      underlayNodes
+        ? underlayNodes.map((node, i) => (activeKey[i] === '1' ? node : null))
+        : null,
+    [underlayNodes, activeKey],
+  );
 
   // §13 — the board is rasterised at `resolution` and displayed at 1.0. The scaling
   // has to happen on a plain RN View: react-native-svg treats a `transform` in the

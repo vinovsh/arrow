@@ -18,7 +18,6 @@ import Animated, {
 import {
   CRISP_RERENDER_DEBOUNCE_MS,
   CRISP_RERENDER_SCALE,
-  DOUBLE_TAP_SCALE,
   MAX_SCALE,
   MIN_SCALE,
   PAN_OVERSHOOT_DP,
@@ -26,6 +25,8 @@ import {
   TAP_SLOP_DP,
   clampPan,
 } from '../../utils/layout';
+// TEMPORARY — tap-latency instrumentation, see src/utils/tapTrace.ts.
+import {traceTap} from '../../utils/tapTrace';
 
 export interface ViewportHandle {
   /** Springs back to fit and re-centres (§5.5, and on level complete §9.4). */
@@ -54,7 +55,7 @@ interface Props {
 const SPRING = {damping: 20, stiffness: 180, mass: 0.6} as const;
 
 /**
- * §5.5 — pinch, pan, two-finger-tap zoom and fit.
+ * §5.5 — pinch, pan, tap and fit.
  *
  * The load-bearing detail is that **the container view transforms, not the SVG**.
  * Reanimated drives `scale`/`translateX`/`translateY` as shared values on this
@@ -81,6 +82,10 @@ function BoardViewportBase(
   const savedX = useSharedValue(0);
   const savedY = useSharedValue(0);
   const [zoomed, setZoomed] = useState(false);
+  // TEMPORARY — when the finger touched down and when it left the glass, so the
+  // wait between the lift and this gesture being allowed to activate is visible.
+  const touchDownAt = useSharedValue(0);
+  const touchUpAt = useSharedValue(0);
 
   const settleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -105,37 +110,6 @@ function BoardViewportBase(
       }
     },
     [],
-  );
-
-  const springTo = useCallback(
-    (nextScale: number, nextX: number, nextY: number) => {
-      'worklet';
-      scale.value = withSpring(nextScale, SPRING);
-      translateX.value = withSpring(
-        clampPan(nextX, boardSize, viewportWidth, nextScale),
-        SPRING,
-      );
-      translateY.value = withSpring(
-        clampPan(nextY, boardSize, viewportHeight, nextScale),
-        SPRING,
-      );
-      savedScale.value = nextScale;
-      savedX.value = translateX.value;
-      savedY.value = translateY.value;
-      runOnJS(noteScale)(nextScale);
-    },
-    [
-      boardSize,
-      viewportWidth,
-      viewportHeight,
-      scale,
-      translateX,
-      translateY,
-      savedScale,
-      savedX,
-      savedY,
-      noteScale,
-    ],
   );
 
   const resetViewport = useCallback(() => {
@@ -287,54 +261,26 @@ function BoardViewportBase(
       );
     });
 
-  // §5.5 — the zoom toggle is a two-finger tap, not a double tap, and that is the
-  // whole point. A double tap cannot be ruled out until the window for the second tap
-  // closes, so Exclusive(doubleTap, tap) sat on every board tap for RNGH's maxDelay —
-  // 200ms of nothing between the finger lifting and the arrow so much as twitching,
-  // long enough to read as the game having ignored the tap and only then relented.
-  // Tapping an arrow *is* the game and has to answer as the finger comes up, so the
-  // gesture it was competing with moved to one that cannot be confused with a tap at
-  // all. Zoom keeps pinch, this, and the Fit button; only the double tap is gone.
-  const zoomToggle = Gesture.Tap()
-    .enabled(!locked)
-    .numberOfTaps(1)
-    .minPointers(2)
-    .maxDuration(TAP_MAX_MS)
-    // The board tap still has to wait for this one to fail — a two-finger tap ends
-    // with the same ACTION_UP a one-finger tap does, so without the wait, zooming
-    // would also play a move. maxDelay is what that wait costs, and RNGH's 200ms
-    // default is the whole bug in miniature; at 0 the handler gives up on the next
-    // run of the main loop instead, which is too short to see.
-    .maxDelay(0)
-    .onEnd((event, success) => {
-      'worklet';
-      if (!success) {
-        return;
-      }
-      if (scale.value > MIN_SCALE + 0.01) {
-        springTo(MIN_SCALE, 0, 0);
-        return;
-      }
-      // Zoom toward the tapped point, not the centre. With two pointers down the
-      // event carries their centroid, which is the point between the fingers.
-      const focalX = event.x - viewportWidth / 2;
-      const focalY = event.y - viewportHeight / 2;
-      springTo(
-        DOUBLE_TAP_SCALE,
-        -focalX * (DOUBLE_TAP_SCALE - 1),
-        -focalY * (DOUBLE_TAP_SCALE - 1),
-      );
-    });
-
   const singleTap = Gesture.Tap()
     .numberOfTaps(1)
     .maxDuration(TAP_MAX_MS)
     .maxDistance(TAP_SLOP_DP)
+    // TEMPORARY — instrumentation only; touch callbacks do not affect arbitration.
+    .onTouchesDown(() => {
+      'worklet';
+      touchDownAt.value = Date.now();
+    })
+    .onTouchesUp(() => {
+      'worklet';
+      touchUpAt.value = Date.now();
+    })
     .onEnd((event, success) => {
       'worklet';
       if (!success) {
         return;
       }
+      // TEMPORARY — tap-latency instrumentation.
+      runOnJS(traceTap)(touchDownAt.value, touchUpAt.value, Date.now());
       // Undo the container transform to land in board dp. The board is centred in the
       // viewport and scaled about that centre (§5.5).
       const centreX = viewportWidth / 2 + translateX.value;
@@ -344,15 +290,19 @@ function BoardViewportBase(
       runOnJS(onTap)(boardX, boardY, scale.value);
     });
 
-  // §5.5 — pinch and pan run alongside everything, since zooming and panning overlap
-  // and neither can be mistaken for a tap that does not travel. The board tap is the
-  // only gesture that defers to another, and only to the zoom toggle, which gives up
-  // within a main-loop tick when a second finger never arrives.
-  const gesture = Gesture.Simultaneous(
-    pinch,
-    pan,
-    Gesture.Exclusive(zoomToggle, singleTap),
-  );
+  // §5.5 — pinch and pan compose simultaneously so zooming and panning can overlap,
+  // and the board tap runs beside them rather than behind anything.
+  //
+  // Nothing here is Exclusive any more, and that is the whole point. Exclusive is
+  // implemented as requireToFail, so the board tap could not activate until a
+  // double-tap handler had *failed* — and a tap handler still hoping for a second tap
+  // does not fail until its maxDelay elapses, which RNGH leaves at 200ms on Android.
+  // Every tap on an arrow therefore spent a fifth of a second doing nothing before
+  // the engine was so much as asked about it, against roughly 0.07ms of actual work
+  // once it was. A single tap cannot be told apart from the first half of a double
+  // tap until that window shuts, so the only way to answer the tap at once is to stop
+  // asking the question. Zoom keeps pinch and the Fit button above the board.
+  const gesture = Gesture.Simultaneous(pinch, pan, singleTap);
 
   const style = useAnimatedStyle(() => ({
     transform: [

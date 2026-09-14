@@ -6,13 +6,8 @@ export const MAX_SCALE = 3.5;
 export const DOUBLE_TAP_SCALE = 2.0;
 /** Rubber-band overshoot allowed while dragging, sprung back on release. */
 export const PAN_OVERSHOOT_DP = 40;
-/**
- * A touch is a tap if it lifts inside this window and moves less than TAP_SLOP_DP.
- * Generous on purpose: nothing on the board answers to a long press, so the only
- * thing a tight window buys is a press held a beat too long doing nothing at all,
- * which the player reads as the game having missed them.
- */
-export const TAP_MAX_MS = 500;
+/** A touch is a tap if it lifts inside this window and moves less than TAP_SLOP_DP. */
+export const TAP_MAX_MS = 250;
 export const TAP_SLOP_DP = 10;
 /** Above this the SVG re-renders once, debounced, to restore crispness. */
 export const CRISP_RERENDER_SCALE = 1.5;
