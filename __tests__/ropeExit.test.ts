@@ -2,9 +2,9 @@ import {
   SINGLE_CELL_STUB,
   bodyLengthOf,
   buildRopeGeometry,
-  escapeDurationMs,
   exitTravelDistance,
 } from '../src/game/renderer/arrowGeometry';
+import {ARROW_MOTION, escapeDurationMs} from '../src/config/arrowMotion';
 import type {ArrowPath} from '../src/game/models/types';
 
 const CELL = 40;
@@ -101,7 +101,9 @@ describe('rope exit geometry', () => {
     // translation would carry both limbs along at their original lengths.
     const resting = buildRopeGeometry(lShape, GRID, CELL, 0).body;
     expect(runLength(midway.body, 'U')).toBeLessThan(runLength(resting, 'U'));
-    expect(runLength(midway.body, 'R')).toBeGreaterThan(runLength(resting, 'R'));
+    expect(runLength(midway.body, 'R')).toBeGreaterThan(
+      runLength(resting, 'R'),
+    );
   });
 
   it('is perfectly straight, along the arrowhead, once the corner is past', () => {
@@ -121,7 +123,9 @@ describe('rope exit geometry', () => {
     let previous = -Infinity;
     for (let step = 0; step <= 10; step++) {
       const travelled = (exitTravelDistance(lShape, GRID, CELL) * step) / 10;
-      const nose = pointsOf(buildRopeGeometry(lShape, GRID, CELL, travelled).head)[0];
+      const nose = pointsOf(
+        buildRopeGeometry(lShape, GRID, CELL, travelled).head,
+      )[0];
       expect(nose.x).toBeGreaterThan(previous);
       previous = nose.x;
     }
@@ -149,18 +153,18 @@ describe('rope exit geometry', () => {
       ],
       'U',
     );
-    expect(segmentDirections(buildRopeGeometry(uShape, GRID, CELL, 0).body)).toEqual([
-      'D',
-      'R',
-      'U',
-    ]);
+    expect(
+      segmentDirections(buildRopeGeometry(uShape, GRID, CELL, 0).body),
+    ).toEqual(['D', 'R', 'U']);
 
     const bodyLength = bodyLengthOf(uShape, CELL);
     const straight = buildRopeGeometry(uShape, GRID, CELL, bodyLength);
     expect(segmentDirections(straight.body)).toEqual(['U']);
 
     const travel = exitTravelDistance(uShape, GRID, CELL);
-    const tail = pointsOf(buildRopeGeometry(uShape, GRID, CELL, travel).body)[0];
+    const tail = pointsOf(
+      buildRopeGeometry(uShape, GRID, CELL, travel).body,
+    )[0];
     expect(tail.y).toBeLessThan(0);
   });
 
@@ -173,7 +177,10 @@ describe('rope exit geometry', () => {
       const resting = buildRopeGeometry(single, GRID, CELL, 0);
       const tail = pointsOf(resting.body)[0];
       expect(segmentDirections(resting.body)).toEqual([direction]);
-      expect(bodyLengthOf(single, CELL)).toBeCloseTo(CELL * SINGLE_CELL_STUB, 5);
+      expect(bodyLengthOf(single, CELL)).toBeCloseTo(
+        CELL * SINGLE_CELL_STUB,
+        5,
+      );
 
       // The stub travels with the head instead of being tacked on at draw time: by
       // the end even the tail — the last part to leave — is off the board.
@@ -211,14 +218,8 @@ describe('rope exit geometry', () => {
       exitTravelDistance(longColumn, FINE_GRID, FINE, c);
     const tailAt = (travelled: number): {x: number; y: number} =>
       pointsOf(
-        buildRopeGeometry(
-          longColumn,
-          FINE_GRID,
-          FINE,
-          travelled,
-          1,
-          CLEARANCE,
-        ).body,
+        buildRopeGeometry(longColumn, FINE_GRID, FINE, travelled, 1, CLEARANCE)
+          .body,
       )[0];
 
     it('carries the tail past the clip, not just past the board edge', () => {
@@ -243,11 +244,26 @@ describe('rope exit geometry', () => {
     });
   });
 
-  it('keeps the exit inside the 400-700ms window the design asks for', () => {
+  it('keeps the exit inside the window the config asks for', () => {
+    // Read from the config rather than hard-coded, so retuning arrow speed there does
+    // not fail a test that is really about the mapping from travel to duration.
+    const {minDurationMs, maxDurationMs, speedMultiplier} = ARROW_MOTION.escape;
     for (const travel of [CELL, CELL * 8, CELL * 40]) {
       const ms = escapeDurationMs(travel, GRID * CELL);
-      expect(ms).toBeGreaterThanOrEqual(400);
-      expect(ms).toBeLessThanOrEqual(700);
+      expect(ms).toBeGreaterThanOrEqual(
+        Math.round(minDurationMs / speedMultiplier),
+      );
+      expect(ms).toBeLessThanOrEqual(
+        Math.round(maxDurationMs / speedMultiplier),
+      );
     }
+  });
+
+  it('scales every exit duration by the speed multiplier', () => {
+    const base = escapeDurationMs(CELL * 8, GRID * CELL);
+    const {minDurationMs, maxDurationMs} = ARROW_MOTION.escape;
+    const t = Math.min(1, (CELL * 8) / (GRID * CELL));
+    const span = minDurationMs + t * (maxDurationMs - minDurationMs);
+    expect(base).toBe(Math.round(span / ARROW_MOTION.escape.speedMultiplier));
   });
 });

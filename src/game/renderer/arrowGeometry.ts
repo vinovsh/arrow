@@ -335,12 +335,5 @@ export function buildRopeGeometry(
   };
 }
 
-/**
- * 400-700ms, scaled by how far the arrow has to travel, so a path leaving from the
- * far side of a 14x14 board does not crawl while a one-cell hop off the edge feels
- * instant.
- */
-export function escapeDurationMs(travel: number, boardSize: number): number {
-  const t = Math.min(1, travel / Math.max(1, boardSize));
-  return Math.round(400 + t * 300);
-}
+// The exit flight's duration now lives with the rest of the arrow-speed tuning, in
+// src/config/arrowMotion.ts — `escapeDurationMs` is exported from there.

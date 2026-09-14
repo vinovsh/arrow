@@ -7,6 +7,7 @@ import type {RenderTier} from '../../app/featureFlags';
 import {withOwnUnderlay} from '../../app/featureFlags';
 import {ArrowShape} from './ArrowShape';
 import {buildArrowGeometry} from './arrowGeometry';
+import {ARROW_MOTION} from '../../config/arrowMotion';
 
 interface Props {
   arrow: ArrowPath;
@@ -17,9 +18,11 @@ interface Props {
   onComplete: (index: number) => void;
 }
 
-/** §9.3 — three-cycle shake, ±4dp perpendicular to direction. No colour change. */
-const SHAKE_AMPLITUDE = 4;
-const SHAKE_MS = 180;
+// §9.3 — three-cycle shake perpendicular to direction. No colour change. Both
+// numbers are tuning rather than design, so they live with the rest of the arrow
+// speed knobs in src/config/arrowMotion.ts.
+const SHAKE_AMPLITUDE = ARROW_MOTION.blockedShake.amplitudeDp;
+const SHAKE_MS = ARROW_MOTION.blockedShake.durationMs;
 
 /**
  * A blocked arrow, refusing to go.

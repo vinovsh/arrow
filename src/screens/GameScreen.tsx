@@ -41,7 +41,6 @@ import type {ScoreBreakdown} from '../game/engine/ScoreManager';
 import {TutorialController} from '../game/tutorial/TutorialController';
 import type {ActiveCoachMark} from '../game/tutorial/TutorialController';
 import {getLevel, preloadAround, TOTAL_LEVELS} from '../game/levels';
-import {DIR_VECTORS} from '../game/models/types';
 import {computeBoardMetrics} from '../utils/layout';
 import {renderTierFor, FEATURES} from '../app/featureFlags';
 import {SaveStore} from '../storage/SaveStore';
@@ -311,8 +310,6 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
 
       if (outcome.kind === 'escaped') {
         const arrow = engine.level.arrows[outcome.arrowIndex];
-        const geometry = buildArrowGeometry(arrow, metrics.cellSize);
-        const step = DIR_VECTORS[arrow.direction];
         // 'escaping' hands the arrow to MovingArrow, which flies it off the board and
         // only then reports back. The engine has already cleared its cells, so the
         // arrow cannot be tapped again and whatever it was blocking is free to tap
@@ -333,28 +330,11 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
         Audio.playArrowMove(arrow.cells.length);
         Haptics.light();
         trace('tick, move and haptic returned');
-        // The trail is spawned on the *next* frame rather than this one. Filling the
-        // particle field costs tens of milliseconds of marshalling between the JS and
-        // UI runtimes, and every one of them used to be spent before React was allowed
-        // to render the arrow — the move queued behind its own decoration. A frame
-        // later the particles are in the same place doing the same thing, and the
-        // arrow no longer waits on them.
-        const trailX = geometry.headCentre.x;
-        const trailY = geometry.headCentre.y;
-        const trailColour = arrow.color;
-        const trailCount = Math.round(
-          (tier.particlesMin + tier.particlesMax) / 2,
-        );
-        requestAnimationFrame(() => {
-          particlesRef.current?.trail(
-            trailX,
-            trailY,
-            step.x,
-            step.y,
-            trailColour,
-            trailCount,
-          );
-        });
+        // No particle trail behind the escaping arrow. The arrow's own motion is the
+        // feedback; the field of sparks behind it was decoration on top of that, and
+        // filling it cost tens of milliseconds of marshalling between the JS and UI
+        // runtimes on the frame right after the tap. The completion burst (§9.4) is
+        // untouched — that one is the reward, not a per-tap flourish.
         trace('handleTap done, React now owns the time');
         return;
       }
@@ -413,7 +393,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
         }
       }
     },
-    [engine, complete, paused, coachMark, metrics.cellSize, patchVisual, tier],
+    [engine, complete, paused, coachMark, metrics.cellSize, patchVisual],
   );
 
   // ------------------------------------------------------------------ hint

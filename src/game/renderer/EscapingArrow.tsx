@@ -8,9 +8,9 @@ import {ArrowShape} from './ArrowShape';
 import {
   EXIT_MARGIN_CELLS,
   buildRopeGeometry,
-  escapeDurationMs,
   exitTravelDistance,
 } from './arrowGeometry';
+import {escapeDurationMs} from '../../config/arrowMotion';
 import {subscribeToFrames} from './frameClock';
 // TEMPORARY — tap-latency instrumentation, see src/utils/tapTrace.ts.
 import {trace} from '../../utils/tapTrace';

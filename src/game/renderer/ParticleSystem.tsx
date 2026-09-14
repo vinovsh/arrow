@@ -12,7 +12,6 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import {theme} from '../../theme/theme';
-import type {ArrowColor} from '../models/types';
 
 /**
  * §13 — one pooled layer, max 80 sprites, recycled, driven by a single
@@ -26,15 +25,6 @@ const PARTICLE_LIFE_MS = 400;
 export const BURST_MAX = 60;
 
 export interface ParticleHandle {
-  /** §9.2 — trail from an escaping arrow's head. */
-  trail: (
-    x: number,
-    y: number,
-    dx: number,
-    dy: number,
-    color: ArrowColor,
-    count: number,
-  ) => void;
   /** §9.4 — radial burst from the board centre on completion. */
   burst: (x: number, y: number, count: number) => void;
   clear: () => void;
@@ -165,24 +155,6 @@ function ParticleSystemBase(
   useImperativeHandle(
     ref,
     () => ({
-      trail: (x, y, dx, dy, color, count) => {
-        const colour = theme.arrow[color];
-        const batch: ParticleState[] = [];
-        for (let i = 0; i < count; i++) {
-          const spread = (Math.random() - 0.5) * 90;
-          const speed = 60 + Math.random() * 110;
-          batch.push({
-            x: x + (Math.random() - 0.5) * 10,
-            y: y + (Math.random() - 0.5) * 10,
-            vx: -dx * speed + -dy * spread,
-            vy: -dy * speed + -dx * spread,
-            life: PARTICLE_LIFE_MS,
-            size: 3 + Math.random() * 4,
-            colour,
-          });
-        }
-        spawnAll(batch);
-      },
       burst: (x, y, count) => {
         const palette = Object.values(theme.arrow);
         const total = Math.min(count, BURST_MAX);

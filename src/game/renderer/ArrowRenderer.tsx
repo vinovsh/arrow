@@ -67,8 +67,11 @@ function ArrowRendererBase({
   const breath = useSharedValue(1);
 
   // §9.1 — phase-offset per arrow so the board shimmers rather than pulsing in
-  // lockstep. Off above 40 arrows, where it is both a cost and visual noise (§13).
-  // Opacity is a real SVG attribute, so unlike a transform it does animate here.
+  // lockstep. Opacity is a real SVG attribute, so unlike a transform it does animate
+  // here — which is also why it costs what it does: every frame of it writes a prop
+  // into the board's <Svg> and invalidates the surface. `idleBreathing` is false on
+  // every tier now (see featureFlags), so this arms nothing; the machinery is left in
+  // place because flipping that one flag back is the whole of turning it on again.
   useEffect(() => {
     if (!tier.idleBreathing) {
       return;

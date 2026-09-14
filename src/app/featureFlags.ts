@@ -24,9 +24,18 @@ export const FEATURES = {
 /** §13 — rendering is tiered by arrow count; a 90-arrow board cannot afford 3 layers. */
 export interface RenderTier {
   layersPerArrow: 2 | 3;
+  /**
+   * §9.1 — the idle shimmer, and currently off on every board.
+   *
+   * It was on below 40 arrows and off above, which made the *sparse* boards the slow
+   * ones: level 39 (24 arrows) answered a tap noticeably later than level 500 (80),
+   * because 24 arrows breathing means 24 Reanimated animations writing an `opacity`
+   * prop into the board's single <Svg> every frame, for as long as the level is open.
+   * Each write invalidates that surface, so the board was being re-rasterised
+   * continuously and a tap's commit had to wait for a gap that never came. Level 500
+   * has the shimmer off, is three times the arrows, and was the responsive one.
+   */
   idleBreathing: boolean;
-  particlesMin: number;
-  particlesMax: number;
   glowOpacityScale: number;
   /**
    * Above 60 arrows the per-arrow glow and casing collapse into a single underlay
@@ -41,9 +50,7 @@ export function renderTierFor(arrowCount: number): RenderTier {
   if (arrowCount <= 40) {
     return {
       layersPerArrow: 3,
-      idleBreathing: true,
-      particlesMin: 12,
-      particlesMax: 18,
+      idleBreathing: false,
       glowOpacityScale: 1,
       bakedUnderlay: false,
     };
@@ -52,8 +59,6 @@ export function renderTierFor(arrowCount: number): RenderTier {
     return {
       layersPerArrow: 2,
       idleBreathing: false,
-      particlesMin: 8,
-      particlesMax: 12,
       glowOpacityScale: 0.6,
       bakedUnderlay: false,
     };
@@ -61,8 +66,6 @@ export function renderTierFor(arrowCount: number): RenderTier {
   return {
     layersPerArrow: 2,
     idleBreathing: false,
-    particlesMin: 6,
-    particlesMax: 10,
     glowOpacityScale: 0.6,
     bakedUnderlay: true,
   };
