@@ -141,9 +141,12 @@ it still looks big, `arrowHeadSizeFor` in `src/utils/layout.ts` is the one place
 - **Level packs grew 700KB -> 960KB.** More cells per arrow is more path data. They
   are still lazy-loaded three at a time, so this is bundle weight, not memory.
 
-- **Audio does not ship.** `AudioService` is wired to the whole §14 event table and
-  no-ops on missing files, so the game plays silently. Spec and licence table in
-  `assets/audio/LICENSES.md`.
+- **Audio ships three of eleven effects.** `ui_tap`, `arrow_move` and `arrow_blocked`
+  are in `android/app/src/main/res/raw/`, synthesised for this project and recorded in
+  `assets/audio/LICENSES.md` with the expressions that generated them. The remaining
+  eight and the music loop are still absent; `AudioService` no-ops on a missing file,
+  so those events are simply silent. The three that ship are placeholders in intent —
+  plain, and meant to be replaced by produced audio.
 - **Performance unmeasured.** §13 wants 60fps at 14×14 / 90 arrows on a low-end
   device. An x86_64 emulator says nothing useful about that.
 - **Only x86_64 has been built.** A physical device needs the full

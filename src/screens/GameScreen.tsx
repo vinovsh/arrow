@@ -322,16 +322,17 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
           escapeStartedAt: tappedAt,
         });
         trace('setState escaping dispatched');
+        // Tick, move, buzz — all three answer the same tap, and all three now land
+        // within a frame or two of the arrow actually leaving. That timing is the
+        // whole reason they are here: the haptic was pulled at one point because the
+        // arrow took the better part of a second to start moving, so the buzz arrived
+        // a third of a second before the thing it was confirming and read as the game
+        // stalling. With the tap answered in roughly a tenth of that, the cue and the
+        // motion are simultaneous, which is what makes a tap feel like it connected.
+        Audio.playTap();
         Audio.playArrowMove(arrow.cells.length);
-        trace('Audio.playArrowMove returned');
-        // No haptic on a successful tap, deliberately. The buzz cost about 3ms, so
-        // this is not where the time went — but it fired the moment the finger lifted
-        // and the arrow does not start moving until a couple of hundred milliseconds
-        // later, so all it actually did was announce the gap and then leave the player
-        // waiting on it. A cue that arrives before the thing it is meant to confirm is
-        // worse than no cue. The blocked bump (§9.3) and the lost-life knock keep
-        // theirs: those answer taps where nothing moves, so the haptic *is* the
-        // feedback rather than a trailer for it.
+        Haptics.light();
+        trace('tick, move and haptic returned');
         // The trail is spawned on the *next* frame rather than this one. Filling the
         // particle field costs tens of milliseconds of marshalling between the JS and
         // UI runtimes, and every one of them used to be spent before React was allowed

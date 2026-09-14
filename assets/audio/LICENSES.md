@@ -6,10 +6,40 @@ the record; a build that ships a sound not listed below is not clearable for rel
 
 ## Status
 
-**No audio files ship yet.** `AudioService` is wired to the full §14 event table,
-loads from `android/app/src/main/res/raw/`, and degrades silently when a file is
-absent — every `play()` call becomes a no-op, so the game is fully playable without
-sound while the audio is being produced or sourced.
+**Three of eleven effects ship.** The rest are still absent, and `AudioService`
+degrades silently when a file is missing — every `play()` call for an unshipped
+sound is a no-op — so the game stays fully playable while the remainder is produced.
+
+| Shipped | Still absent |
+|---|---|
+| `ui_tap` `arrow_move` `arrow_blocked` | `hint` `star_1` `star_2` `star_3` `score_tick` `level_complete` `life_lost` `game_over` `ambient_loop` |
+
+### Licence of the shipped three
+
+**Synthesised from first principles for this project; no third-party material.** Each
+is a closed-form waveform rendered by ffmpeg from the expression recorded below — sums
+of sine partials under an exponential envelope, and for `arrow_move` a uniform noise
+source under a difference-of-exponentials envelope. There is no sample, recording,
+library or pack anywhere in their provenance, so there is nothing to license and
+nothing to attribute. They are original work owned outright, which is what §14 asks
+for.
+
+Reproducible verbatim — the expressions *are* the masters, so the files can be
+regenerated or retuned at any time without re-clearing anything:
+
+```
+ui_tap        aevalsrc='(0.62*sin(2*PI*1500*t)+0.28*sin(2*PI*2700*t))*exp(-t*150)':d=0.045
+arrow_move    aevalsrc='0.55*(random(0)*2-1)*(exp(-t*9)-exp(-t*34))':d=0.24
+              -af highpass=f=220,lowpass=f=2400,volume=2.6
+arrow_blocked aevalsrc='(0.66*sin(2*PI*175*t)+0.22*sin(2*PI*262*t))*exp(-t*17)':d=0.22
+              -af lowpass=f=900
+```
+
+All three: `-c:a aac -b:a 96k -ar 44100 -ac 1`, ~10KB the three together.
+
+These are deliberately plain. They exist so the game is audible and the timing of the
+tap can be felt, and they are meant to be replaced by produced audio rather than to be
+the final voice of the game.
 
 ## Required files
 

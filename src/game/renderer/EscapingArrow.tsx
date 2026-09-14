@@ -11,6 +11,7 @@ import {
   escapeDurationMs,
   exitTravelDistance,
 } from './arrowGeometry';
+import {subscribeToFrames} from './frameClock';
 // TEMPORARY — tap-latency instrumentation, see src/utils/tapTrace.ts.
 import {trace} from '../../utils/tapTrace';
 
@@ -94,24 +95,8 @@ export function EscapingArrow({
   const displaced = useRef(false);
 
   useEffect(() => {
-    let frame = 0;
-
-    const tick = (): void => {
-      if (!traced.current) {
-        traced.current = true;
-        trace('EscapingArrow first animation frame');
-      }
-      const t = Math.min(1, (Date.now() - startedAt) / duration);
-      setProgress(t);
-      if (t < 1) {
-        frame = requestAnimationFrame(tick);
-      } else if (!done.current) {
-        done.current = true;
-        onComplete(index);
-      }
-    };
     trace(
-      'EscapingArrow mounted, rAF scheduled — canvas ' +
+      'EscapingArrow mounted, joined the frame clock — canvas ' +
         Math.round(bounds.width) +
         'x' +
         Math.round(bounds.height) +
@@ -123,8 +108,23 @@ export function EscapingArrow({
         Math.round(size + clearance + EXIT_MARGIN_CELLS * cellSize) +
         ')',
     );
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
+    // One shared loop for every arrow in flight — see frameClock. `now` is handed in
+    // so that all the arrows in a frame advance to the same instant.
+    return subscribeToFrames(now => {
+      if (!traced.current) {
+        traced.current = true;
+        trace('EscapingArrow first animation frame');
+      }
+      if (done.current) {
+        return;
+      }
+      const t = Math.min(1, (now - startedAt) / duration);
+      setProgress(t);
+      if (t >= 1) {
+        done.current = true;
+        onComplete(index);
+      }
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startedAt, duration, index, onComplete]);
 

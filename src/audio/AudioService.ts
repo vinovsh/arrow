@@ -46,6 +46,13 @@ const MUSIC_VOLUME = 0.13;
 const MUSIC_DUCKED_VOLUME = 0.065;
 /** −8dB relative to a move, so blocked reads as information rather than a buzzer. */
 const BLOCKED_VOLUME = 0.4;
+/**
+ * §14 — the tick sits under the move it accompanies rather than alongside it. Both
+ * fire on the same tap, and at equal weight the click and the whoosh smear into one
+ * muddy noise; half volume keeps the tick as the leading edge of the move instead of
+ * a second sound competing with it.
+ */
+const TAP_TICK_VOLUME = 0.5;
 
 interface Voice {
   sound: Sound;
@@ -155,6 +162,15 @@ class AudioServiceImpl {
 
   playBlocked(): void {
     this.play('arrow_blocked', 1, BLOCKED_VOLUME);
+  }
+
+  /**
+   * The tick that answers the tap itself — played *with* the move, not instead of it.
+   * The move sound is pitched by path length and reads as the arrow travelling; this
+   * is the shorter, flatter click that confirms the finger landed on something.
+   */
+  playTap(): void {
+    this.play('ui_tap', 1, TAP_TICK_VOLUME);
   }
 
   playStar(index: 0 | 1 | 2): void {
