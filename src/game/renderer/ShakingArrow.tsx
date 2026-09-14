@@ -35,7 +35,7 @@ const SHAKE_MS = ARROW_MOTION.blockedShake.durationMs;
  * It still has to live outside the board's SVG, because react-native-svg resolves a
  * `<G>` transform into a matrix at render time and never sees an animated update.
  */
-export function ShakingArrow({
+function ShakingArrowBase({
   arrow,
   index,
   gridSize,
@@ -97,6 +97,9 @@ export function ShakingArrow({
     </Animated.View>
   );
 }
+
+/** §13 — same as EscapingArrow: a tap elsewhere must not re-render a shake in progress. */
+export const ShakingArrow = React.memo(ShakingArrowBase);
 
 const styles = StyleSheet.create({
   layer: {position: 'absolute', left: 0, top: 0},

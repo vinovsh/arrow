@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -165,144 +166,173 @@ function BoardViewportBase(
     ],
   );
 
-  const pinch = Gesture.Pinch()
-    .enabled(!locked)
-    .onUpdate(event => {
-      'worklet';
-      const next = Math.min(
-        MAX_SCALE,
-        Math.max(MIN_SCALE, savedScale.value * event.scale),
-      );
-      // Scale about the pinch focal point rather than the view centre, so the board
-      // grows out from under the fingers instead of sliding away from them.
-      const focalX = event.focalX - viewportWidth / 2;
-      const focalY = event.focalY - viewportHeight / 2;
-      const ratio = next / savedScale.value;
-      scale.value = next;
-      translateX.value = clampPan(
-        focalX + (savedX.value - focalX) * ratio,
-        boardSize,
-        viewportWidth,
-        next,
-        PAN_OVERSHOOT_DP,
-      );
-      translateY.value = clampPan(
-        focalY + (savedY.value - focalY) * ratio,
-        boardSize,
-        viewportHeight,
-        next,
-        PAN_OVERSHOOT_DP,
-      );
-    })
-    .onEnd(() => {
-      'worklet';
-      savedScale.value = scale.value;
-      translateX.value = withSpring(
-        clampPan(translateX.value, boardSize, viewportWidth, scale.value),
-        SPRING,
-      );
-      translateY.value = withSpring(
-        clampPan(translateY.value, boardSize, viewportHeight, scale.value),
-        SPRING,
-      );
-      savedX.value = translateX.value;
-      savedY.value = translateY.value;
-      runOnJS(noteScale)(scale.value);
-    });
-
-  const pan = Gesture.Pan()
-    .enabled(!locked)
-    .averageTouches(true)
-    // §5.5 — at fit the whole board is visible, so a one-finger drag is a no-op and
-    // must not steal the tap.
-    .minPointers(1)
-    .onUpdate(event => {
-      'worklet';
-      if (scale.value <= MIN_SCALE + 0.001) {
-        return;
-      }
-      translateX.value = clampPan(
-        savedX.value + event.translationX,
-        boardSize,
-        viewportWidth,
-        scale.value,
-        PAN_OVERSHOOT_DP,
-      );
-      translateY.value = clampPan(
-        savedY.value + event.translationY,
-        boardSize,
-        viewportHeight,
-        scale.value,
-        PAN_OVERSHOOT_DP,
-      );
-    })
-    .onEnd(() => {
-      'worklet';
-      // Rubber-band overshoot springs back so an edge never rests inside the viewport.
-      translateX.value = withSpring(
-        clampPan(translateX.value, boardSize, viewportWidth, scale.value),
-        SPRING,
-      );
-      translateY.value = withSpring(
-        clampPan(translateY.value, boardSize, viewportHeight, scale.value),
-        SPRING,
-      );
-      savedX.value = clampPan(
-        translateX.value,
-        boardSize,
-        viewportWidth,
-        scale.value,
-      );
-      savedY.value = clampPan(
-        translateY.value,
-        boardSize,
-        viewportHeight,
-        scale.value,
-      );
-    });
-
-  const singleTap = Gesture.Tap()
-    .numberOfTaps(1)
-    .maxDuration(TAP_MAX_MS)
-    .maxDistance(TAP_SLOP_DP)
-    // TEMPORARY — instrumentation only; touch callbacks do not affect arbitration.
-    .onTouchesDown(() => {
-      'worklet';
-      touchDownAt.value = Date.now();
-    })
-    .onTouchesUp(() => {
-      'worklet';
-      touchUpAt.value = Date.now();
-    })
-    .onEnd((event, success) => {
-      'worklet';
-      if (!success) {
-        return;
-      }
-      // TEMPORARY — tap-latency instrumentation.
-      runOnJS(traceTap)(touchDownAt.value, touchUpAt.value, Date.now());
-      // Undo the container transform to land in board dp. The board is centred in the
-      // viewport and scaled about that centre (§5.5).
-      const centreX = viewportWidth / 2 + translateX.value;
-      const centreY = viewportHeight / 2 + translateY.value;
-      const boardX = (event.x - centreX) / scale.value + boardSize / 2;
-      const boardY = (event.y - centreY) / scale.value + boardSize / 2;
-      runOnJS(onTap)(boardX, boardY, scale.value);
-    });
-
-  // §5.5 — pinch and pan compose simultaneously so zooming and panning can overlap,
-  // and the board tap runs beside them rather than behind anything.
+  // §5.5 — composed once, not once per render.
   //
-  // Nothing here is Exclusive any more, and that is the whole point. Exclusive is
-  // implemented as requireToFail, so the board tap could not activate until a
-  // double-tap handler had *failed* — and a tap handler still hoping for a second tap
-  // does not fail until its maxDelay elapses, which RNGH leaves at 200ms on Android.
-  // Every tap on an arrow therefore spent a fifth of a second doing nothing before
-  // the engine was so much as asked about it, against roughly 0.07ms of actual work
-  // once it was. A single tap cannot be told apart from the first half of a double
-  // tap until that window shuts, so the only way to answer the tap at once is to stop
-  // asking the question. Zoom keeps pinch and the Fit button above the board.
-  const gesture = Gesture.Simultaneous(pinch, pan, singleTap);
+  // These were rebuilt in the render body, and `BoardViewport` re-renders on every
+  // tap: the board's visual state lives in `GameScreen`, so a tap re-renders it and
+  // hands this component a fresh `children` tree. Three brand-new gesture objects
+  // then reached `GestureDetector`, which has to push the new configuration down to
+  // the native handlers — a fixed cost paid on the critical path of every single tap,
+  // and one that does not care how many arrows are on the board.
+  //
+  // Memoised, the handlers are configured once and a tap only *uses* them. Nothing
+  // about recognition changes: the worklets close over the same shared values, which
+  // are stable by construction, and over `onTap` and `locked`, which are in the deps.
+  const gesture = useMemo(() => {
+    const pinch = Gesture.Pinch()
+      .enabled(!locked)
+      .onUpdate(event => {
+        'worklet';
+        const next = Math.min(
+          MAX_SCALE,
+          Math.max(MIN_SCALE, savedScale.value * event.scale),
+        );
+        // Scale about the pinch focal point rather than the view centre, so the board
+        // grows out from under the fingers instead of sliding away from them.
+        const focalX = event.focalX - viewportWidth / 2;
+        const focalY = event.focalY - viewportHeight / 2;
+        const ratio = next / savedScale.value;
+        scale.value = next;
+        translateX.value = clampPan(
+          focalX + (savedX.value - focalX) * ratio,
+          boardSize,
+          viewportWidth,
+          next,
+          PAN_OVERSHOOT_DP,
+        );
+        translateY.value = clampPan(
+          focalY + (savedY.value - focalY) * ratio,
+          boardSize,
+          viewportHeight,
+          next,
+          PAN_OVERSHOOT_DP,
+        );
+      })
+      .onEnd(() => {
+        'worklet';
+        savedScale.value = scale.value;
+        translateX.value = withSpring(
+          clampPan(translateX.value, boardSize, viewportWidth, scale.value),
+          SPRING,
+        );
+        translateY.value = withSpring(
+          clampPan(translateY.value, boardSize, viewportHeight, scale.value),
+          SPRING,
+        );
+        savedX.value = translateX.value;
+        savedY.value = translateY.value;
+        runOnJS(noteScale)(scale.value);
+      });
+
+    const pan = Gesture.Pan()
+      .enabled(!locked)
+      .averageTouches(true)
+      // §5.5 — at fit the whole board is visible, so a one-finger drag is a no-op and
+      // must not steal the tap.
+      .minPointers(1)
+      .onUpdate(event => {
+        'worklet';
+        if (scale.value <= MIN_SCALE + 0.001) {
+          return;
+        }
+        translateX.value = clampPan(
+          savedX.value + event.translationX,
+          boardSize,
+          viewportWidth,
+          scale.value,
+          PAN_OVERSHOOT_DP,
+        );
+        translateY.value = clampPan(
+          savedY.value + event.translationY,
+          boardSize,
+          viewportHeight,
+          scale.value,
+          PAN_OVERSHOOT_DP,
+        );
+      })
+      .onEnd(() => {
+        'worklet';
+        // Rubber-band overshoot springs back so an edge never rests inside the viewport.
+        translateX.value = withSpring(
+          clampPan(translateX.value, boardSize, viewportWidth, scale.value),
+          SPRING,
+        );
+        translateY.value = withSpring(
+          clampPan(translateY.value, boardSize, viewportHeight, scale.value),
+          SPRING,
+        );
+        savedX.value = clampPan(
+          translateX.value,
+          boardSize,
+          viewportWidth,
+          scale.value,
+        );
+        savedY.value = clampPan(
+          translateY.value,
+          boardSize,
+          viewportHeight,
+          scale.value,
+        );
+      });
+
+    const singleTap = Gesture.Tap()
+      .numberOfTaps(1)
+      .maxDuration(TAP_MAX_MS)
+      .maxDistance(TAP_SLOP_DP)
+      // TEMPORARY — instrumentation only; touch callbacks do not affect arbitration.
+      .onTouchesDown(() => {
+        'worklet';
+        touchDownAt.value = Date.now();
+      })
+      .onTouchesUp(() => {
+        'worklet';
+        touchUpAt.value = Date.now();
+      })
+      .onEnd((event, success) => {
+        'worklet';
+        if (!success) {
+          return;
+        }
+        // TEMPORARY — tap-latency instrumentation.
+        runOnJS(traceTap)(touchDownAt.value, touchUpAt.value, Date.now());
+        // Undo the container transform to land in board dp. The board is centred in the
+        // viewport and scaled about that centre (§5.5).
+        const centreX = viewportWidth / 2 + translateX.value;
+        const centreY = viewportHeight / 2 + translateY.value;
+        const boardX = (event.x - centreX) / scale.value + boardSize / 2;
+        const boardY = (event.y - centreY) / scale.value + boardSize / 2;
+        runOnJS(onTap)(boardX, boardY, scale.value);
+      });
+
+    // §5.5 — pinch and pan compose simultaneously so zooming and panning can overlap,
+    // and the board tap runs beside them rather than behind anything.
+    //
+    // Nothing here is Exclusive any more, and that is the whole point. Exclusive is
+    // implemented as requireToFail, so the board tap could not activate until a
+    // double-tap handler had *failed* — and a tap handler still hoping for a second tap
+    // does not fail until its maxDelay elapses, which RNGH leaves at 200ms on Android.
+    // Every tap on an arrow therefore spent a fifth of a second doing nothing before
+    // the engine was so much as asked about it, against roughly 0.07ms of actual work
+    // once it was. A single tap cannot be told apart from the first half of a double
+    // tap until that window shuts, so the only way to answer the tap at once is to stop
+    // asking the question. Zoom keeps pinch and the Fit button above the board.
+    return Gesture.Simultaneous(pinch, pan, singleTap);
+  }, [
+    locked,
+    onTap,
+    boardSize,
+    viewportWidth,
+    viewportHeight,
+    noteScale,
+    scale,
+    savedScale,
+    translateX,
+    translateY,
+    savedX,
+    savedY,
+    touchDownAt,
+    touchUpAt,
+  ]);
 
   const style = useAnimatedStyle(() => ({
     transform: [

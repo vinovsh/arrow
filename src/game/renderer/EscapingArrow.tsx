@@ -52,7 +52,7 @@ interface Props {
  * re-rendering per frame, only while an arrow is actually leaving. Even a fast
  * clear-out has a handful in flight at once, nowhere near the whole board (§13).
  */
-export function EscapingArrow({
+function EscapingArrowBase({
   arrow,
   index,
   gridSize,
@@ -234,6 +234,22 @@ export function EscapingArrow({
     </Svg>
   );
 }
+
+/**
+ * §13 — an arrow already in flight is not re-rendered because another one was tapped.
+ *
+ * Every escaping arrow lives in `GameScreen`'s `visuals.map`, so a tap anywhere
+ * re-rendered all of them: each rebuilt its rope geometry for a progress that had not
+ * changed and handed react-native-svg a full new layer stack, all of it on the
+ * critical path of the tap that was waiting to be answered. Tap four arrows in quick
+ * succession and the fourth paid for the three still leaving.
+ *
+ * Every prop here is stable while a level is being played — `arrow` and `tier` are
+ * memoised upstream, `clearance` and `startedAt` are numbers, `onComplete` is a
+ * `useCallback` — so the default shallow comparison is enough, and an arrow in flight
+ * now re-renders only from its own frame clock.
+ */
+export const EscapingArrow = React.memo(EscapingArrowBase);
 
 const styles = StyleSheet.create({
   layer: {position: 'absolute'},
