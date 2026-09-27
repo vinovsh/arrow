@@ -5,7 +5,7 @@ import {theme} from '../theme/theme';
 import {type as typography} from '../theme/typography';
 import {Button} from './Button';
 import {Panel} from './Panel';
-import {DotGrid} from '../game/renderer/DotGrid';
+import {DotGrid, pathCells} from '../game/renderer/DotGrid';
 import {buildArrowGeometry} from '../game/renderer/arrowGeometry';
 import type {Level} from '../game/models/types';
 
@@ -73,7 +73,7 @@ export function HintModal({
             height={PREVIEW_SIZE}
             viewBox={`0 0 ${PREVIEW_SIZE} ${PREVIEW_SIZE}`}
             opacity={0.45}>
-            <DotGrid gridSize={level.gridSize} cellSize={cellSize} />
+            <DotGrid cells={pathCells(level.arrows)} cellSize={cellSize} />
             {activeIndices.map(index => {
               const arrow = level.arrows[index];
               const geometry = buildArrowGeometry(arrow, cellSize);

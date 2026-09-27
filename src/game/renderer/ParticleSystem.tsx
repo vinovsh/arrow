@@ -44,6 +44,9 @@ interface ParticleState {
   colour: string;
 }
 
+/** Ink, and two steps of it towards the page, so the burst has depth without hue. */
+const BURST_PALETTE = [theme.board.ink, '#4A5680', '#8B93AD'] as const;
+
 const emptyParticle = (): ParticleState => ({
   x: 0,
   y: 0,
@@ -51,7 +54,7 @@ const emptyParticle = (): ParticleState => ({
   vy: 0,
   life: 0,
   size: 4,
-  colour: theme.arrow.white,
+  colour: theme.board.ink,
 });
 
 /**
@@ -156,7 +159,10 @@ function ParticleSystemBase(
     ref,
     () => ({
       burst: (x, y, count) => {
-        const palette = Object.values(theme.arrow);
+        // §10.2 — the board is one ink, and so is the burst that comes off it.
+        // Eight-hue confetti on a white page reads as a different game's effect; the
+        // celebration colour belongs on the completion screen, not on the board.
+        const palette = BURST_PALETTE;
         const total = Math.min(count, BURST_MAX);
         const batch: ParticleState[] = [];
         for (let i = 0; i < total; i++) {

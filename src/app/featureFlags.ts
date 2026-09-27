@@ -17,9 +17,19 @@ export const FEATURES = {
   levelsPerPack: 25,
 } as const;
 
-/** §13 — rendering is tiered by arrow count; a 90-arrow board cannot afford 3 layers. */
+/**
+ * §13 — what the board is allowed to spend per arrow, by arrow count.
+ *
+ * There used to be a lot more here: a layer count, a glow scale, and a flag that
+ * collapsed every arrow's casing into one baked underlay above 60 arrows. All three
+ * described a five-layer arrow, and §10.2 now draws two — a stroke and a filled
+ * triangle, one ink, nothing underneath — so an 116-arrow board costs less than a
+ * 40-arrow one used to. There is nothing left to tier.
+ *
+ * `idleBreathing` survives because it is the one thing here that still has teeth, and
+ * the comment on it is the reason it is off everywhere.
+ */
 export interface RenderTier {
-  layersPerArrow: 2 | 3;
   /**
    * §9.1 — the idle shimmer, and currently off on every board.
    *
@@ -32,52 +42,12 @@ export interface RenderTier {
    * has the shimmer off, is three times the arrows, and was the responsive one.
    */
   idleBreathing: boolean;
-  glowOpacityScale: number;
-  /**
-   * Above 60 arrows the per-arrow glow and casing collapse into a single underlay
-   * <G>, and what gets baked there is the *casing*, not the glow: on a board that
-   * dense, telling two neighbouring paths apart is worth far more than a bloom, and
-   * eighty haloes is a haze over the picture rather than an effect.
-   */
-  bakedUnderlay: boolean;
 }
 
-export function renderTierFor(arrowCount: number): RenderTier {
-  if (arrowCount <= 40) {
-    return {
-      layersPerArrow: 3,
-      idleBreathing: false,
-      glowOpacityScale: 1,
-      bakedUnderlay: false,
-    };
-  }
-  if (arrowCount <= 60) {
-    return {
-      layersPerArrow: 2,
-      idleBreathing: false,
-      glowOpacityScale: 0.6,
-      bakedUnderlay: false,
-    };
-  }
-  return {
-    layersPerArrow: 2,
-    idleBreathing: false,
-    glowOpacityScale: 0.6,
-    bakedUnderlay: true,
-  };
-}
+const STILL: RenderTier = {idleBreathing: false};
 
-/**
- * The tier an arrow should be drawn at once it has left the board's static layer.
- *
- * The baked underlay only covers arrows that are still resting and active, so the
- * moment one starts escaping or shaking it loses the casing every other arrow still
- * has — a visible pop at exactly the moment the player is watching that arrow. A
- * moving arrow is one path, not eighty, so it can simply carry its own.
- *
- * The tier is returned unchanged when it already draws per-arrow, so `ArrowShape`'s
- * memo still sees a stable reference.
- */
-export function withOwnUnderlay(tier: RenderTier): RenderTier {
-  return tier.bakedUnderlay ? {...tier, bakedUnderlay: false} : tier;
+export function renderTierFor(_arrowCount: number): RenderTier {
+  // One object for every board, so `ArrowRenderer`'s memo sees a stable reference
+  // and a level with more arrows does not re-render the ones it shares.
+  return STILL;
 }

@@ -4,7 +4,6 @@ import Svg from 'react-native-svg';
 import type {ArrowPath} from '../models/types';
 import {perpendicular} from '../models/types';
 import type {RenderTier} from '../../app/featureFlags';
-import {withOwnUnderlay} from '../../app/featureFlags';
 import {ArrowShape} from './ArrowShape';
 import {buildArrowGeometry} from './arrowGeometry';
 import {ARROW_MOTION} from '../../config/arrowMotion';
@@ -48,9 +47,6 @@ function ShakingArrowBase({
     () => buildArrowGeometry(arrow, cellSize),
     [arrow, cellSize],
   );
-  // §13 — the baked underlay drops an arrow the moment it starts shaking, so this
-  // one draws its own rather than losing its casing exactly while it is being watched.
-  const ownTier = useMemo(() => withOwnUnderlay(tier), [tier]);
   const wobble = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -92,7 +88,7 @@ function ShakingArrowBase({
       style={[styles.layer, {width: size, height: size}, style]}
       pointerEvents="none">
       <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        <ArrowShape arrow={arrow} geometry={geometry} tier={ownTier} />
+        <ArrowShape arrow={arrow} geometry={geometry} tier={tier} blocked />
       </Svg>
     </Animated.View>
   );

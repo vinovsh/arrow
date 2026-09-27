@@ -37,26 +37,27 @@ function boardSvg(level: Level, sizePx: number): string {
   const cellSize = sizePx / level.gridSize;
   const parts: string[] = [];
 
+  // Dots go under the path cells only, as the app draws them — see DotGrid.
   let dots = '';
   const radius = dotRadiusFor(cellSize);
-  for (let y = 0; y < level.gridSize; y++) {
-    for (let x = 0; x < level.gridSize; x++) {
-      const cx = (x + 0.5) * cellSize;
-      const cy = (y + 0.5) * cellSize;
+  for (const arrow of level.arrows) {
+    for (const cell of arrow.cells) {
+      const cx = (cell.x + 0.5) * cellSize;
+      const cy = (cell.y + 0.5) * cellSize;
       dots +=
         `M ${(cx - radius).toFixed(2)} ${cy.toFixed(2)} ` +
         `a ${radius} ${radius} 0 1 0 ${(radius * 2).toFixed(2)} 0 ` +
         `a ${radius} ${radius} 0 1 0 ${(-radius * 2).toFixed(2)} 0 `;
     }
   }
-  parts.push(`<path d="${dots}" fill="${theme.grid.dot}"/>`);
+  parts.push(`<path d="${dots}" fill="${theme.board.dot}"/>`);
 
   if (level.decor) {
     const inner = level.decor
       .map(
         d =>
-          `<path d="${d.d}" fill="${d.fill ? theme.text.primary : 'none'}" ` +
-          `stroke="${d.fill ? 'none' : theme.text.primary}" stroke-width="${
+          `<path d="${d.d}" fill="${d.fill ? theme.board.ink : 'none'}" ` +
+          `stroke="${d.fill ? 'none' : theme.board.ink}" stroke-width="${
             d.w ?? 0.03
           }" ` +
           'stroke-linecap="round" stroke-linejoin="round"/>',
@@ -65,39 +66,26 @@ function boardSvg(level: Level, sizePx: number): string {
     parts.push(`<g opacity="0.7" transform="scale(${sizePx})">${inner}</g>`);
   }
 
-  // Casing first, for every arrow, then the lines: interleaving them would let one
-  // arrow's casing cut a hole in the neighbour drawn before it.
-  const line = (d: string, stroke: string, width: number): string =>
-    `<path d="${d}" stroke="${stroke}" stroke-width="${width.toFixed(2)}" ` +
-    'stroke-linecap="round" stroke-linejoin="round" fill="none"/>';
-
+  // §10.2 — one ink, two paths per arrow, and nothing under them. `arrow.color` is
+  // not read here for the same reason the app does not read it: the board is one
+  // drawing, and the separation between two paths running side by side is the white
+  // page between them.
   for (const arrow of level.arrows) {
     const geometry = buildArrowGeometry(arrow, cellSize);
-    const casing = theme.arrowInk.casing;
     if (geometry.body !== '') {
-      parts.push(line(geometry.body, casing, geometry.strokeWidth * 1.75));
+      parts.push(
+        `<path d="${geometry.body}" stroke="${theme.board.ink}" ` +
+          `stroke-width="${geometry.strokeWidth.toFixed(2)}" ` +
+          'stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+      );
     }
-    parts.push(
-      `<path d="${geometry.head}" fill="${casing}" stroke="${casing}" ` +
-        `stroke-width="${(geometry.strokeWidth * 0.7).toFixed(
-          2,
-        )}" stroke-linejoin="round"/>`,
-    );
-  }
-
-  for (const arrow of level.arrows) {
-    const geometry = buildArrowGeometry(arrow, cellSize);
-    const colour = theme.arrow[arrow.color];
-    if (geometry.body !== '') {
-      parts.push(line(geometry.body, colour, geometry.strokeWidth));
-    }
-    parts.push(`<path d="${geometry.head}" fill="${colour}"/>`);
+    parts.push(`<path d="${geometry.head}" fill="${theme.board.ink}"/>`);
   }
 
   return (
     `<svg width="${sizePx}" height="${sizePx}" viewBox="0 0 ${sizePx} ${sizePx}" ` +
     `xmlns="http://www.w3.org/2000/svg"><rect width="${sizePx}" height="${sizePx}" ` +
-    `rx="14" fill="${theme.bg.panel}"/>${parts.join('')}</svg>`
+    `rx="14" fill="${theme.board.bg}"/>${parts.join('')}</svg>`
   );
 }
 
@@ -137,19 +125,21 @@ function main(): void {
 
   const html =
     '<!doctype html><meta charset="utf-8"><title>Arrow Escape — contact sheet</title>' +
-    `<style>body{background:${theme.bg.base};color:${theme.text.primary};` +
+    `<style>body{background:#F4F5F8;color:${theme.board.title};` +
     'font:13px system-ui,sans-serif;margin:24px}' +
     'h1{font-size:18px;letter-spacing:2px}' +
-    'p.note{color:rgba(234,241,255,0.62);max-width:60ch;line-height:1.5}' +
+    `p.note{color:${theme.board.chipText};max-width:60ch;line-height:1.5}` +
     '.grid{display:flex;flex-wrap:wrap;gap:22px;margin-top:20px}' +
     'figure{margin:0}' +
-    'figcaption{margin-top:8px;color:rgba(234,241,255,0.62);line-height:1.5}' +
-    `b{color:${theme.text.primary}}</style>` +
+    `figcaption{margin-top:8px;color:${theme.board.chipText};line-height:1.5}` +
+    'figure svg{box-shadow:0 1px 4px rgba(11,22,64,0.14);border-radius:14px}' +
+    `b{color:${theme.board.title}}</style>` +
     '<h1>ARROW ESCAPE — CONTACT SHEET</h1>' +
     `<p class="note">${chosen.length} boards, one per shape per grid size, from levels ` +
     `${from}–${to}, rendered at ${REVIEW_WIDTH_DP}dp — the review scale §8.6 specifies. ` +
     'Check each one reads as its named object at this size, that single-cell arrows are ' +
-    'clearly directional, and that no colour dominates. Reject by sending the shape back ' +
+    'clearly directional, and that two paths running side by side stay separable. ' +
+    'Reject by sending the shape back ' +
     'to stage 2 with a new seed or a revised mask.</p>' +
     `<div class="grid">${cards}</div>`;
 

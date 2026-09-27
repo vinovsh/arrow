@@ -84,6 +84,42 @@ function shrinkCandidates(
   return out;
 }
 
+/**
+ * Cells that can be punched *out of the middle* without touching the outline.
+ *
+ * This is how a `porous` mask loses cells, and it is the whole difference between
+ * the reference's ordinary boards and what eroding a rectangle gives you. Erosion
+ * eats the boundary, so a full grid asked for 60% occupancy comes back as a rounded
+ * blob floating in the middle of the board; the reference's levels 5, 7, 8 and 9 all
+ * reach every edge and carry their empty space *inside*, as scattered single-cell
+ * gaps. Only fully-enclosed cells are offered, so the silhouette cannot be nibbled.
+ *
+ * `spread` counts empty cells in the 8-neighbourhood, and the caller prefers the
+ * lowest: holes then land away from each other rather than merging into one bite,
+ * which is what keeps the board reading as a field with gaps rather than as a blob
+ * with a coastline.
+ */
+function poreCandidates(mask: Mask): {x: number; y: number; spread: number}[] {
+  const out: {x: number; y: number; spread: number}[] = [];
+  for (let y = 0; y < mask.length; y++) {
+    for (let x = 0; x < mask[y].length; x++) {
+      if (!mask[y][x] || filledNeighbourCount(mask, x, y) < 4) {
+        continue;
+      }
+      let spread = 0;
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          if ((dx !== 0 || dy !== 0) && !at(mask, x + dx, y + dy)) {
+            spread++;
+          }
+        }
+      }
+      out.push({x, y, spread});
+    }
+  }
+  return out;
+}
+
 /** Flood fill over 4-connectivity; the decomposer needs one connected blob. */
 export function isConnected(mask: Mask): boolean {
   let start: [number, number] | null = null;
@@ -164,6 +200,58 @@ function cloneMask(mask: Mask): Mask {
 }
 
 /**
+ * The rectangle a porous shape starts from: the largest box no wider or taller than
+ * the grid whose area still covers `targetCells`, preferring one a little taller than
+ * it is wide.
+ *
+ * Without this a block always starts as the whole grid, and a level that wants 140
+ * cells out of 196 gets 56 holes punched into a full square. The reference does the
+ * opposite: its boards are rectangular regions *inside* the grid — level 7 is about
+ * 13 wide by 17 tall on an 18-grid — with only a scattering of interior gaps. Trim
+ * first, punch second, and both come out right.
+ *
+ * `PREFERRED_ASPECT` is width over height, and below 1 on purpose: a phone is tall,
+ * and so is every mid-run board in the reference.
+ */
+const PREFERRED_ASPECT = 0.82;
+
+function startingBox(
+  gridSize: number,
+  targetCells: number,
+): {w: number; h: number} {
+  let best: {w: number; h: number; score: number} | null = null;
+  for (let h = 1; h <= gridSize; h++) {
+    for (let w = 1; w <= gridSize; w++) {
+      const area = w * h;
+      if (area < targetCells) {
+        continue;
+      }
+      // Slack first — a box barely bigger than the target needs the fewest holes —
+      // then shape, so the region stays a sensible rectangle rather than a strip.
+      const score =
+        (area - targetCells) / targetCells +
+        Math.abs(w / h - PREFERRED_ASPECT) * 0.5;
+      if (!best || score < best.score) {
+        best = {w, h, score};
+      }
+    }
+  }
+  return best ? {w: best.w, h: best.h} : {w: gridSize, h: gridSize};
+}
+
+/** The box, centred in the grid. */
+function boxMask(gridSize: number, w: number, h: number): Mask {
+  const x0 = Math.floor((gridSize - w) / 2);
+  const y0 = Math.floor((gridSize - h) / 2);
+  return Array.from({length: gridSize}, (_row, y) =>
+    Array.from(
+      {length: gridSize},
+      (_cell, x) => x >= x0 && x < x0 + w && y >= y0 && y < y0 + h,
+    ),
+  );
+}
+
+/**
  * Rasterise `shape` at `gridSize` and reshape it to `targetCells`.
  *
  * Threshold is scanned first because it changes the silhouette coherently — a fatter
@@ -177,6 +265,14 @@ export function fitMask(
   targetCells: number,
   rng: Rng,
 ): FittedMask | null {
+  // A porous shape has no silhouette to preserve, so there is nothing for the
+  // threshold scan to find: it starts from a plain rectangle sized to the job.
+  if (shape.porous) {
+    const {w, h} = startingBox(gridSize, targetCells);
+    const mask = boxMask(gridSize, w, h);
+    return finishMask(mask, shape, gridSize, targetCells, rng, 0.5);
+  }
+
   let best: {mask: Mask; threshold: number; distance: number} | null = null;
   for (let t = 0.18; t <= 0.82; t += 0.02) {
     const raw = keepLargestComponent(rasterise(shape.ops, gridSize, t));
@@ -193,7 +289,25 @@ export function fitMask(
     return null;
   }
 
-  const mask = cloneMask(best.mask);
+  return finishMask(
+    cloneMask(best.mask),
+    shape,
+    gridSize,
+    targetCells,
+    rng,
+    best.threshold,
+  );
+}
+
+/** Grow or trim `mask` onto `targetCells`, then package it for the decomposer. */
+function finishMask(
+  mask: Mask,
+  shape: ShapeDef,
+  gridSize: number,
+  targetCells: number,
+  rng: Rng,
+  threshold: number,
+): FittedMask | null {
   let count = countCells(mask);
   let guard = gridSize * gridSize * 2;
 
@@ -212,18 +326,29 @@ export function fitMask(
   }
 
   while (count > targetCells && guard-- > 0) {
-    const options = shrinkCandidates(mask);
-    if (options.length === 0) {
-      break;
+    // A porous shape gives up interior cells first and only falls back to its
+    // outline once there is nothing enclosed left to punch.
+    const pores = shape.porous ? poreCandidates(mask) : [];
+    let pick: {x: number; y: number};
+    if (pores.length > 0) {
+      const minSpread = Math.min(...pores.map(o => o.spread));
+      const pool = pores.filter(o => o.spread === minSpread);
+      pick = pool[rng.int(pool.length)];
+    } else {
+      const options = shrinkCandidates(mask);
+      if (options.length === 0) {
+        break;
+      }
+      const minSupport = Math.min(...options.map(o => o.support));
+      const pool = options.filter(o => o.support === minSupport);
+      pick = pool[rng.int(pool.length)];
     }
-    const minSupport = Math.min(...options.map(o => o.support));
-    const pool = options.filter(o => o.support === minSupport);
-    const pick = pool[rng.int(pool.length)];
     mask[pick.y][pick.x] = false;
     if (!isConnected(mask)) {
       mask[pick.y][pick.x] = true;
       // Nothing safe left to trim; stop rather than fragment the picture.
-      const remaining = shrinkCandidates(mask).length;
+      const remaining =
+        shrinkCandidates(mask).length + poreCandidates(mask).length;
       if (remaining <= 1) {
         break;
       }
@@ -248,7 +373,7 @@ export function fitMask(
     return null;
   }
 
-  return {mask, cells, cellCount: cells.length, threshold: best.threshold};
+  return {mask, cells, cellCount: cells.length, threshold};
 }
 
 /** Mask cells with at least one empty or off-board neighbour — the silhouette outline. */

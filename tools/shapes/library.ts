@@ -24,6 +24,12 @@ export interface ShapeDef {
   decor?: DecorPath[];
   /** Smallest grid this silhouette stays legible on. */
   minGrid: number;
+  /**
+   * Loses cells from the *inside* when the fitter shrinks it, rather than from the
+   * outline. Only meaningful for a shape with no silhouette to protect — see
+   * `BLOCK_SHAPE` and `poreCandidates` in pipeline/mask.ts.
+   */
+  porous?: boolean;
 }
 
 const eyes = (lx: number, rx: number, y: number, r: number): DecorPath[] => [
@@ -1339,5 +1345,28 @@ export const SHAPES: ShapeDef[] = [
   },
 ];
 
+/**
+ * The ordinary board: the whole grid, and no silhouette at all.
+ *
+ * Kept out of `SHAPES` on purpose — it is not a picture and must never be dealt out
+ * by the rotation, or a level that asked for a showcase would get a rectangle. It is
+ * what `shapeForLevel` returns for every level that is *not* a showcase or a
+ * milestone, which is how the reference boards are built: a plain field of
+ * interlocking paths most of the time, with a recognisable silhouette arriving every
+ * tenth level as the reward.
+ *
+ * It does not usually stay a rectangle. `fitMask` erodes it to whatever cell count
+ * the slot needs, smoothest-boundary-first, so a level that asks for 60% occupancy
+ * gets the ragged, bitten-into block the reference's mid-run levels actually show,
+ * rather than a shape squeezed to fit.
+ */
+export const BLOCK_SHAPE: ShapeDef = {
+  name: 'block',
+  category: 'symbol',
+  minGrid: 3,
+  porous: true,
+  ops: [add(rect(0, 0, 1, 1))],
+};
+
 export const shapeByName = (name: string): ShapeDef | undefined =>
-  SHAPES.find(s => s.name === name);
+  name === BLOCK_SHAPE.name ? BLOCK_SHAPE : SHAPES.find(s => s.name === name);

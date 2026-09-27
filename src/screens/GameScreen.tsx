@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Pressable,
+  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -15,6 +16,7 @@ import {Hearts} from '../components/Hearts';
 import {HintPill} from '../components/HintPill';
 import {FitButton} from '../components/FitButton';
 import {CoachMark} from '../components/CoachMark';
+import type {CoachSpotlight} from '../components/CoachMark';
 import {DevOverlay} from '../components/DevOverlay';
 import {HintModal} from '../components/HintModal';
 import {PauseOverlay} from '../components/PauseOverlay';
@@ -113,6 +115,10 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
   const [outOfLives, setOutOfLives] = useState(false);
   const [complete, setComplete] = useState<ScoreBreakdown | null>(null);
   const [newHighScore, setNewHighScore] = useState(false);
+  const [bestTime, setBestTime] = useState<{
+    seconds: number;
+    isNew: boolean;
+  } | null>(null);
   const [climb, setClimb] = useState<Climb | null>(null);
   const [coachMark, setCoachMark] = useState<ActiveCoachMark | null>(null);
   const [hintPillPulsing, setHintPillPulsing] = useState(false);
@@ -261,6 +267,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
       parTime: engine.level.parTime,
     });
     const isHigh = SaveStore.isNewHighScore(engine.level.id, breakdown.total);
+    const previousTime = SaveStore.bestTimeFor(engine.level.id);
     // The standings are read either side of the write: `bestScore` is the lifetime
     // total (§11) and moves by this level's gain, so these two numbers are exactly
     // what the climb animation needs. One `Date.now()` for both, so the only thing
@@ -270,6 +277,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
       engine.level.id,
       breakdown.stars,
       breakdown.total,
+      breakdown.elapsedSeconds,
     );
     const lifetimeAfter = SaveStore.data.bestScore;
     setClimb(climbFor(lifetimeBefore, lifetimeAfter, Date.now()));
@@ -277,6 +285,12 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
     void SaveStore.flush();
 
     setNewHighScore(isHigh);
+    setBestTime({
+      seconds: SaveStore.bestTimeFor(engine.level.id) ?? breakdown.elapsedSeconds,
+      // A first solve is a best time by definition, but "New!" there is noise.
+      isNew:
+        previousTime !== null && breakdown.elapsedSeconds < previousTime,
+    });
     setComplete(breakdown);
     setCoachMark(tutorialRef.current?.onWin() ?? null);
 
@@ -541,6 +555,14 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
         styles.root,
         {paddingTop: insets.top, paddingBottom: insets.bottom},
       ]}>
+      {/* The app's bar is light-on-dark; this screen is the one white page in it, so
+          it re-declares the bar for as long as it is mounted. */}
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor={theme.board.bg}
+        translucent={false}
+      />
+
       {/* §5.4 — hearts, level, gear. No score, no move counter, no timer, no ad. */}
       <View style={styles.header}>
         <Hearts hearts={hearts} visible={heartsVisible} />
@@ -727,6 +749,10 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
           visible={complete !== null && !showLeaderboard}
           breakdown={complete}
           newHighScore={newHighScore}
+          levelId={level.id}
+          bestTime={bestTime?.seconds ?? complete.elapsedSeconds}
+          newBestTime={bestTime?.isNew ?? false}
+          levelsCompleted={SaveStore.data.completedLevels.length}
           onNext={onCompleteNext}
           onHome={() => navigation.navigate('Home')}
         />
@@ -779,9 +805,15 @@ function spotlightFor(
   engine: GameEngine,
   metrics: {size: number; cellSize: number; originX: number; originY: number},
   boardTop: number,
-): {x: number; y: number; radius: number} | null {
+): CoachSpotlight | null {
   if (mark.step.target.kind === 'hearts') {
-    return {x: 46, y: boardTop - 28, radius: 44};
+    return {
+      x: 46,
+      y: boardTop - 28,
+      radius: 44,
+      cellSize: metrics.cellSize,
+      bounds: {left: 2, top: boardTop - 72, right: 90, bottom: boardTop + 16},
+    };
   }
   if (mark.arrowIndex < 0) {
     return null;
@@ -790,15 +822,38 @@ function spotlightFor(
     engine.level.arrows[mark.arrowIndex],
     metrics.cellSize,
   );
+  // The whole arrow, not just its head: the hand points at the middle of the path and
+  // the caption hangs off the far end of it, and on a tutorial board an arrow is six
+  // cells long, so the difference between the two is most of the board. `bounds` is
+  // in cells, so the box is the outer edge of the first and last cell it touches.
   return {
     x: metrics.originX + geometry.headCentre.x,
     y: boardTop + metrics.originY + geometry.headCentre.y,
     radius: Math.max(38, metrics.cellSize * 1.4),
+    cellSize: metrics.cellSize,
+    bounds: {
+      left: metrics.originX + geometry.bounds.minX * metrics.cellSize,
+      top: boardTop + metrics.originY + geometry.bounds.minY * metrics.cellSize,
+      right: metrics.originX + (geometry.bounds.maxX + 1) * metrics.cellSize,
+      bottom:
+        boardTop +
+        metrics.originY +
+        (geometry.bounds.maxY + 1) * metrics.cellSize,
+    },
   };
 }
 
+/**
+ * §10.2 — the game screen is the one light surface in the app.
+ *
+ * The board is a drawing on a page, so the page has to be a page: a dense maze of
+ * navy lines on `bg.base` is a photographic negative of itself, and the white gap
+ * between two neighbouring paths — the only thing separating them now that the casing
+ * is gone — cannot exist on a dark ground. Home, Level Select and Settings are
+ * unchanged and still dark; this screen owns `theme.board` and nothing else does.
+ */
 const styles = StyleSheet.create({
-  root: {flex: 1, backgroundColor: theme.bg.base},
+  root: {flex: 1, backgroundColor: theme.board.bg},
   header: {
     height: HEADER_HEIGHT,
     flexDirection: 'row',
@@ -810,9 +865,10 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     letterSpacing: 2,
+    color: theme.board.title,
   },
   gear: {width: 44, height: 44, alignItems: 'center', justifyContent: 'center'},
-  gearGlyph: {fontSize: 20, color: theme.text.secondary},
+  gearGlyph: {fontSize: 22, color: theme.board.chrome},
   boardArea: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   // Sized by the board, but never clipping it: the exit animation lives here.
   boardStack: {overflow: 'visible'},
@@ -827,13 +883,11 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: theme.bg.panelAlt,
-    borderWidth: 1,
-    borderColor: theme.bg.border,
+    backgroundColor: theme.board.chip,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  restartGlyph: {fontSize: 20, color: theme.text.primary},
+  restartGlyph: {fontSize: 20, color: theme.board.chipText},
   chevron: {
     position: 'absolute',
     right: 4,
@@ -841,20 +895,20 @@ const styles = StyleSheet.create({
     width: 26,
     height: 26,
     borderRadius: 13,
-    backgroundColor: theme.bg.panelAlt,
+    backgroundColor: theme.board.chip,
     alignItems: 'center',
     justifyContent: 'center',
-    opacity: 0.85,
+    opacity: 0.95,
   },
-  chevronGlyph: {fontSize: 18, color: theme.text.primary},
+  chevronGlyph: {fontSize: 18, color: theme.board.chipText},
   missing: {
     flex: 1,
-    backgroundColor: theme.bg.base,
+    backgroundColor: theme.board.bg,
     alignItems: 'center',
     justifyContent: 'center',
     gap: theme.space.md,
   },
-  missingText: {...typography.body(15)},
+  missingText: {...typography.body(15), color: theme.board.chipText},
   missingLink: {
     ...typography.ui(13),
     color: theme.brand.tagline,

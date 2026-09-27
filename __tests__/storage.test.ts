@@ -52,6 +52,15 @@ describe('SaveStore progress rules', () => {
     SaveStore.resetForTests();
   });
 
+  it('keeps the fastest solve per level as its best time', () => {
+    expect(SaveStore.bestTimeFor(3)).toBeNull();
+    SaveStore.recordCompletion(3, 2, 500, 12.4);
+    SaveStore.recordCompletion(3, 2, 500, 20);
+    expect(SaveStore.bestTimeFor(3)).toBe(12.4);
+    SaveStore.recordCompletion(3, 3, 900, 8.1);
+    expect(SaveStore.bestTimeFor(3)).toBe(8.1);
+  });
+
   it('unlocks by completion alone — no star gates, no coins (§3.5)', () => {
     expect(SaveStore.isUnlocked(1)).toBe(true);
     expect(SaveStore.isUnlocked(2)).toBe(false);

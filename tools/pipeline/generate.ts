@@ -9,15 +9,16 @@
 import type {DecorPath, Level} from '../../src/game/models/types.ts';
 import type {Validation} from '../../src/game/engine/LevelValidator.ts';
 import {createRng, hashSeed} from '../../src/utils/rng.ts';
-import {SHAPES} from '../shapes/library.ts';
+import {BLOCK_SHAPE, SHAPES} from '../shapes/library.ts';
 import type {ShapeDef} from '../shapes/library.ts';
 import {fitMask} from './mask.ts';
 import {decompose, distributionError} from './decompose.ts';
 import type {Decomposition} from './decompose.ts';
 import {searchOrientations} from './orient.ts';
 import {assignColours} from './colorise.ts';
-import {D_TOLERANCE, DIFFICULTY_CEILING} from './plan.ts';
+import {D_TOLERANCE, DIFFICULTY_CEILING, TUTORIAL_LAST_LEVEL} from './plan.ts';
 import type {LevelSlot} from './plan.ts';
+import {handcraftedLevel} from './handcrafted.ts';
 
 /** §8.4 — observed path-length mix may drift at most this far from the band target. */
 export const DISTRIBUTION_TOLERANCE = 0.03;
@@ -36,11 +37,27 @@ export interface GenerationReport {
 }
 
 /**
- * Shapes are dealt out with a stride that is coprime with the library size, so a
- * band never repeats a silhouette on consecutive levels and every shape gets used a
- * comparable number of times across the 500.
+ * The mask a level is carved out of.
+ *
+ * Through the onboarding ramp an ordinary level gets the whole grid (`BLOCK_SHAPE`)
+ * and a silhouette arrives on the showcase, which is level 10. That split is the
+ * reference's: its levels 5, 7, 8 and 9 are plain rectangular fields of interlocking
+ * paths, and the picture at level 10 is the reward for getting there. Trying to make
+ * a 26-arrow board *also* be a cat is what left the old level 5 with nine arrows.
+ *
+ * Above level 10 every level still draws a silhouette, as it always has. That is the
+ * scope this refit was designed and checked against — ten boards is all the reference
+ * shows — and widening it means regenerating the other 490 and reviewing the contact
+ * sheet again.
+ *
+ * Silhouettes are dealt out with a stride that is coprime with the library size, so a
+ * band never repeats one on consecutive levels and every shape gets used a comparable
+ * number of times across the 500.
  */
 export function shapeForLevel(slot: LevelSlot, offset = 0): ShapeDef | null {
+  if (slot.id <= TUTORIAL_LAST_LEVEL && !slot.showcase) {
+    return BLOCK_SHAPE;
+  }
   const usable = SHAPES.filter(
     s =>
       s.minGrid <= slot.gridSize &&
@@ -161,6 +178,13 @@ export function generateLevel(
   slot: LevelSlot,
   budget = attemptBudget(slot.targetArrows),
 ): GenerationReport | null {
+  // A drawn board short-circuits the whole pipeline: the search has nothing to add to
+  // a level whose geometry is the design (see handcrafted.ts).
+  const authored = handcraftedLevel(slot);
+  if (authored) {
+    return authored;
+  }
+
   let fallback: GenerationReport | null = null;
   let fallbackScore = Infinity;
   let stalled = 0;

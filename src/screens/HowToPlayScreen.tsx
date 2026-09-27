@@ -18,7 +18,7 @@ import {Button} from '../components/Button';
 import {Panel} from '../components/Panel';
 import {HOW_TO_PLAY_CARDS} from '../game/tutorial/steps';
 import {buildArrowGeometry} from '../game/renderer/arrowGeometry';
-import {DotGrid} from '../game/renderer/DotGrid';
+import {DotGrid, pathCells} from '../game/renderer/DotGrid';
 import type {ArrowPath} from '../game/models/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'HowToPlay'>;
@@ -177,7 +177,7 @@ function MiniBoard({
   const cellSize = size / MINI_GRID;
   return (
     <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      <DotGrid gridSize={MINI_GRID} cellSize={cellSize} />
+      <DotGrid cells={pathCells(arrows)} cellSize={cellSize} />
       {arrows.map(arrow => {
         const geometry = buildArrowGeometry(arrow, cellSize);
         return (

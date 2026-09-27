@@ -20,6 +20,12 @@ export interface TutorialStep {
   target: CoachTarget;
   /** A looping ghost hand demonstrates the gesture. */
   gesture: 'tap' | 'pinch' | 'none';
+  /**
+   * Whether the rest of the board is dimmed behind the mark. Defaults to true; level
+   * 1 turns it off, because a board of three arrows has nothing to be picked out from
+   * and the reference dims nothing there either.
+   */
+  veil?: boolean;
   /** Some marks only make sense after something has happened. */
   trigger: 'level-start' | 'after-first-blocked' | 'on-win';
   /** §3.3 — level 5 tunes the silent assist tighter than the global 25s. */
@@ -29,10 +35,11 @@ export interface TutorialStep {
 export const TUTORIAL_STEPS: readonly TutorialStep[] = [
   {
     level: 1,
-    caption: 'Tap to send it out',
+    caption: 'Tap to remove',
     target: {kind: 'arrow', pick: 'first-free'},
     gesture: 'tap',
     trigger: 'level-start',
+    veil: false,
   },
   {
     level: 2,
@@ -67,7 +74,7 @@ export const TUTORIAL_STEPS: readonly TutorialStep[] = [
   },
   {
     level: 6,
-    caption: 'Nice — it was a heart!',
+    caption: 'Nice — it was lightning!',
     target: {kind: 'board'},
     gesture: 'none',
     trigger: 'on-win',

@@ -104,7 +104,7 @@ function insidePrimitive(p: Primitive, x: number, y: number): boolean {
   }
 }
 
-function insideShape(ops: readonly ShapeOp[], x: number, y: number): boolean {
+export function insideShape(ops: readonly ShapeOp[], x: number, y: number): boolean {
   let inside = false;
   for (const op of ops) {
     if (insidePrimitive(op.prim, x, y)) {

@@ -132,12 +132,23 @@ class SaveStoreImpl {
     return this.state.levelScores[levelId] ?? 0;
   }
 
+  /** Fastest recorded solve for the level, or null if it has never been solved. */
+  bestTimeFor(levelId: number): number | null {
+    return this.state.levelBestTimes[levelId] ?? null;
+  }
+
   /**
    * Records a finished level. Stars and per-level score only ever improve on a
    * replay, and bestScore is the lifetime cumulative total (§11), so it moves by the
    * *gain* rather than being recomputed.
    */
-  recordCompletion(levelId: number, stars: 1 | 2 | 3, score: number): SaveData {
+  recordCompletion(
+    levelId: number,
+    stars: 1 | 2 | 3,
+    score: number,
+    elapsedSeconds?: number,
+  ): SaveData {
+    const previousTime = this.bestTimeFor(levelId);
     const previousScore = this.scoreFor(levelId);
     const previousStars = this.starsFor(levelId);
     const gain = Math.max(0, score - previousScore);
@@ -157,6 +168,16 @@ class SaveStoreImpl {
         ...this.state.levelScores,
         [levelId]: Math.max(previousScore, score),
       },
+      levelBestTimes:
+        elapsedSeconds === undefined
+          ? this.state.levelBestTimes
+          : {
+              ...this.state.levelBestTimes,
+              [levelId]:
+                previousTime === null
+                  ? elapsedSeconds
+                  : Math.min(previousTime, elapsedSeconds),
+            },
       bestScore: this.state.bestScore + gain,
     });
   }

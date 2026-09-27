@@ -6,6 +6,7 @@ import {
 import {GameEngine} from '../src/game/engine/GameEngine';
 import {
   computeBoardMetrics,
+  FULL_WIDTH_GRID,
   screenToBoard,
   clampPan,
 } from '../src/utils/layout';
@@ -158,8 +159,29 @@ describe('board layout (§5.4, §5.5)', () => {
 
   it('fits to the narrower of width-32 and the available height', () => {
     // A tall, narrow screen is width-bound; a short, wide one is height-bound.
-    expect(computeBoardMetrics(360, 900, 10).size).toBeLessThanOrEqual(328);
-    expect(computeBoardMetrics(900, 300, 10).size).toBeLessThanOrEqual(300);
+    expect(computeBoardMetrics(360, 900, 20).size).toBeLessThanOrEqual(328);
+    expect(computeBoardMetrics(900, 300, 20).size).toBeLessThanOrEqual(300);
+  });
+
+  /**
+   * §10.2 — a board narrower than `FULL_WIDTH_GRID` does not stretch to fill the
+   * screen; it draws at the same cell as a full-width board and sits small in the
+   * middle of the page. Fitting a 6x6 to the width instead is what turned the
+   * tutorial levels into three enormous pipes.
+   */
+  it('gives a small board the same cell as a full-width one, not the same size', () => {
+    const small = computeBoardMetrics(360, 900, 6);
+    const full = computeBoardMetrics(360, 900, FULL_WIDTH_GRID);
+    expect(small.cellSize).toBe(full.cellSize);
+    expect(small.size).toBeLessThan(full.size / 2);
+    // Still centred, so the spare width is split evenly.
+    expect(small.originX).toBeCloseTo((360 - small.size) / 2, 6);
+  });
+
+  it('fits to the width once the grid is wider than the threshold', () => {
+    const wide = computeBoardMetrics(360, 900, 28);
+    expect(wide.cellSize).toBe(Math.floor(328 / 28));
+    expect(wide.size).toBeLessThanOrEqual(328);
   });
 
   it('allows no pan at all at fit scale, because the whole board is visible', () => {

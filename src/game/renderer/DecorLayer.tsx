@@ -29,8 +29,8 @@ function DecorLayerBase({decor, boardSize}: Props): React.JSX.Element | null {
         <Path
           key={i}
           d={path.d}
-          fill={path.fill ? theme.text.primary : 'none'}
-          stroke={path.fill ? 'none' : theme.text.primary}
+          fill={path.fill ? theme.board.ink : 'none'}
+          stroke={path.fill ? 'none' : theme.board.ink}
           strokeWidth={path.w ?? 0.03}
           strokeLinecap="round"
           strokeLinejoin="round"

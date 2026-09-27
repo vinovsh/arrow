@@ -3,7 +3,6 @@ import {StyleSheet} from 'react-native';
 import Svg, {G} from 'react-native-svg';
 import type {ArrowPath} from '../models/types';
 import type {RenderTier} from '../../app/featureFlags';
-import {withOwnUnderlay} from '../../app/featureFlags';
 import {ArrowShape} from './ArrowShape';
 import {
   EXIT_MARGIN_CELLS,
@@ -206,7 +205,6 @@ function EscapingArrowBase({
   }, [arrow, cellSize, travel]);
 
   // §13 — the baked underlay has already dropped this arrow, so it draws its own.
-  const ownTier = useMemo(() => withOwnUnderlay(tier), [tier]);
 
   // No fade, at any point. There used to be one over the last 18% of the animation,
   // on the assumption that the arrow was outside the frame by then — it was not. The
@@ -229,7 +227,7 @@ function EscapingArrowBase({
         {/* Drawn through the same component the resting board uses, so the arrow that
             lifts off is the one that was sitting there — every width, the casing and
             the gloss included, follows the geometry it is handed. */}
-        <ArrowShape arrow={arrow} geometry={geometry} tier={ownTier} />
+        <ArrowShape arrow={arrow} geometry={geometry} tier={tier} />
       </G>
     </Svg>
   );

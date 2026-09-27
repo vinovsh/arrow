@@ -67,22 +67,27 @@ export function bodyPolyline(arrow: ArrowPath, cellSize: number): Point[] {
 }
 
 /**
- * The head triangle, straddling `nose`: it reaches 55% of its length ahead and 45%
- * behind, so the arrow's tip sits just past the cell centre while the base stays
- * inside it.
+ * How the head straddles its cell centre: `HEAD_AHEAD` of its length past the centre
+ * and the rest behind it. Measured off the reference, where a 37px head on a 63px
+ * cell puts its tip 17px past the centre and its base 20px behind — so the triangle
+ * is centred slightly *short* of the cell it occupies rather than overhanging it,
+ * which is what keeps a head from crowding whatever sits in the next cell along.
  */
+const HEAD_AHEAD = 0.46;
+const HEAD_BEHIND = 1 - HEAD_AHEAD;
+
 function headTriangle(
   nose: Point,
   step: GridPoint,
   headSize: ArrowHeadSize,
 ): string {
   const tip = {
-    x: nose.x + step.x * headSize.length * 0.55,
-    y: nose.y + step.y * headSize.length * 0.55,
+    x: nose.x + step.x * headSize.length * HEAD_AHEAD,
+    y: nose.y + step.y * headSize.length * HEAD_AHEAD,
   };
   const base = {
-    x: nose.x - step.x * headSize.length * 0.45,
-    y: nose.y - step.y * headSize.length * 0.45,
+    x: nose.x - step.x * headSize.length * HEAD_BEHIND,
+    y: nose.y - step.y * headSize.length * HEAD_BEHIND,
   };
   const perp = {x: -step.y, y: step.x};
   const w = headSize.halfWidth;
@@ -108,7 +113,7 @@ function bodyPath(points: Point[], headSize: ArrowHeadSize): string {
   const dx = last.x - previous.x;
   const dy = last.y - previous.y;
   const length = Math.hypot(dx, dy) || 1;
-  const shortenBy = Math.min(length * 0.45, headSize.length * 0.45);
+  const shortenBy = Math.min(length * 0.45, headSize.length * HEAD_BEHIND);
   last.x -= (dx / length) * shortenBy;
   last.y -= (dy / length) * shortenBy;
   return drawn

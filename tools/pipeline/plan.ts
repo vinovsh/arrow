@@ -18,14 +18,35 @@ export interface BandRow {
   avgD: number;
 }
 
-/** §4.1 — adopted exactly. */
+/**
+ * §4.1 — adopted exactly from level 11 up, re-cut below it against `ref/Arrow`.
+ *
+ * The onboarding ramp was far too slow to read as the same game as the reference:
+ * level 5 was 8-12 arrows on an 8x8 where the reference's level 5 is 36 arrows on a
+ * board twice that wide, and its level 10 is 86. A board of a dozen short arrows has
+ * almost no dependency structure in it, which is why the early levels solved
+ * themselves in whatever order you tapped.
+ *
+ * Levels 1-10 are therefore one row each — a scripted ramp rather than a band, which
+ * is how the reference treats them too — and the arrow counts are read off the
+ * counter in those screenshots (3, 6, 4, -, 36, -, 28, 36, 54, 86). The grid each one
+ * sits on is whatever holds `arrows x mean path length`, because the mask has to hold
+ * those cells; see `meanLengthFor`, which had to roughly double below level 11 to pay
+ * for the counts.
+ *
+ * Levels 11-500 are untouched, and deliberately: this refit has only been designed
+ * and checked against the ten boards the reference actually shows.
+ */
 export const BAND_TABLE: readonly BandRow[] = [
   {
+    // Drawn rather than generated, so this row only has to describe the board in
+    // tools/pipeline/handcrafted.ts: three 6-cell columns on a 7-wide grid, which is
+    // what centres them on the page with a clear column between each pair.
     from: 1,
     to: 1,
-    gridSize: 6,
+    gridSize: 7,
     minArrows: 3,
-    maxArrows: 4,
+    maxArrows: 3,
     band: 'Tutorial',
     avgD: 1.0,
   },
@@ -33,28 +54,86 @@ export const BAND_TABLE: readonly BandRow[] = [
     from: 2,
     to: 2,
     gridSize: 6,
-    minArrows: 4,
-    maxArrows: 5,
+    minArrows: 5,
+    maxArrows: 6,
     band: 'Tutorial',
     avgD: 1.0,
   },
   {
     from: 3,
     to: 3,
-    gridSize: 7,
-    minArrows: 5,
-    maxArrows: 7,
+    gridSize: 6,
+    minArrows: 4,
+    maxArrows: 5,
     band: 'Tutorial',
     avgD: 1.2,
   },
   {
     from: 4,
-    to: 10,
+    to: 4,
     gridSize: 8,
-    minArrows: 8,
-    maxArrows: 12,
+    minArrows: 10,
+    maxArrows: 13,
+    band: 'Tutorial',
+    avgD: 1.6,
+  },
+  {
+    // The reference's level 5, and the jump the old curve never made: 36 arrows
+    // where this used to ship nine.
+    from: 5,
+    to: 5,
+    gridSize: 13,
+    minArrows: 24,
+    maxArrows: 30,
     band: 'Easy',
     avgD: 1.8,
+  },
+  {
+    from: 6,
+    to: 6,
+    gridSize: 14,
+    minArrows: 30,
+    maxArrows: 38,
+    band: 'Easy',
+    avgD: 2.0,
+  },
+  {
+    from: 7,
+    to: 7,
+    gridSize: 14,
+    minArrows: 26,
+    maxArrows: 32,
+    band: 'Easy',
+    avgD: 2.0,
+  },
+  {
+    from: 8,
+    to: 8,
+    gridSize: 15,
+    minArrows: 32,
+    maxArrows: 38,
+    band: 'Easy',
+    avgD: 2.2,
+  },
+  {
+    from: 9,
+    to: 9,
+    gridSize: 17,
+    minArrows: 44,
+    maxArrows: 54,
+    band: 'Easy',
+    avgD: 2.4,
+  },
+  {
+    // The first showcase, and the reference's own biggest early board — a full
+    // silhouette handed to the player as a reward rather than as a wall.
+    from: 10,
+    to: 10,
+    gridSize: 22,
+    minArrows: 76,
+    maxArrows: 90,
+    band: 'Easy',
+    avgD: 2.6,
   },
   {
     from: 11,
@@ -222,17 +301,26 @@ function mixForMean(targetMean: number, maxLength: number): LengthMix {
  * grid rather than with fewer arrows.
  */
 export function meanLengthFor(levelId: number): number {
+  // Levels 1-10 are set by the reference rather than by the band curve. Its arrows
+  // are long — level 7 fits 28 of them into a region about 13x17 cells, a mean in
+  // the fives — and that is what makes those boards read as interlocking snakes
+  // rather than as a field of dashes. It is also what makes the arrow counts
+  // affordable at all: `cells = arrows x mean length`, so at 3.0 a 26-arrow level 5
+  // is two-thirds empty and the fitter returns a blob floating in the middle of it.
   if (levelId <= 1) {
-    return 2.2;
+    return 5.0;
   }
   if (levelId <= 2) {
-    return 2.4;
+    return 5.5;
   }
   if (levelId <= 3) {
-    return 2.6;
+    return 4.0;
+  }
+  if (levelId <= 4) {
+    return 4.4;
   }
   if (levelId <= 10) {
-    return 3.0;
+    return 5.0;
   }
   if (levelId <= 25) {
     return 3.4;
@@ -318,6 +406,9 @@ const MEASURED_FLOOR: Record<number, number> = {
   6: 2.0,
   7: 2.5,
   8: 1.5,
+  // Grid 13 exists only for level 5 and has no band above it; measured the same way
+  // as the rest, on that level's own arrow count and length mix.
+  13: 5.0,
   10: 2.7,
   12: 3.0,
   14: 3.5,
@@ -329,6 +420,37 @@ const MEASURED_FLOOR: Record<number, number> = {
   20: 5.7,
   21: 5.4,
   22: 5.9,
+};
+
+/**
+ * §7.2's floor for each of the ten onboarding boards, measured per *level* rather
+ * than per grid.
+ *
+ * `MEASURED_FLOOR` is keyed by grid size, and levels 5-10 share their grids with
+ * bands far above them — 14 with 51-100, 15 with 101-150, 17 with 201-250, 22 with
+ * 451-500 — which carry completely different arrow counts at completely different
+ * path lengths. One floor cannot describe both, and correcting the shared entry would
+ * move the targets of 400 levels that are not being regenerated.
+ *
+ * These are not tuned numbers. Each is what its board actually scored with the
+ * annealer driving as low as it could go, so a target set here is reachable by
+ * construction. Level 1 sitting above level 2 is a quirk of the metric rather than of
+ * the board: with three arrows, `freeAvgCount` and `freeMinCount` have nowhere to go,
+ * and those two terms carry 4.0 of §7.2's 10.1.
+ */
+const ONBOARDING_FLOOR: Record<number, number> = {
+  // Level 1 is drawn, not searched for, so its floor is simply what the drawn board
+  // scores: three free arrows, no turns, 37% occupancy.
+  1: 3.65,
+  2: 2.6,
+  3: 3.1,
+  4: 3.0,
+  5: 5.0,
+  6: 5.6,
+  7: 4.5,
+  8: 4.9,
+  9: 5.4,
+  10: 6.2,
 };
 
 /**
@@ -345,7 +467,8 @@ export interface BandWindow {
 
 export function bandWindow(levelId: number): BandWindow {
   const row = bandRowFor(levelId);
-  const floor = MEASURED_FLOOR[row.gridSize] ?? row.avgD;
+  const floor =
+    ONBOARDING_FLOOR[levelId] ?? MEASURED_FLOOR[row.gridSize] ?? row.avgD;
   const top = Math.min(DIFFICULTY_CEILING, floor + REACHABLE_SPAN);
   // Where the band sits on §4.1's own 1..7 design scale, carried across to the range
   // this grid can actually reach. An Easy band still lands near the bottom of its

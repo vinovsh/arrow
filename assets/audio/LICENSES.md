@@ -6,15 +6,15 @@ the record; a build that ships a sound not listed below is not clearable for rel
 
 ## Status
 
-**Three of eleven effects ship.** The rest are still absent, and `AudioService`
+**Seven of eleven effects ship.** The rest are still absent, and `AudioService`
 degrades silently when a file is missing — every `play()` call for an unshipped
 sound is a no-op — so the game stays fully playable while the remainder is produced.
 
 | Shipped | Still absent |
 |---|---|
-| `ui_tap` `arrow_move` `arrow_blocked` | `hint` `star_1` `star_2` `star_3` `score_tick` `level_complete` `life_lost` `game_over` `ambient_loop` |
+| `ui_tap` `arrow_move` `arrow_blocked` `level_complete` `star_1` `star_2` `star_3` | `hint` `score_tick` `life_lost` `game_over` `ambient_loop` |
 
-### Licence of the shipped three
+### Licence of the shipped effects
 
 **Synthesised from first principles for this project; no third-party material.** Each
 is a closed-form waveform rendered by ffmpeg from the expression recorded below — sums
@@ -36,6 +36,28 @@ arrow_blocked aevalsrc='(0.66*sin(2*PI*175*t)+0.22*sin(2*PI*262*t))*exp(-t*17)':
 ```
 
 All three: `-c:a aac -b:a 96k -ar 44100 -ac 1`, ~10KB the three together.
+
+The reward chimes are built the same way. `N(o,f,k,a)` is one bell-like note starting
+at `o` seconds: fundamental `f` plus octave (0.35), twelfth (0.1) and an inharmonic
+2.76·f shimmer (0.12), under `exp(-(t-o)*k)` with a 2.5ms linear attack, scaled by `a`:
+
+```
+N(o,f,k,a) = a*gt(t,o)*min(1,(t-o)*400)*exp(-(t-o)*k)*(sin(2πf(t-o))
+             + 0.35 sin(2π·2f(t-o)) + 0.1 sin(2π·3f(t-o))
+             + 0.12 sin(2π·2.76f(t-o))*exp(-(t-o)*k))
+
+level_complete d=1.1  C6→E6→G6 over a soft C5
+               N(0,1046.5,7,.3)+N(.11,1318.5,7,.3)+N(.22,1568,3.8,.34)+N(.22,523.25,4.5,.14)
+star_1         d=0.55 N(0,1318.5,9,.42)+N(.02,5274,30,.08)
+star_2         d=0.55 N(0,1568,9,.42)+N(.02,6272,30,.08)
+star_3         d=0.95 final reward: N(0,2093,4.5,.3)+N(0,1568,5,.18)+N(0,1046.5,5,.14)
+                      + sparkle run N(.08,2637,18,.09)+N(.16,3136,18,.09)+N(.24,4186,16,.09)
+
+all four: -af lowpass=f=9000,aecho=0.8:0.5:70|130:0.22|0.12,afade=t=out:st=<d-0.12>:d=0.12,
+          volume=<2.4 level_complete | 2.6 star_1/2 | 2.3 star_3>
+```
+
+Peaks sit at −4 to −5.5dBFS, just under the tap and blocked sounds.
 
 These are deliberately plain. They exist so the game is audible and the timing of the
 tap can be felt, and they are meant to be replaced by produced audio rather than to be

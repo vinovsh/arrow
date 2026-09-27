@@ -1,6 +1,6 @@
 # Arrow Escape — progress
 
-Last updated: 2026-09-02.
+Last updated: 2026-09-23.
 
 This is the working handoff note. `README.md` documents the project as built;
 this file records where the work stopped and what to pick up next.
@@ -14,30 +14,119 @@ emulator, and a full loop has been walked through on device: tutorial coach mark
 tap arrows → win sequence → Score Summary → next level.
 
 ```
-npm run verify     # typecheck + lint + 116 tests + level validation
+npm run verify     # typecheck + lint + tests + level validation
 ```
 
-Last run: clean. 10 suites, 121 tests, 0 fatal level issues, 6 non-fatal warnings
-(4 difficulty-window, 2 length-mix on tutorial boards — both explained in README's
-"Where the spec and the implementation disagree").
+Last run (2026-09-23): clean. 12 suites, 158 tests, 500 levels validated, 0 fatal
+issues, 0 warnings.
 
 ---
 
 ## Pick up here
 
-**Nothing since the arrow redesign has been on a screen.** The maze refit regenerated
-all 500 levels and has only been checked headlessly — validator, tests, and ASCII
-renders of the boards. Look at a late level first (381 or 500): it should read as a
-dense interlocking maze of snaking paths, close to the reference the redesign was
-asked against, not as scattered stubs.
+**The launch screen was redrawn on 2026-09-25 after `ref/screens (2).png` panel 6**
+(light gradient, glowing brain with ← → arrows, sparkles). It holds 5s (4 progress
+dots fill), then goes to Home, or Level 1 on a fresh install. The headline/line under
+the brain rotates through `src/config/quotes.ts`, one per app open, index kept under
+its own AsyncStorage key. Not yet seen on a device.
 
-**The redesign is confirmed on screen; the rope exit still is not.**
+**The level-complete overlay was redrawn the same day after `ref/reward model.png`
+frame 4**: trophy + laurels, "Level N Completed!", stars from `assets/art/star.png`
+(the owner's `ref/star.png`, scaled), a Score / Time / Best Time / Total Levels card
+with "New!" badges, a quote card (`COMPLETE_QUOTES`) and
+Next Level / Home. Best time is a new save field, `levelBestTimes` (migrates to `{}`).
+Not yet seen on a device — check it fits on a short phone (it scrolls if not).
 
-The thin arrows were verified by measuring the device framebuffer on level 11 (8x8,
-cell 41dp): a 5.3dp bright core inside a 1.7dp casing rim each side, against the
-18.9dp the old code drew. That is `strokeWidthFor(41)` exactly. Do not re-verify the
-widths by eye from a screenshot — at thumbnail scale the casing and glow read as much
-heavier than they measure, which cost a round trip already.
+**Levels 3-500 were replaced on 2026-09-23 with the approved mock designs, and none of
+the new boards has been on a screen.** The user asked for real progression (level 500
+used to look like level 3), reviewed every design as an image first, and approved them
+all. The images are `mock/level_NNN.png` plus one `mock/overview*.png` sheet per 50.
+
+- **Where levels come from now.** `npm run levels:generate` runs
+  `tools/levelsFromMocks.ts`, which copies each approved board from
+  `mock/data/level_NNN.json` into the packs arrow for arrow and adds colour, band,
+  stored D (capped at 7) and par time. Levels 1-2 (the drawn tutorial boards) are kept
+  from the existing pack. The old procedural generator is still there as
+  `npm run levels:generate:procedural`, but running it over 3-500 overwrites the
+  approved designs.
+- **Designing more.** The mocks come from `tools/mock/`: `patterns.ts` (the plan for
+  3-200, drawn pictures), `families.ts` + `plan201.ts` (parametric families for
+  201-500), `buildMocks.ts --from A --to B` (solvable boards) and `render.py A B`
+  (images). `levels:validate` and `levels.test.ts` fail if a pack drifts from its mock.
+- **What changed for the player.** Grids go 10 -> 40 (25-40 from 201, 35-40 in the
+  400s), arrow counts 24 -> ~180 average (max 252, under the engine's 254 cap), and
+  difficulty is mixed Easy/Medium/Hard/Very Hard rather than a staircase, with no Easy or
+  Medium after 400. The level 6 win caption now says "Nice — it was lightning!" because
+  the heart moved to level 5.
+- **Open it and check:** level 3, 10, 50, 150, 300 and 500. Boards above 30 cells rely
+  on pinch-zoom (up to 3.5x); the user said players will zoom. Render cost of a
+  250-arrow SVG board on a real device is untested. Restart Metro with
+  `--reset-cache` — the packs changed.
+
+---
+
+### Earlier notes (before the level redesign)
+
+**Level 1, level 2's stub arrow and the coach mark were rebuilt against the reference
+on 2026-09-22, and none of it has been on a screen.** The board is now the reference's own: three 6-cell
+columns on a 7x7 — two up, one down, an empty column between each pair — drawn by hand
+in `tools/pipeline/handcrafted.ts` rather than generated, and returned by
+`generateLevel` before the search runs. Only level 1 moved; `npm run levels:validate`
+is clean and down to 3 warnings, all of them pre-existing difficulty-window drift on
+levels 167, 327 and 447.
+
+Level 2 is otherwise untouched: it is the generated board with its left corner
+re-carved. Its one single-cell arrow — a bare arrowhead, boxed in on three sides by
+the 12-cell arrow and on the fourth by the board edge — keeps its column and gains a
+five-cell body pointing off the bottom edge, and the 12-cell arrow gives up column 0
+to make room. All five arrows still start free, which is what its "Any order works"
+caption needs.
+
+Three things to look at when it is opened:
+
+- **The guiding hand** (`src/components/GuideHand.tsx`) — Font Awesome's
+  `hand-pointer` icon where an emoji used to be, rotated 25° so it points up-left with
+  its fingertip on the middle of the target arrow, white with a navy outline, sized at
+  two cells (44dp on the tutorial board) so it indicates rather than upstages. Checked
+  headless against a 1080px mock of the reference screen, not on a device.
+  **It is CC BY 4.0 and the credit it requires is not in the app yet** — see
+  `assets/art/LICENSES.md` for what has to ship before release, and for the
+  Apache-2.0 alternative if carrying a credit is not wanted.
+- **The caption is now a bubble with a nub**, hanging under the arrow it explains
+  rather than sitting at 18% of the screen. Board-wide marks (levels 2, 5, 6, 8, 11)
+  still use the old centred slot.
+- **Level 1 no longer dims the board.** `TutorialStep.veil` is false there and the
+  overlay is `box-none`, so all three arrows stay full strength and the board stays
+  tappable — which is also what dismisses the mark. Every other mark still veils.
+
+The dot grid changed with it: dots are drawn under path cells only, never as a full
+grid (`DotGrid` takes `cells` now). That is measured off the reference too, and it
+affects every level, though above the tutorial the arrows cover the dots anyway.
+
+**Nothing in the reference refit has been on a screen.** The whole board — colour,
+weight, scale — and levels 1-10 changed in one pass, and every check so far has been
+headless: typecheck, lint, 156 tests, level validation, and ASCII renders of the
+boards. Open level 1, then 5, then 10.
+
+What it should look like, and the reference to check against is `ref/Arrow`:
+
+- **One colour.** Navy `#061242` on white, every arrow, no exceptions. If anything on
+  the board is cyan, pink or orange, `ArrowShape` is reading `arrow.color` again — it
+  must not; the palette is still in the level data and nothing draws it.
+- **No glow, no casing, no gloss.** Two paths per arrow. Two paths running side by
+  side are separated by the white page between them and by nothing else.
+- **Small boards stay small.** Level 1 is a 6×6 sitting in the middle of a mostly
+  empty white page, not a board stretched to the screen width. Anything at 17 columns
+  or wider fills the width; below that the cell size does not change.
+- **Level 5 is 27 arrows on a 13×13**, where it used to be 9 on an 8×8, and levels
+  1-9 are plain rectangular fields rather than silhouettes. Level 10 is 78 arrows on a
+  22×22 drawn as a strawberry — the first showcase, and the only picture in the ten.
+  If level 5 still looks sparse the app is running against stale packs; Metro caches
+  them, hence `--reset-cache` below.
+
+Do not re-verify the stroke width by eye from a screenshot; at thumbnail scale a
+0.19-of-a-cell line reads heavier than it measures. The ratios in `src/utils/layout.ts`
+are measured off the reference screenshots to the pixel — see the comments there.
 
 **Restart the app fully after a structural change; do not trust Fast Refresh.** The
 blank screen seen on 2026-09-02 came back to a working board on a force-stop and
@@ -50,33 +139,29 @@ npx react-native start --reset-cache
 npm run android            # or: cd android && ./gradlew installDebug -PreactNativeArchitectures=x86_64
 ```
 
-**The board redesign (§10.2).** Arrows are now thin lines with small heads instead of
-tubes: 3dp at 14×14 up to 7dp at 5×5, against 10.6-29.9dp before. Look for a board
-that reads as a maze of paths with air between them, and heads that terminate a line
-rather than replacing it. Level data did not change and did not need to — L5 was
-already 9 arrows on 7×7, L500 already 81 on 14×14. It was never the arrow count that
-filled the screen, it was the ink.
+**The one judgement call worth a second opinion on screen** is how the game screen's
+chrome sits against the white page. `theme.board` owns that screen and only that
+screen: Home, Level Select and Settings are still dark, and the hand-off between them
+has not been looked at. The hint pill is also still the old yellow gradient — it reads
+fine on white but it is not what the reference draws, which is a plain white circle
+with a lightbulb in it.
 
-**The exit no longer vanishes in view (§9.2).** Two faults compounded, and the maze
-refit made both worse by making paths long. Travel was measured to the *board* edge,
-but `BoardViewport` clips further out — the board is centred in it, so on a 20x20
-board there is 100dp of open space above and below where an arrow was being removed
-in plain sight, 68dp short of the clip. On top of that the fade ran from 82% of the
-animation, which the easing puts only 72% of the way along the travel; the longer the
-body, the earlier in the journey that lands. Arrows now travel to the clip and there
-is no fade at all. Watch a long vertical arrow near the top of a late level — it
-should slide up and be gone, never dim.
+**Levels 11-500 were deliberately left alone.** They still carry the old curve — 16-22
+arrows on a 10×10 at level 11, against 27 on a 13×13 at level 5 — so the game gets
+*easier* and sparser at level 11 and stays that way for a while. That is the one
+visible seam this refit leaves, and closing it means re-cutting `BAND_TABLE` above
+level 10 and regenerating 490 levels, which is roughly an hour of generation plus a
+contact-sheet review.
 
-**The rope exit.** Tap an L- or U-shaped arrow. It should **unbend** — the corner
-feeding backwards down the body until the arrow is straight — then leave the board in
-the direction its head points, staying visible until it is well clear. Nothing else on
-the board should shift while it travels. It now draws through the same `ArrowShape` as
-the resting board, so if the resting arrow looks right the flying one cannot drift.
-
-One judgement call worth a second opinion on screen: the head is **1.5× the stroke in
-half-width**, i.e. 3× across. Read as full width that is above the "1.5-2×" the
-redesign asked for, but a head 2× the line across barely registers as a triangle. If
-it still looks big, `arrowHeadSizeFor` in `src/utils/layout.ts` is the one place.
+Worth knowing before doing that: the machinery is already in place and was measured
+once. `BLOCK_SHAPE` + `poreCandidates` + `startingBox` in `tools/pipeline/mask.ts`
+give the reference's rectangular fields at any grid size; `shapeForLevel` is what
+currently gates them to levels 1-10. Two things bit when it was tried across all 500
+and would bite again: §7.2's D saturates on dense boards — turns, span and occupancy
+all pin, the reachable window narrows to about a point above grid 20, and the 7.0
+ceiling has to come up or every target above level 250 is unreachable — and the
+orientation search stops finding a solvable board past roughly 520 cells
+(`arrows × mean length`), which is what caps the tail rather than anything visual.
 
 ---
 
@@ -134,10 +219,13 @@ it still looks big, `arrowHeadSizeFor` in `src/utils/layout.ts` is the one place
 
 ## Still outstanding
 
-- **Fine grids lean on zoom.** A 22×22 board is a 14dp cell; `MAX_HIT_RADIUS_CELLS`
-  keeps taps honest but the target is genuinely small at fit scale. §5.5's pinch-zoom
-  is the intended answer and the level-11 coach mark teaches it, but whether that
-  feels right on a real board is unknown until someone plays a late level.
+- **Every grid now leans on zoom, not just the fine ones.** `FULL_WIDTH_GRID` stops
+  a small board growing to fill the screen, so a 6×6 draws at the same ~19dp cell a
+  17×17 does — that is what the reference does and it is why its early boards sit
+  small on the page, but it means level 1 has the same touch precision as level 300
+  rather than a much easier one. `MAX_HIT_RADIUS_CELLS` keeps an ambiguous tap
+  resolving to nothing, and §5.5's pinch-zoom is the intended answer, but whether a
+  19dp cell is comfortable on a real phone is unknown until someone plays it.
 - **Level packs grew 700KB -> 960KB.** More cells per arrow is more path data. They
   are still lazy-loaded three at a time, so this is bundle weight, not memory.
 

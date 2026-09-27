@@ -179,19 +179,22 @@ describe('playing a real level to completion', () => {
    * tweak to the constants is free, going back to a tube is not.
    */
   it('draws a thin line with a small head at every grid size', () => {
-    // Every cell size the fit calculation produces from 5x5 up to 14x14.
-    for (const cell of [16, 24, 32, 46, 65]) {
+    // Every cell size the fit calculation produces from a 6x6 board up to a 28x28.
+    for (const cell of [12, 16, 24, 32, 46, 65]) {
       const stroke = strokeWidthFor(cell);
-      expect(stroke).toBeLessThanOrEqual(cell * 0.16);
-      expect(stroke).toBeGreaterThanOrEqual(2.5);
+      // 0.19 is the ratio measured off the reference boards; the ceiling is that
+      // plus a hair, so the line stays a line and the white gap either side of it —
+      // the only thing separating two neighbouring paths — survives.
+      expect(stroke).toBeLessThanOrEqual(cell * 0.2);
+      expect(stroke).toBeGreaterThanOrEqual(2);
 
       const head = arrowHeadSizeFor(cell, stroke, 4);
-      // The head is a terminator: a couple of line-widths across, nowhere near the
-      // five-to-eight it becomes if it is sized off the cell instead.
-      expect(head.halfWidth / stroke).toBeLessThanOrEqual(2);
-      expect(head.length / stroke).toBeLessThanOrEqual(3);
+      // The head is a terminator: three line-widths across and three long, nowhere
+      // near the five-to-eight it becomes if it is sized off the cell instead.
+      expect(head.halfWidth / stroke).toBeLessThanOrEqual(1.8);
+      expect(head.length / stroke).toBeLessThanOrEqual(3.2);
       // ...and never wide enough to reach into the neighbouring path.
-      expect(head.halfWidth * 2).toBeLessThan(cell * 0.6);
+      expect(head.halfWidth * 2).toBeLessThan(cell * 0.75);
     }
   });
 });

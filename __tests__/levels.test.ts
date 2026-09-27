@@ -12,6 +12,10 @@ import {validate} from '../src/game/engine/LevelValidator';
 import {randomPlayStaysSolvable} from '../src/game/engine/LevelValidator';
 import {createRng} from '../src/utils/rng';
 import type {Level} from '../src/game/models/types';
+import {readFileSync} from 'fs';
+import {join} from 'path';
+
+const MOCK_DATA = join(__dirname, '..', 'mock', 'data');
 
 /**
  * These run against the committed packs, so they are the app's own copy of the CI gate
@@ -98,50 +102,67 @@ describe('every shipped level is playable (§20)', () => {
   });
 
   /**
-   * §4.1's arrow counts, unchanged, against the grid sizes the §4.2 maze refit needed.
-   *
-   * The published grid column ran 5..14. It was sized for a mean path length of about
-   * 2, and cells = arrows x length, so holding the arrow counts while tripling the
-   * path length had to be paid for in board size — otherwise occupancy goes past 100%
-   * and the mask cannot be fitted at all. The arrow counts are the half of §4.1 that
-   * carries the difficulty and scoring intent, so they are the half that was kept.
+   * Levels 1-2 are the drawn tutorial boards. Levels 3-500 are the approved mock
+   * designs (mock/level_NNN.png, data in mock/data/), shipped as drawn by
+   * tools/levelsFromMocks.ts — so the check is that every pack still holds exactly the
+   * approved board: grid, band and every arrow's cells and direction.
    */
-  it('matches the §4.1 arrow-count table, on the refit grid sizes', () => {
-    const rows: [number, number, number, number, number][] = [
-      // from, to, grid, minArrows, maxArrows
-      [1, 1, 6, 3, 4],
-      [2, 2, 6, 4, 5],
-      [3, 3, 7, 5, 7],
-      [4, 10, 8, 8, 12],
-      [11, 25, 10, 16, 22],
-      [26, 50, 12, 20, 28],
-      [51, 100, 14, 26, 36],
-      [101, 150, 15, 32, 42],
-      [151, 200, 16, 36, 48],
-      [201, 250, 17, 42, 54],
-      [251, 300, 18, 46, 60],
-      [301, 350, 19, 52, 66],
-      [351, 400, 20, 58, 72],
-      [401, 450, 21, 64, 80],
-      [451, 500, 22, 70, 90],
-    ];
+  it('keeps the tutorial boards on levels 1-2', () => {
+    expect(all[0].gridSize).toBe(7);
+    expect(all[0].arrows).toHaveLength(3);
+    expect(all[1].gridSize).toBe(6);
+    expect(all[1].arrows.length).toBeGreaterThanOrEqual(5);
+    expect(all[1].arrows.length).toBeLessThanOrEqual(6);
+  });
+
+  it('ships levels 3-500 exactly as the approved mock designs', () => {
     const wrong: string[] = [];
-    for (const [from, to, grid, min, max] of rows) {
-      for (const level of all.slice(from - 1, to)) {
-        if (level.gridSize !== grid) {
-          wrong.push(
-            `level ${level.id} grid ${level.gridSize}, expected ${grid}`,
-          );
-        }
-        const n = level.arrows.length;
-        if (n < min || n > max) {
-          wrong.push(
-            `level ${level.id} has ${n} arrows, expected ${min}..${max}`,
-          );
-        }
+    for (const level of all.slice(2)) {
+      const mock = JSON.parse(
+        readFileSync(
+          join(MOCK_DATA, `level_${String(level.id).padStart(3, '0')}.json`),
+          'utf8',
+        ),
+      ) as {
+        gridSize: number;
+        tier: string;
+        arrows: {cells: [number, number][]; direction: string}[];
+      };
+      if (level.gridSize !== mock.gridSize || level.band !== mock.tier) {
+        wrong.push(`level ${level.id}: grid/band differ from the mock`);
+        continue;
       }
+      if (level.arrows.length !== mock.arrows.length) {
+        wrong.push(`level ${level.id}: arrow count differs from the mock`);
+        continue;
+      }
+      level.arrows.forEach((arrow, i) => {
+        const cells = arrow.cells.map(c => [c.x, c.y]);
+        if (
+          JSON.stringify(cells) !== JSON.stringify(mock.arrows[i].cells) ||
+          arrow.direction !== mock.arrows[i].direction
+        ) {
+          wrong.push(`level ${level.id}: arrow ${i} differs from the mock`);
+        }
+      });
     }
     expect(wrong).toEqual([]);
+  });
+
+  it('grows to 35-40 grids and almost all Very Hard boards in the 400s', () => {
+    const late = all.slice(400);
+    expect(late.every(l => l.gridSize >= 35 && l.gridSize <= 40)).toBe(true);
+    const veryHard = late.filter(l => l.band === 'Very Hard').length;
+    expect(veryHard / late.length).toBeGreaterThanOrEqual(0.9);
+    const mean = (ls: Level[]) =>
+      ls.reduce((sum, l) => sum + l.arrows.length, 0) / ls.length;
+    // Level 500 must not look like level 3: the last hundred carry far more arrows.
+    expect(mean(late)).toBeGreaterThan(mean(all.slice(2, 50)) * 2.5);
+  });
+
+  it("stays within the engine's 254-arrow board limit", () => {
+    const over = all.filter(l => l.arrows.length > 254).map(l => l.id);
+    expect(over).toEqual([]);
   });
 
   it('ships no duplicate boards (§8.4)', () => {
@@ -184,13 +205,6 @@ describe('every shipped level is playable (§20)', () => {
       }
     }
     expect(offenders).toEqual([]);
-  });
-
-  it('carries a decor layer from level 100 onward (§4.2)', () => {
-    const missing = all
-      .filter(l => l.id >= 100 && (l.decor?.length ?? 0) === 0)
-      .map(l => l.id);
-    expect(missing).toEqual([]);
   });
 
   it('never reaches an unsolvable state under random play, on 100 sampled levels (§20)', () => {

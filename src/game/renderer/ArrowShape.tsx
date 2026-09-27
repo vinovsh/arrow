@@ -9,29 +9,37 @@ interface Props {
   arrow: ArrowPath;
   geometry: ArrowStrokes;
   tier: RenderTier;
-  /** §9.3 — outlined at 25% as the blocker of a failed tap. */
+  /** §9.3 — the arrow that blocked a failed tap. */
   highlighted?: boolean;
+  /** §9.3 — the arrow the player actually tapped and could not free. */
+  blocked?: boolean;
   /** §3.3, §3.4 — pulsing for a hint or the silent assist. */
   pulsing?: boolean;
 }
 
 /**
- * §10.2 — the layer stack, and every width in it as a multiple of the stroke.
+ * §10.2 — one line, one colour, no layers.
  *
- * Tying these to the stroke rather than to the cell is the whole trick behind the
- * thin look: halve the line and the halo, the casing and the gloss all halve with it,
- * so an arrow stays the same drawing from a 5x5 board to a 14x14 one. Sized off the
- * cell instead — which is what the old chunky version did — thinning the line just
- * leaves the decoration behind at pipe scale, swallowing the line inside its own glow.
+ * This used to draw five passes per arrow — glow, casing, body, gloss, and a halo for
+ * each attention state — in one of eight hues carried by the level data. All of that
+ * is gone, and the reason is worth keeping: on a board of forty interlocking paths
+ * the decoration *was* the noise. A glow and a casing are both ways of separating a
+ * line from what sits next to it, and on a dense maze they fight the one separator
+ * that actually works, which is the white page showing through the gap. The hues did
+ * the same thing to the silhouette: eight colours across one picture stops it reading
+ * as one picture.
  *
- * The two attention states run wider than everything else because a halo has to clear
- * the glow to be seen at all at 3dp.
+ * So the arrow is now exactly what the reference draws — a navy stroke with a solid
+ * triangle on the end — and `arrow.color` is deliberately not read. The palette is
+ * still in the theme and still in the level data; nothing on the board consults it.
+ *
+ * `tier` is kept in the signature because every caller still threads it through, but
+ * nothing here varies by it and `renderTierFor` no longer has anything to say: two
+ * paths per arrow is already below the budget the tier existed to defend.
  */
-const GLOW = 2.4;
-const GLOW_OPACITY = 0.22;
-const CASING = 1.75;
-const GLOSS = 0.26;
-const HIGHLIGHT = 3;
+
+/** Wide enough to clear the stroke and be seen as a halo rather than as a thicker line. */
+const HIGHLIGHT = 2.6;
 const PULSE = 3.4;
 
 /**
@@ -44,60 +52,71 @@ const PULSE = 3.4;
  * drawn, so a resting `ArrowGeometry` and a deforming `RopeGeometry` both satisfy it.
  */
 function ArrowShapeBase({
-  arrow,
   geometry,
-  tier,
   highlighted = false,
+  blocked = false,
   pulsing = false,
 }: Props): React.JSX.Element {
-  const colour = theme.arrow[arrow.color];
   const {body, head, strokeWidth: w} = geometry;
   const hasBody = body !== '';
 
+  // §9.3 — a failed tap is the only thing that puts a second colour on the board, and
+  // it puts two: the arrow the player tapped goes bright, the arrow in its way goes
+  // muted. Recolouring the arrows rather than ringing them is both louder and
+  // cheaper — at these stroke widths an outline at 25% was barely visible on a dense
+  // board — and the two tones are what say *which* of the two the player touched.
+  const colour = blocked
+    ? theme.board.blocked
+    : highlighted
+    ? theme.board.blocker
+    : theme.board.ink;
+
   return (
     <G>
-      {/* Glow and casing. Above 60 arrows the tier bakes one shared underlay instead
-          of giving every arrow its own (§13); there the underlay is the casing, since
-          on a board that dense separating neighbouring paths is worth far more than a
-          bloom that would just haze the picture over. */}
-      {!tier.bakedUnderlay && (
+      {pulsing && (
         <>
           {hasBody && (
             <Path
               d={body}
-              stroke={colour}
-              strokeWidth={w * GLOW}
+              stroke={theme.state.star}
+              strokeWidth={w * PULSE}
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
-              strokeOpacity={GLOW_OPACITY * tier.glowOpacityScale}
+              opacity={0.45}
             />
           )}
           <Path
             d={head}
-            fill={colour}
-            stroke={colour}
-            strokeWidth={w * 1.1}
+            fill="none"
+            stroke={theme.state.star}
+            strokeWidth={w * 1.6}
             strokeLinejoin="round"
-            opacity={GLOW_OPACITY * tier.glowOpacityScale}
+            opacity={0.45}
           />
+        </>
+      )}
 
+      {highlighted && (
+        <>
           {hasBody && (
             <Path
               d={body}
-              stroke={theme.arrowInk.casing}
-              strokeWidth={w * CASING}
+              stroke={theme.board.blocker}
+              strokeWidth={w * HIGHLIGHT}
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
+              opacity={0.18}
             />
           )}
           <Path
             d={head}
-            fill={theme.arrowInk.casing}
-            stroke={theme.arrowInk.casing}
-            strokeWidth={w * 0.7}
+            fill="none"
+            stroke={theme.board.blocker}
+            strokeWidth={w * 1.2}
             strokeLinejoin="round"
+            opacity={0.18}
           />
         </>
       )}
@@ -113,69 +132,6 @@ function ArrowShapeBase({
         />
       )}
       <Path d={head} fill={colour} />
-
-      {/* Gloss — the third layer, and the first thing the tier drops (§13). */}
-      {tier.layersPerArrow === 3 && hasBody && (
-        <Path
-          d={body}
-          stroke={theme.arrowInk.gloss}
-          strokeWidth={w * GLOSS}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-          opacity={0.22}
-        />
-      )}
-
-      {/* §9.3 — the blocker outline: the single highest-value readability cue in the
-          game, and worth more the denser the board gets. */}
-      {highlighted && (
-        <>
-          {hasBody && (
-            <Path
-              d={body}
-              stroke={theme.text.primary}
-              strokeWidth={w * HIGHLIGHT}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-              opacity={0.25}
-            />
-          )}
-          <Path
-            d={head}
-            fill="none"
-            stroke={theme.text.primary}
-            strokeWidth={w}
-            strokeLinejoin="round"
-            opacity={0.25}
-          />
-        </>
-      )}
-
-      {pulsing && (
-        <>
-          {hasBody && (
-            <Path
-              d={body}
-              stroke={theme.state.star}
-              strokeWidth={w * PULSE}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-              opacity={0.5}
-            />
-          )}
-          <Path
-            d={head}
-            fill="none"
-            stroke={theme.state.star}
-            strokeWidth={w * 1.2}
-            strokeLinejoin="round"
-            opacity={0.5}
-          />
-        </>
-      )}
     </G>
   );
 }

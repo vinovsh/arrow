@@ -13,6 +13,8 @@ export interface SaveData {
   completedLevels: number[];
   levelStars: Record<number, 1 | 2 | 3>;
   levelScores: Record<number, number>;
+  /** Fastest solve per level, in seconds (paused time excluded). */
+  levelBestTimes: Record<number, number>;
   bestScore: number;
   soundEnabled: boolean;
   musicEnabled: boolean;
@@ -28,6 +30,7 @@ export function defaultSave(): SaveData {
     completedLevels: [],
     levelStars: {},
     levelScores: {},
+    levelBestTimes: {},
     bestScore: 0,
     soundEnabled: true,
     musicEnabled: true,
@@ -112,6 +115,11 @@ export function migrate(raw: unknown): SaveData {
     completedLevels: numberArray(raw.completedLevels),
     levelStars: stars,
     levelScores: scores,
+    levelBestTimes: numberRecord(
+      raw.levelBestTimes,
+      0,
+      Number.MAX_SAFE_INTEGER,
+    ),
     bestScore: Math.max(storedBest, derivedBest),
     soundEnabled: bool(raw.soundEnabled, base.soundEnabled),
     musicEnabled: bool(raw.musicEnabled, base.musicEnabled),
