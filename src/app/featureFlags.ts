@@ -3,14 +3,14 @@
  * playtest tweak never means hunting through screens.
  */
 export const FEATURES = {
-  /** §3.2 — hearts are disabled entirely below this level. */
-  livesFromLevel: 26,
+  /** Each blocked arrow costs one heart, starting with the first level. */
+  livesFromLevel: 1,
   /** §6 — scripted coach marks run to level 10, plus the zoom and hearts marks. */
   tutorialLastScriptedLevel: 10,
   zoomCoachMarkLevel: 11,
   heartsCoachMarkLevel: 26,
-  /** §16 — no ad SDK ships in v1; the rewarded life is granted immediately. */
-  adsEnabled: false,
+  /** Google rewarded ads are offered only from the out-of-lives popup. */
+  adsEnabled: true,
   /** §8.7 — 7 taps on the version string, and only in a debug build. */
   devMenuTapCount: 7,
   totalLevels: 500,

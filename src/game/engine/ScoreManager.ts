@@ -22,12 +22,7 @@ export interface ScoreBreakdown {
   speed: SpeedAccolade;
 }
 
-export type SpeedKey =
-  | 'lightning'
-  | 'blazing'
-  | 'swift'
-  | 'ahead'
-  | 'steady';
+export type SpeedKey = 'lightning' | 'blazing' | 'swift' | 'ahead' | 'steady';
 
 export interface SpeedAccolade {
   key: SpeedKey;
@@ -96,10 +91,6 @@ export function speedAccolade(
     rare: false,
   };
 }
-
-/** §3.2 — a heart is spent every this-many blocked taps. */
-export const blockedTapsPerHeart = (n: number): number =>
-  Math.max(4, Math.round(n * 0.12));
 
 /** §11 — mistake tolerance for two and three stars, scaled to board size. */
 export const twoStarThreshold = (n: number): number =>

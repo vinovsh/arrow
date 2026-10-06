@@ -227,3 +227,27 @@ the reasoning recorded at the site:
   average sits within 1.5 of its own floor, so the gap does not exist to use.
   `curveReport` scores both the literal rule and what was achieved, and the §7.2 refit
   the spec already calls for after playtest is what would widen it.
+
+## Rewarded lives (Google AdMob)
+
+Every blocked arrow costs one heart. At zero hearts the game pauses and offers
+**Get more lives** (complete a rewarded ad for one heart) or **Restart level**.
+Closing an ad early or an ad failure does not grant a life or dismiss the popup.
+A restart restores all three hearts and resets the puzzle without requiring an ad.
+
+Debug APKs always use Google's sample Android app and rewarded ad unit IDs.
+Rebuild the Android APK after adding the native ad module; a Metro reload alone
+cannot install it. The integration uses Mobile Ads SDK 23.6.0 and UMP 3.1.0,
+compatible with this React Native version's Kotlin 1.9.24 toolchain.
+Release builds need your own Gradle properties:
+
+```properties
+ADMOB_APP_ID=ca-app-pub-YOUR_PUBLISHER_ID~YOUR_APP_ID
+ADMOB_REWARDED_AD_UNIT_ID=ca-app-pub-YOUR_PUBLISHER_ID/YOUR_REWARDED_UNIT_ID
+```
+
+Set these in your Gradle properties or pass them with `-P`. A release build with
+no rewarded unit configured reports the ad as unavailable. Configure your AdMob
+privacy messages before serving production ads. Required consent forms run before
+ad initialization; Settings provides **Ad privacy choices** to change consent.
+Ads need internet, while restarting and playing puzzles still work offline.

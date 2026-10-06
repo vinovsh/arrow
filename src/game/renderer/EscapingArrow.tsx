@@ -1,12 +1,14 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import Svg, {G} from 'react-native-svg';
+import Svg, {Circle, G} from 'react-native-svg';
+import {theme} from '../../theme/theme';
 import type {ArrowPath} from '../models/types';
 import type {RenderTier} from '../../app/featureFlags';
 import {ArrowShape} from './ArrowShape';
 import {
   EXIT_MARGIN_CELLS,
   buildRopeGeometry,
+  buildArrowGeometry,
   exitTravelDistance,
 } from './arrowGeometry';
 import {escapeDurationMs} from '../../config/arrowMotion';
@@ -66,7 +68,14 @@ function EscapingArrowBase({
     () => exitTravelDistance(arrow, gridSize, cellSize, clearance),
     [arrow, gridSize, cellSize, clearance],
   );
-  const duration = useMemo(() => escapeDurationMs(travel, size), [travel, size]);
+  const duration = useMemo(
+    () => escapeDurationMs(travel, size),
+    [travel, size],
+  );
+  const launchPoint = useMemo(
+    () => buildArrowGeometry(arrow, cellSize).headCentre,
+    [arrow, cellSize],
+  );
 
   // The flight is clocked from the tap, not from this component's first render.
   //
@@ -223,11 +232,30 @@ function EscapingArrowBase({
       // boundary reads as deleted rather than as having left, so this one is not.
       style={[styles.layer, {left: bounds.x, top: bounds.y}]}
       pointerEvents="none">
+      {/* A small cyan ripple stays at the launch point while the arrow leaves. */}
+      {progress * duration < 300 && (
+        <G opacity={0.32 * (1 - (progress * duration) / 300)}>
+          <Circle
+            cx={launchPoint.x}
+            cy={launchPoint.y}
+            r={cellSize * (0.28 + (progress * duration) / 750)}
+            fill={theme.board.escapeGlow}
+          />
+          <Circle
+            cx={launchPoint.x}
+            cy={launchPoint.y}
+            r={cellSize * (0.35 + (progress * duration) / 650)}
+            stroke={theme.board.escapeGlow}
+            strokeWidth={1.5}
+            fill="none"
+          />
+        </G>
+      )}
       <G>
         {/* Drawn through the same component the resting board uses, so the arrow that
             lifts off is the one that was sitting there — every width, the casing and
             the gloss included, follows the geometry it is handed. */}
-        <ArrowShape arrow={arrow} geometry={geometry} tier={tier} />
+        <ArrowShape arrow={arrow} geometry={geometry} tier={tier} escaping />
       </G>
     </Svg>
   );

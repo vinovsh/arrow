@@ -1,7 +1,6 @@
 import {CollisionDetector} from '../src/game/engine/CollisionDetector';
 import {GameEngine} from '../src/game/engine/GameEngine';
 import type {ArrowPath, Level} from '../src/game/models/types';
-import {blockedTapsPerHeart} from '../src/game/engine/ScoreManager';
 
 const arrow = (
   id: string,
@@ -144,30 +143,41 @@ describe('GameEngine tap resolution', () => {
     expect(engine.resolveTap(0).kind).toBe('ignored');
   });
 
-  it('disables lives below level 26 however many mistakes are made (§3.2)', () => {
-    const engine = new GameEngine(
-      makeLevel([arrow('a', [[0, 0]], 'R'), arrow('b', [[3, 0]], 'D')], 5, 25),
-    );
-    for (let i = 0; i < 20; i++) {
-      engine.resolveTap(0);
+  it('costs exactly one heart per blocked tap at every level', () => {
+    for (const id of [1, 25, 26, 500]) {
+      const engine = new GameEngine(
+        makeLevel(
+          [arrow('a', [[0, 0]], 'R'), arrow('b', [[3, 0]], 'D')],
+          5,
+          id,
+        ),
+      );
+      expect(engine.livesEnabled).toBe(true);
+      for (const hearts of [2, 1, 0]) {
+        const outcome = engine.resolveTap(0);
+        expect(outcome.kind === 'blocked' && outcome.heartLost).toBe(true);
+        expect(engine.hearts).toBe(hearts);
+        expect(engine.activeCount).toBe(2);
+      }
+      expect(engine.resolveTap(0).kind).toBe('ignored');
+      expect(engine.resolveTap(1).kind).toBe('ignored');
+      expect(engine.hearts).toBe(0);
+      expect(engine.blockedTaps).toBe(3);
     }
-    expect(engine.livesEnabled).toBe(false);
-    expect(engine.hearts).toBe(3);
   });
 
-  it('spends a heart every max(4, n * 0.12) blocked taps from level 26 (§3.2)', () => {
-    const arrows = [arrow('a', [[0, 0]], 'R'), arrow('b', [[3, 0]], 'D')];
-    const engine = new GameEngine(makeLevel(arrows, 5, 26));
-    const per = blockedTapsPerHeart(arrows.length);
-    expect(per).toBe(4);
-
-    for (let i = 0; i < per - 1; i++) {
+  it('resumes the same board with one earned heart', () => {
+    const engine = new GameEngine(
+      makeLevel([arrow('a', [[0, 0]], 'R'), arrow('b', [[3, 0]], 'D')]),
+    );
+    for (let i = 0; i < 3; i++) {
       engine.resolveTap(0);
     }
-    expect(engine.hearts).toBe(3);
-    const outcome = engine.resolveTap(0);
-    expect(outcome.kind === 'blocked' && outcome.heartLost).toBe(true);
-    expect(engine.hearts).toBe(2);
+    engine.grantExtraLife();
+    expect(engine.hearts).toBe(1);
+    expect(engine.resolveTap(1).kind).toBe('escaped');
+    expect(engine.hearts).toBe(1);
+    expect(engine.activeCount).toBe(1);
   });
 
   it('restores the board, hearts and counters on restart at no cost (§3.2)', () => {
@@ -193,13 +203,11 @@ describe('GameEngine tap resolution', () => {
     engine.resume();
   });
 
-  it('offers the silent assist after four consecutive blocked taps (§3.3)', () => {
+  it('offers the silent assist before the player loses their last heart', () => {
     const engine = new GameEngine(
       makeLevel([arrow('a', [[0, 0]], 'R'), arrow('b', [[3, 0]], 'D')], 5, 30),
     );
-    for (let i = 0; i < 3; i++) {
-      engine.resolveTap(0);
-    }
+    engine.resolveTap(0);
     expect(engine.shouldOfferSilentAssist()).toBe(false);
     engine.resolveTap(0);
     expect(engine.shouldOfferSilentAssist()).toBe(true);

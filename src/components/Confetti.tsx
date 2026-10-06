@@ -16,7 +16,7 @@ interface Props {
 }
 
 const LIFE_MS = 3500;
-const DEFAULT_COUNT = 34;
+const DEFAULT_COUNT = 48;
 
 /**
  * §5.7 / §9.4 — the completion confetti.
@@ -30,7 +30,7 @@ export function Confetti({
   count = DEFAULT_COUNT,
 }: Props): React.JSX.Element {
   const {width, height} = useWindowDimensions();
-  const palette = useMemo(() => Object.values(theme.arrow), []);
+  const palette = theme.celebration.colours;
 
   const pieces = useMemo(
     () =>
@@ -43,6 +43,9 @@ export function Confetti({
         size: 6 + Math.random() * 7,
         colour: palette[i % palette.length],
         spin: (Math.random() - 0.5) * 900,
+        round: i % 3 === 0,
+        flutter: 2 + Math.random() * 3,
+        sway: 12 + Math.random() * 22,
       })),
     [count, width, startDelayMs, palette],
   );
@@ -64,6 +67,9 @@ function Piece({
   size,
   colour,
   spin,
+  round,
+  flutter,
+  sway,
   fallTo,
 }: {
   x: number;
@@ -73,6 +79,9 @@ function Piece({
   size: number;
   colour: string;
   spin: number;
+  round: boolean;
+  flutter: number;
+  sway: number;
   fallTo: number;
 }): React.JSX.Element {
   const progress = useSharedValue(0);
@@ -88,9 +97,24 @@ function Piece({
     opacity:
       progress.value === 0 ? 0 : 1 - Math.max(0, progress.value - 0.75) * 4,
     transform: [
-      {translateX: x + drift * progress.value},
-      {translateY: -30 + fallTo * progress.value},
+      {
+        translateX:
+          x +
+          drift * progress.value +
+          Math.sin(progress.value * Math.PI * flutter) * sway,
+      },
+      {
+        translateY:
+          -30 +
+          fallTo *
+            (0.35 * progress.value + 0.65 * progress.value * progress.value),
+      },
       {rotate: `${spin * progress.value}deg`},
+      {
+        scaleX: round
+          ? 1
+          : 0.4 + Math.abs(Math.cos(progress.value * Math.PI * flutter)) * 0.6,
+      },
     ],
   }));
 
@@ -98,7 +122,12 @@ function Piece({
     <Animated.View
       style={[
         styles.piece,
-        {width: size, height: size * 0.55, backgroundColor: colour},
+        {
+          width: size,
+          height: round ? size : size * 0.5,
+          backgroundColor: colour,
+        },
+        round && styles.round,
         style,
       ]}
     />
@@ -106,5 +135,6 @@ function Piece({
 }
 
 const styles = StyleSheet.create({
+  round: {borderRadius: theme.radius.pill},
   piece: {position: 'absolute', left: 0, top: 0, borderRadius: 2},
 });

@@ -15,6 +15,8 @@ interface Props {
   blocked?: boolean;
   /** §3.3, §3.4 — pulsing for a hint or the silent assist. */
   pulsing?: boolean;
+  /** The reference turns only the departing arrow cyan. */
+  escaping?: boolean;
 }
 
 /**
@@ -56,6 +58,7 @@ function ArrowShapeBase({
   highlighted = false,
   blocked = false,
   pulsing = false,
+  escaping = false,
 }: Props): React.JSX.Element {
   const {body, head, strokeWidth: w} = geometry;
   const hasBody = body !== '';
@@ -69,10 +72,33 @@ function ArrowShapeBase({
     ? theme.board.blocked
     : highlighted
     ? theme.board.blocker
+    : escaping
+    ? theme.board.escaping
     : theme.board.ink;
 
   return (
     <G>
+      {escaping && (
+        <G opacity={0.16}>
+          {hasBody && (
+            <Path
+              d={body}
+              stroke={theme.board.escapeGlow}
+              strokeWidth={w * 2.4}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+            />
+          )}
+          <Path
+            d={head}
+            fill={theme.board.escapeGlow}
+            stroke={theme.board.escapeGlow}
+            strokeWidth={w}
+            strokeLinejoin="round"
+          />
+        </G>
+      )}
       {pulsing && (
         <>
           {hasBody && (

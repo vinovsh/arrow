@@ -12,7 +12,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import type {RootStackParamList} from '../navigation/types';
 import {theme} from '../theme/theme';
 import {type as typography} from '../theme/typography';
-import {Hearts} from '../components/Hearts';
+import {GameHeader, GAME_HEADER_HEIGHT} from '../components/GameHeader';
 import {HintPill} from '../components/HintPill';
 import {FitButton} from '../components/FitButton';
 import {CoachMark} from '../components/CoachMark';
@@ -57,7 +57,7 @@ import {trace} from '../utils/tapTrace';
 type Props = NativeStackScreenProps<RootStackParamList, 'Game'>;
 
 /** §5.4 — 56dp header, 72dp footer, and the board takes what is left. */
-const HEADER_HEIGHT = 56;
+const HEADER_HEIGHT = GAME_HEADER_HEIGHT;
 const FOOTER_HEIGHT = 72;
 /** §9.3 — the blocker outline holds for 300ms. */
 const BLOCKER_HIGHLIGHT_MS = 300;
@@ -103,7 +103,6 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
     (level?.arrows ?? []).map(freshVisual),
   );
   const [hearts, setHearts] = useState(MAX_HEARTS);
-  const [heartsVisible, setHeartsVisible] = useState(false);
   const [hintsRemaining, setHintsRemaining] = useState(
     hintsRef.current.remaining,
   );
@@ -113,6 +112,9 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
   const [paused, setPaused] = useState(false);
   const [hintModal, setHintModal] = useState(false);
   const [outOfLives, setOutOfLives] = useState(false);
+  const [rewardLoading, setRewardLoading] = useState(false);
+  const [rewardError, setRewardError] = useState<string | null>(null);
+  const rewardInFlight = useRef(false);
   const [complete, setComplete] = useState<ScoreBreakdown | null>(null);
   const [newHighScore, setNewHighScore] = useState(false);
   const [bestTime, setBestTime] = useState<{
@@ -200,9 +202,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
     setVisuals(level.arrows.map(freshVisual));
     inFlight.current = 0;
     setHearts(engine.hearts);
-    // §5.4 — hearts fade in only after the first blocked tap on levels 1-25, and do
-    // not exist at all below the lives threshold (§3.2).
-    setHeartsVisible(engine.livesEnabled);
+
     setHintsRemaining(hintsRef.current.remaining);
     assistUsed.current = false;
     assistEscalated.current = false;
@@ -232,7 +232,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
       }
       const threshold = tutorialRef.current?.assistAfterSeconds() ?? 25;
       const stuck =
-        engine.consecutiveBlockedTaps >= 4 ||
+        engine.consecutiveBlockedTaps >= 2 ||
         engine.secondsSinceLastMove >= threshold ||
         engine.elapsedSeconds > 2.5 * engine.level.parTime;
       if (!stuck) {
@@ -326,7 +326,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
       // from it.
       const tappedAt = Date.now();
       trace('handleTap entered');
-      if (!engine || complete || paused) {
+      if (!engine || complete || paused || outOfLives) {
         return;
       }
       if (coachMark) {
@@ -409,9 +409,6 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
 
         if (!firstBlockSeen.current) {
           firstBlockSeen.current = true;
-          if (engine.livesEnabled) {
-            setHeartsVisible(true);
-          }
           const mark = tutorialRef.current?.onFirstBlocked(
             outcome.blockerIndex,
           );
@@ -424,15 +421,25 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
           Audio.play('life_lost');
           Haptics.medium();
           setHearts(engine.hearts);
-          setHeartsVisible(true);
+
           if (engine.hearts === 0) {
             Audio.play('game_over');
+            engine.pause();
+            setRewardError(null);
             setOutOfLives(true);
           }
         }
       }
     },
-    [engine, complete, paused, coachMark, metrics.cellSize, patchVisual],
+    [
+      engine,
+      complete,
+      paused,
+      outOfLives,
+      coachMark,
+      metrics.cellSize,
+      patchVisual,
+    ],
   );
 
   // ------------------------------------------------------------------ hint
@@ -490,9 +497,10 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
     inFlight.current = 0;
     setHearts(engine.hearts);
     setHintsRemaining(hintsRef.current.remaining);
-    setHeartsVisible(engine.livesEnabled && firstBlockSeen.current);
+
     setPaused(false);
     setOutOfLives(false);
+    setRewardError(null);
     setComplete(null);
     assistUsed.current = false;
     assistEscalated.current = false;
@@ -562,24 +570,19 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
         translucent={false}
       />
 
-      {/* §5.4 — hearts, level, gear. No score, no move counter, no timer, no ad. */}
-      <View style={styles.header}>
-        <Hearts hearts={hearts} visible={heartsVisible} />
-        <Text style={styles.levelLabel}>LEVEL {level.id}</Text>
-        <ClickPressable
-          onPress={() => {
-            engine.pause();
-            setPaused(true);
-          }}
-          // §8.7 — developer mode is never reachable by a normal user in release:
-          // __DEV__ is compiled away, so in a release build this is an ordinary gear.
-          onLongPress={__DEV__ ? () => setDevOpen(true) : undefined}
-          accessibilityRole="button"
-          accessibilityLabel="Pause"
-          style={styles.gear}>
-          <Text style={styles.gearGlyph}>⚙</Text>
-        </ClickPressable>
-      </View>
+      <GameHeader
+        key={level.id}
+        levelId={level.id}
+        band={level.band}
+        hearts={hearts}
+        remaining={visuals.filter(visual => visual.state === 'active').length}
+        onBack={() => navigation.navigate('Home')}
+        onPause={() => {
+          engine.pause();
+          setPaused(true);
+        }}
+        onDeveloper={__DEV__ ? () => setDevOpen(true) : undefined}
+      />
 
       <View style={styles.boardArea}>
         <FitButton
@@ -729,16 +732,44 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
 
       <OutOfLivesOverlay
         visible={outOfLives}
+        loading={rewardLoading}
+        error={rewardError}
         onWatchVideo={() => {
-          // §3.2 / §16 — the rewarded seam. NoopAdService grants immediately, so the
-          // button reads CONTINUE +1 LIFE and costs the player nothing.
-          void Ads.showRewarded('extra-life').then(granted => {
-            if (granted) {
-              engine.grantExtraLife();
-              setHearts(engine.hearts);
-            }
-            setOutOfLives(false);
-          });
+          if (rewardInFlight.current) {
+            return;
+          }
+          rewardInFlight.current = true;
+          setRewardLoading(true);
+          setRewardError(null);
+          void Ads.showRewarded('extra-life')
+            .then(granted => {
+              if (engineRef.current !== engine) {
+                return;
+              }
+              if (granted) {
+                engine.grantExtraLife();
+                setHearts(engine.hearts);
+                engine.resume();
+                setOutOfLives(false);
+              } else {
+                setRewardError(
+                  'Finish the rewarded ad to get a heart, or restart the level.',
+                );
+              }
+            })
+            .catch((error: unknown) => {
+              if (engineRef.current === engine) {
+                setRewardError(
+                  error instanceof Error
+                    ? error.message
+                    : 'The ad is unavailable. Please try again.',
+                );
+              }
+            })
+            .finally(() => {
+              rewardInFlight.current = false;
+              setRewardLoading(false);
+            });
         }}
         onRetry={restart}
       />
@@ -852,28 +883,6 @@ function spotlightFor(
  */
 const styles = StyleSheet.create({
   root: {flex: 1, backgroundColor: theme.bg.base},
-  header: {
-    height: HEADER_HEIGHT,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: theme.space.md,
-  },
-  levelLabel: {
-    ...typography.ui(16),
-    flex: 1,
-    textAlign: 'center',
-    letterSpacing: 2,
-    color: theme.board.title,
-  },
-  gear: {
-    width: 44,
-    height: 44,
-    backgroundColor: theme.bg.panel,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  gearGlyph: {fontSize: 22, color: theme.board.chrome},
   boardArea: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   // Sized by the board, but never clipping it: the exit animation lives here.
   boardStack: {

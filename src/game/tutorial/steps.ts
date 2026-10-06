@@ -129,7 +129,10 @@ export const HOW_TO_PLAY_CARDS: readonly {title: string; body: string}[] = [
     title: 'Follow the head',
     body: 'It goes where the arrowhead points, even around corners.',
   },
-  {title: 'Blocked?', body: 'It shakes. Clear whatever is in the way first.'},
+  {
+    title: 'Blocked?',
+    body: 'Each blocked tap costs one heart. Clear the arrow in its way first.',
+  },
   {title: 'Busy board?', body: 'Pinch to zoom in and tap precisely.'},
   {
     title: 'Clear it all',

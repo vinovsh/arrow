@@ -86,11 +86,11 @@ describe('onboarding script (§6)', () => {
     expect(new TutorialController(engineFor(26)).onLevelStart()).not.toBeNull();
   });
 
-  it('fires the hearts mark exactly where lives switch on', () => {
+  it('keeps the dedicated hearts reminder and enables lives on earlier levels', () => {
     const step = stepFor(26);
     expect(step?.target.kind).toBe('hearts');
     expect(engineFor(26).livesEnabled).toBe(true);
-    expect(engineFor(25).livesEnabled).toBe(false);
+    expect(engineFor(25).livesEnabled).toBe(true);
   });
 
   it('ships five How To Play cards, reachable from Home and Settings', () => {
@@ -138,9 +138,9 @@ describe('onboarding levels are as gentle as the script assumes (§6)', () => {
     expect(turning.length).toBeGreaterThanOrEqual(1);
   });
 
-  it('keeps lives off for the whole scripted run (§3.2)', () => {
+  it('uses the same heart rules throughout the scripted run', () => {
     for (let id = 1; id <= 25; id++) {
-      expect(engineFor(id).livesEnabled).toBe(false);
+      expect(engineFor(id).livesEnabled).toBe(true);
     }
   });
 });

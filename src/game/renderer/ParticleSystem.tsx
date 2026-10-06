@@ -20,7 +20,7 @@ import {theme} from '../../theme/theme';
  * off-screen and made transparent when its life runs out.
  */
 export const MAX_PARTICLES = 80;
-const PARTICLE_LIFE_MS = 400;
+const PARTICLE_LIFE_MS = 1100;
 /** §9.4 — the completion burst is capped separately and is the densest moment. */
 export const BURST_MAX = 60;
 
@@ -40,12 +40,15 @@ interface ParticleState {
   vx: number;
   vy: number;
   life: number;
+  lifetime: number;
+  rotation: number;
+  spin: number;
+  round: boolean;
   size: number;
   colour: string;
 }
 
-/** Ink, and two steps of it towards the page, so the burst has depth without hue. */
-const BURST_PALETTE = [theme.board.ink, '#4A5680', '#8B93AD'] as const;
+const BURST_PALETTE = theme.celebration.colours;
 
 const emptyParticle = (): ParticleState => ({
   x: 0,
@@ -53,6 +56,10 @@ const emptyParticle = (): ParticleState => ({
   vx: 0,
   vy: 0,
   life: 0,
+  lifetime: PARTICLE_LIFE_MS,
+  rotation: 0,
+  spin: 0,
+  round: true,
   size: 4,
   colour: theme.board.ink,
 });
@@ -71,14 +78,19 @@ function Sprite({
 }): React.JSX.Element {
   const style = useAnimatedStyle(() => {
     const p = particles.value[index];
-    const t = p.life / PARTICLE_LIFE_MS;
+    const t = Math.max(0, Math.min(1, p.life / p.lifetime));
     return {
-      opacity: t <= 0 ? 0 : t,
+      opacity: t <= 0 ? 0 : Math.min(1, t / 0.35),
       width: p.size,
-      height: p.size,
-      borderRadius: p.size / 2,
+      height: p.round ? p.size : p.size * 0.45,
+      borderRadius: p.round ? p.size / 2 : 2,
       backgroundColor: p.colour,
-      transform: [{translateX: p.x}, {translateY: p.y}, {scale: 0.6 + t * 0.6}],
+      transform: [
+        {translateX: p.x},
+        {translateY: p.y},
+        {rotate: `${p.rotation}deg`},
+        {scale: 0.8 + t * 0.2},
+      ],
     };
   });
   return <Animated.View style={[styles.sprite, style]} pointerEvents="none" />;
@@ -115,13 +127,14 @@ function ParticleSystemBase(
         continue;
       }
       alive = true;
-      p.life -= dt;
+      p.life = Math.max(0, p.life - dt);
       p.x += p.vx * (dt / 1000);
       p.y += p.vy * (dt / 1000);
-      // A touch of drag so trails feather out instead of shooting off in straight
-      // lines; additive blending is approximated by the fade alone.
-      p.vx *= 0.94;
-      p.vy *= 0.94;
+      // Frame-rate independent drag, then gravity for a soft confetti arc.
+      const drag = Math.pow(0.985, dt / 16.67);
+      p.vx *= drag;
+      p.vy = p.vy * drag + (210 * dt) / 1000;
+      p.rotation += (p.spin * dt) / 1000;
     }
     if (alive) {
       particles.value = [...next];
@@ -159,22 +172,24 @@ function ParticleSystemBase(
     ref,
     () => ({
       burst: (x, y, count) => {
-        // §10.2 — the board is one ink, and so is the burst that comes off it.
-        // Eight-hue confetti on a white page reads as a different game's effect; the
-        // celebration colour belongs on the completion screen, not on the board.
         const palette = BURST_PALETTE;
         const total = Math.min(count, BURST_MAX);
         const batch: ParticleState[] = [];
         for (let i = 0; i < total; i++) {
-          const angle = (i / total) * Math.PI * 2;
-          const speed = 140 + Math.random() * 180;
+          const angle = (i / total) * Math.PI * 2 + (Math.random() - 0.5) * 0.2;
+          const speed = 100 + Math.random() * 170;
+          const lifetime = PARTICLE_LIFE_MS * (0.8 + Math.random() * 0.4);
           batch.push({
             x,
             y,
             vx: Math.cos(angle) * speed,
-            vy: Math.sin(angle) * speed,
-            life: PARTICLE_LIFE_MS * 2,
-            size: 4 + Math.random() * 5,
+            vy: Math.sin(angle) * speed - 75,
+            life: lifetime,
+            lifetime,
+            rotation: Math.random() * 360,
+            spin: (Math.random() - 0.5) * 480,
+            round: i % 3 === 0,
+            size: 5 + Math.random() * 5,
             colour: palette[i % palette.length],
           });
         }

@@ -1,11 +1,6 @@
 import type {ArrowState, Level} from '../models/types';
 import {CollisionDetector} from './CollisionDetector';
-import {
-  HitTester,
-  HIT_RADIUS_DP,
-  MAX_HIT_RADIUS_CELLS,
-} from './HitTester';
-import {blockedTapsPerHeart} from './ScoreManager';
+import {HitTester, HIT_RADIUS_DP, MAX_HIT_RADIUS_CELLS} from './HitTester';
 import {FEATURES} from '../../app/featureFlags';
 
 export type TapOutcome =
@@ -155,7 +150,11 @@ export class GameEngine {
 
   /** §2.2 — tap resolution. The caller owns animation, sound and haptics. */
   resolveTap(arrowIndex: number): TapOutcome {
-    if (arrowIndex < 0 || this.states[arrowIndex] !== 'active') {
+    if (
+      (this.livesEnabled && this.hearts === 0) ||
+      arrowIndex < 0 ||
+      this.states[arrowIndex] !== 'active'
+    ) {
       return {kind: 'ignored'};
     }
 
@@ -179,8 +178,7 @@ export class GameEngine {
     this.consecutiveBlocked++;
     let heartLost = false;
     if (this.livesEnabled) {
-      const per = blockedTapsPerHeart(this.level.arrows.length);
-      if (this.blockedTaps % per === 0 && this.hearts > 0) {
+      if (this.hearts > 0) {
         this.hearts--;
         heartLost = true;
       }
@@ -194,7 +192,7 @@ export class GameEngine {
    */
   shouldOfferSilentAssist(): boolean {
     return (
-      this.consecutiveBlocked >= 4 ||
+      this.consecutiveBlocked >= 2 ||
       this.secondsSinceLastMove >= 25 ||
       this.elapsedSeconds > 2.5 * this.level.parTime
     );

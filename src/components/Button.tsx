@@ -14,6 +14,7 @@ import {Haptics} from '../haptics/HapticService';
 
 export type ButtonVariant =
   | 'play'
+  | 'reward'
   | 'levels'
   | 'settings'
   | 'primary'
@@ -92,14 +93,21 @@ export function Button({
             disabled && styles.disabled,
           ]}>
           {typeof icon === 'string' ? (
-            <Text style={[styles.icon, variant === 'play' && styles.playText]}>
+            <Text
+              style={[
+                styles.icon,
+                (variant === 'play' || variant === 'reward') && styles.playText,
+              ]}>
               {icon}
             </Text>
           ) : icon ? (
             <View style={styles.vectorIcon}>{icon}</View>
           ) : null}
           <Text
-            style={[styles.label, variant === 'play' && styles.playText]}
+            style={[
+              styles.label,
+              (variant === 'play' || variant === 'reward') && styles.playText,
+            ]}
             numberOfLines={1}>
             {label}
           </Text>

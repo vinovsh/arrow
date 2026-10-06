@@ -18,14 +18,13 @@ export const ARROW_MOTION = {
   /**
    * The exit flight, §9.2.
    *
-   * Defaults reproduce the original hard-coded 400-700ms window exactly, so changing
-   * nothing here changes nothing on screen.
+   * A quick pull with enough time to read the unwinding body, matching the video.
    */
   escape: {
     /** Shortest flight: an arrow one hop from the edge. Lower = faster. */
-    minDurationMs: 400,
+    minDurationMs: 340,
     /** Longest flight: an arrow crossing the full board. Lower = faster. */
-    maxDurationMs: 700,
+    maxDurationMs: 560,
     /**
      * Scales both ends at once. 1 leaves the window as written; 2 halves every
      * duration (arrows twice as fast); 0.5 doubles them (half speed).

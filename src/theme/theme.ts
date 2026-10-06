@@ -37,6 +37,7 @@ export const theme = {
   },
 
   button: {
+    reward: ['#54A5FF', '#2875D6'] as const,
     play: ['#A180DA', '#7953B9'] as const,
     levels: ['#F5B9C9', '#E79AB4'] as const,
     settings: ['#B9E2D8', '#89C6B9'] as const,
@@ -73,7 +74,9 @@ export const theme = {
    */
   board: {
     bg: '#FFFFFF',
-    ink: '#453160',
+    ink: '#18234B',
+    escaping: '#31B8F0',
+    escapeGlow: '#7CEEE9',
     /** §9.3 — the arrow the player tapped and could not free. */
     blocked: '#FF3B2D',
     /** §9.3 — the arrow standing in its way, muted so the two read as a pair. */
@@ -135,6 +138,16 @@ export const theme = {
     icon: '#60A5FA',
   },
 
+  celebration: {
+    colours: [
+      '#F075A5',
+      '#A17CE0',
+      '#40BBD6',
+      '#57BD9F',
+      '#F4BE4F',
+      '#F39B68',
+    ] as const,
+  },
   radius: {sm: 14, md: 20, lg: 26, panel: 32, pill: 999},
   space: {xs: 4, sm: 8, md: 16, lg: 24, xl: 32},
   glow: {soft: 6, medium: 12, strong: 20},

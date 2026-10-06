@@ -1,5 +1,4 @@
 import {
-  blockedTapsPerHeart,
   computeScore,
   computeStars,
   speedAccolade,
@@ -124,11 +123,6 @@ describe('scoring (§11)', () => {
         }
       }
     }
-  });
-
-  it('scales the heart cost with arrow count (§3.2)', () => {
-    expect(blockedTapsPerHeart(9)).toBe(4);
-    expect(blockedTapsPerHeart(90)).toBe(11);
   });
 });
 

@@ -18,6 +18,7 @@ import {Panel} from '../components/Panel';
 import {Toggle} from '../components/Toggle';
 import {SaveStore} from '../storage/SaveStore';
 import type {SaveData} from '../storage/SaveStore';
+import {Ads} from '../ads/AdService';
 import {Audio} from '../audio/AudioService';
 import {Haptics} from '../haptics/HapticService';
 import {FEATURES} from '../app/featureFlags';
@@ -85,6 +86,25 @@ export function SettingsScreen({navigation}: Props): React.JSX.Element {
         </Panel>
 
         <Panel style={styles.group}>
+          {Ads.enabled && (
+            <>
+              <ChevronRow
+                icon="?"
+                label="AD PRIVACY CHOICES"
+                onPress={() => {
+                  void Ads.showPrivacyOptions().catch((error: unknown) =>
+                    Alert.alert(
+                      'Ad privacy choices',
+                      error instanceof Error
+                        ? error.message
+                        : 'No privacy form is available right now.',
+                    ),
+                  );
+                }}
+              />
+              <View style={styles.divider} />
+            </>
+          )}
           <ChevronRow
             icon="★"
             label="RATE US"
@@ -108,8 +128,9 @@ export function SettingsScreen({navigation}: Props): React.JSX.Element {
                 // §15 — no account, no backend, no analytics endpoint. The policy is
                 // short because there is nothing to disclose.
                 'Arrow Escape stores your progress and settings on this device only. ' +
-                  'It has no account, no backend and no analytics, and works fully in ' +
-                  'airplane mode.',
+                  'Optional rewarded ads are provided by Google AdMob and require internet. ' +
+                  'Google may process device and ad interaction data according to your privacy choices. ' +
+                  'Puzzle gameplay works offline.',
               )
             }
           />

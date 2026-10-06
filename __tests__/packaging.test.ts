@@ -56,20 +56,16 @@ describe('build constraints', () => {
     }
   });
 
-  it('requests no INTERNET permission in the shipping manifest (§18)', () => {
+  it('configures network access and the AdMob application ID for rewarded ads', () => {
     const manifest = readFileSync(
       join(root, 'android/app/src/main/AndroidManifest.xml'),
       'utf8',
     );
-    expect(manifest).not.toContain('android.permission.INTERNET');
-
-    // Metro and the dev menu do need it, so it lives in the debug variant only and
-    // is merged out of release entirely.
-    const debugManifest = readFileSync(
-      join(root, 'android/app/src/debug/AndroidManifest.xml'),
-      'utf8',
-    );
-    expect(debugManifest).toContain('android.permission.INTERNET');
+    expect(manifest).toContain('android.permission.INTERNET');
+    expect(manifest).toContain('com.google.android.gms.ads.APPLICATION_ID');
+    const gradle = readFileSync(join(root, 'android/app/build.gradle'), 'utf8');
+    expect(gradle).toContain('com.google.android.gms:play-services-ads:');
+    expect(gradle).toContain('ADMOB_REWARDED_AD_UNIT_ID');
   });
 
   it('locks to portrait and targets minSdk 24 (§18)', () => {

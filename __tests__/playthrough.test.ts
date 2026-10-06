@@ -79,14 +79,17 @@ describe('playing a real level to completion', () => {
     const engine = new GameEngine(level);
     const rng = createRng(31);
 
-    // Tap arrows completely at random, blocked or not, until the board is clear.
+    // Random play can continue after earning a rewarded heart at zero lives.
     let guard = level.arrows.length * 60;
     while (engine.activeCount > 0 && guard-- > 0) {
+      if (engine.hearts === 0) {
+        engine.grantExtraLife();
+      }
       const active = engine.detector.activeIndices();
       engine.resolveTap(active[rng.int(active.length)]);
     }
     expect(engine.activeCount).toBe(0);
-    // A dead end is impossible, so blind play finishes — it just costs stars.
+    // The puzzle remains solvable after mistakes and rewarded continuations.
     expect(engine.blockedTaps).toBeGreaterThan(0);
   });
 

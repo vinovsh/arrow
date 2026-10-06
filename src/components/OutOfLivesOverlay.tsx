@@ -1,82 +1,103 @@
-import React from 'react';
+﻿import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import Svg, {Circle, Path} from 'react-native-svg';
 import {theme} from '../theme/theme';
 import {type as typography} from '../theme/typography';
 import {Button} from './Button';
-import {MAX_HEARTS} from '../game/engine/GameEngine';
-import {FEATURES} from '../app/featureFlags';
+import {AppIcon} from './AppIcon';
+import {Panel} from './Panel';
 
 interface Props {
   visible: boolean;
+  loading?: boolean;
+  error?: string | null;
   onWatchVideo: () => void;
   onRetry: () => void;
 }
-
-/**
- * Rendered as an in-tree layer rather than in a `Modal`.
- *
- * On Android a Modal's content lives in its own window, which
- * `GestureHandlerRootView` does not wrap — react-native-gesture-handler then
- * swallows every touch inside it and the overlay is visible but completely inert.
- * These overlays are full-screen layers over the game screen anyway, so keeping them
- * in the same tree fixes the touches, avoids a second Modal window fighting the
- * first when one overlay hands over to another, and lets Fabric size them correctly.
- */
-
-/**
- * §5.10 / §3.2 — a pause, not a punishment.
- *
- * RETRY LEVEL is instant, restores all hearts, and loses no progress, no stars and no
- * score. There is no wait timer, no regeneration clock and nothing to buy. With no ad
- * SDK in v1 the rewarded button grants the life immediately and says so, rather than
- * pretending a video played (§3.2, §16).
- */
+/** Kept in-tree so gesture handling works while the board underneath is locked. */
 export function OutOfLivesOverlay({
   visible,
+  loading = false,
+  error,
   onWatchVideo,
   onRetry,
 }: Props): React.JSX.Element | null {
-  const rewardLabel = FEATURES.adsEnabled
-    ? 'WATCH VIDEO +1 LIFE'
-    : 'CONTINUE +1 LIFE';
-
   if (!visible) {
     return null;
   }
-
   return (
     <View style={styles.scrim}>
-      <View style={styles.hearts}>
-        {Array.from({length: MAX_HEARTS}, (_, i) => (
-          <Text key={i} style={styles.heart}>
-            ♡
+      <Panel raised style={styles.card}>
+        <Text accessibilityRole="header" style={styles.title}>
+          Out of lives
+        </Text>
+        <View
+          style={styles.heart}
+          accessible
+          accessibilityLabel="No hearts remaining">
+          <Svg
+            width={116}
+            height={110}
+            viewBox="0 0 120 110"
+            accessible={false}>
+            <Circle
+              cx={60}
+              cy={54}
+              r={48}
+              fill={theme.button.levels[0]}
+              opacity={0.22}
+            />
+            <Path
+              d="M60 94S18 69 18 41C18 18 47 14 60 36C73 14 102 18 102 41C102 69 60 94 60 94Z"
+              fill={theme.state.heart}
+            />
+            <Path
+              d="M60 36L52 49L64 59L55 71L61 91"
+              fill="none"
+              stroke={theme.bg.panel}
+              strokeWidth={4}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <Path
+              d="M29 39Q31 27 42 28"
+              fill="none"
+              stroke={theme.bg.panel}
+              strokeWidth={4}
+              strokeLinecap="round"
+              opacity={0.6}
+            />
+          </Svg>
+        </View>
+        <Text style={styles.body}>A little boost to keep going?</Text>
+        <Text style={styles.caption}>
+          Watch a rewarded ad to get 1 heart and continue this puzzle.
+        </Text>
+        {error && (
+          <Text accessibilityRole="alert" style={styles.error}>
+            {error}
           </Text>
-        ))}
-      </View>
-
-      <Text style={styles.title}>OUT OF LIVES!</Text>
-      <Text style={styles.face}>ʘ︵ʘ</Text>
-      <Text style={styles.encouragement}>Don't give up!</Text>
-
-      <View style={styles.buttons}>
-        <Button
-          label={rewardLabel}
-          icon="▶"
-          variant="play"
-          onPress={onWatchVideo}
-        />
-        <Button
-          label="RETRY LEVEL"
-          icon="↻"
-          variant="neutral"
-          glow={false}
-          onPress={onRetry}
-        />
-      </View>
+        )}
+        <View style={styles.buttons}>
+          <Button
+            label={loading ? 'Loading ad...' : 'Get more lives'}
+            icon={<AppIcon name="play" color={theme.bg.panel} />}
+            variant="reward"
+            disabled={loading}
+            onPress={onWatchVideo}
+          />
+          <Button
+            label="Restart level"
+            variant="neutral"
+            disabled={loading}
+            glow={false}
+            onPress={onRetry}
+          />
+        </View>
+      </Panel>
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   scrim: {
     ...StyleSheet.absoluteFillObject,
@@ -85,21 +106,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: theme.space.lg,
-    gap: theme.space.md,
   },
-  hearts: {flexDirection: 'row', gap: theme.space.sm},
-  heart: {fontSize: 34, color: theme.state.heartEmpty},
-  title: {
-    ...typography.display(26),
+  card: {
+    width: '100%',
+    maxWidth: 360,
+    alignItems: 'center',
+    padding: 24,
+    gap: 10,
+  },
+  title: {...typography.display(27), textAlign: 'center'},
+  heart: {alignItems: 'center', marginVertical: 4},
+  body: {...typography.ui(16), textAlign: 'center'},
+  caption: {...typography.body(13), textAlign: 'center', lineHeight: 20},
+  error: {
+    ...typography.body(12),
     color: theme.state.danger,
-    letterSpacing: 2,
-    marginTop: theme.space.sm,
+    textAlign: 'center',
+    lineHeight: 18,
   },
-  face: {
-    fontSize: 30,
-    color: theme.text.secondary,
-    marginVertical: theme.space.sm,
-  },
-  encouragement: {...typography.body(15), marginBottom: theme.space.lg},
-  buttons: {alignSelf: 'stretch', gap: 14, maxWidth: 340, width: '100%'},
+  buttons: {alignSelf: 'stretch', gap: 12, marginTop: 12},
 });
