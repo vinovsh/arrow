@@ -24,7 +24,7 @@ interface Props {
   label: string;
   onPress: () => void;
   variant?: ButtonVariant;
-  icon?: string;
+  icon?: React.ReactNode;
   disabled?: boolean;
   /** §10.2 — only primary CTAs glow. Headers and list rows never do. */
   glow?: boolean;
@@ -62,7 +62,7 @@ export function Button({
   }, [pressed]);
 
   const handlePress = useCallback(() => {
-    Audio.play('ui_tap');
+    Audio.playClick();
     onPress();
   }, [onPress]);
 
@@ -91,8 +91,16 @@ export function Button({
             glow && variant !== 'neutral' && styles.glow,
             disabled && styles.disabled,
           ]}>
-          {icon ? <Text style={styles.icon}>{icon}</Text> : null}
-          <Text style={styles.label} numberOfLines={1}>
+          {typeof icon === 'string' ? (
+            <Text style={[styles.icon, variant === 'play' && styles.playText]}>
+              {icon}
+            </Text>
+          ) : icon ? (
+            <View style={styles.vectorIcon}>{icon}</View>
+          ) : null}
+          <Text
+            style={[styles.label, variant === 'play' && styles.playText]}
+            numberOfLines={1}>
             {label}
           </Text>
           {/* A gradient alone is a colour signal; the icon and the pressed scale make
@@ -106,7 +114,9 @@ export function Button({
 
 const styles = StyleSheet.create({
   surface: {
-    height: BUTTON_HEIGHT,
+    height: BUTTON_HEIGHT + 4,
+    borderWidth: 1,
+    borderColor: theme.bg.border,
     borderRadius: theme.radius.lg,
     flexDirection: 'row',
     alignItems: 'center',
@@ -115,14 +125,16 @@ const styles = StyleSheet.create({
   },
   compact: {height: 44, borderRadius: theme.radius.md},
   glow: {
-    shadowColor: '#000',
-    shadowOpacity: 0.45,
+    shadowColor: theme.brand.tagline,
+    shadowOpacity: 0.18,
     shadowRadius: theme.glow.medium,
     shadowOffset: {width: 0, height: 4},
     elevation: 6,
   },
   disabled: {opacity: 0.45},
   icon: {...typography.ui(18), marginRight: theme.space.sm},
-  label: {...typography.ui(17), letterSpacing: 0.6},
+  label: {...typography.ui(17), color: theme.text.primary, letterSpacing: 0.3},
+  playText: {color: theme.bg.panel},
+  vectorIcon: {marginRight: theme.space.sm},
   spacer: {width: 0},
 });

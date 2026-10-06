@@ -1,5 +1,6 @@
 import React from 'react';
-import {Pressable, StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text} from 'react-native';
+import {ClickPressable} from './ClickPressable';
 import {theme} from '../theme/theme';
 import {Haptics} from '../haptics/HapticService';
 
@@ -15,7 +16,7 @@ export function FitButton({onPress, visible}: Props): React.JSX.Element | null {
     return null;
   }
   return (
-    <Pressable
+    <ClickPressable
       accessibilityRole="button"
       accessibilityLabel="Fit board to screen"
       style={styles.button}
@@ -24,7 +25,7 @@ export function FitButton({onPress, visible}: Props): React.JSX.Element | null {
         onPress();
       }}>
       <Text style={styles.glyph}>⛶</Text>
-    </Pressable>
+    </ClickPressable>
   );
 }
 

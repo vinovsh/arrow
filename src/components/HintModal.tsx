@@ -1,5 +1,6 @@
 import React from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import {ClickPressable} from './ClickPressable';
 import Svg, {G, Path} from 'react-native-svg';
 import {theme} from '../theme/theme';
 import {type as typography} from '../theme/typography';
@@ -58,13 +59,13 @@ export function HintModal({
       <Panel raised style={styles.panel}>
         <View style={styles.header}>
           <Text style={styles.title}>HINT</Text>
-          <Pressable
+          <ClickPressable
             onPress={onCancel}
             accessibilityRole="button"
             accessibilityLabel="Close"
             style={styles.close}>
             <Text style={styles.closeGlyph}>✕</Text>
-          </Pressable>
+          </ClickPressable>
         </View>
 
         <View style={styles.preview}>
@@ -106,9 +107,9 @@ export function HintModal({
           disabled={remaining === 0}
           style={styles.cta}
         />
-        <Pressable onPress={onCancel} accessibilityRole="button">
+        <ClickPressable onPress={onCancel} accessibilityRole="button">
           <Text style={styles.cancel}>CANCEL</Text>
-        </Pressable>
+        </ClickPressable>
       </Panel>
     </View>
   );

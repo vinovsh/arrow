@@ -1,11 +1,14 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import {ClickPressable} from '../components/ClickPressable';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import type {RootStackParamList} from '../navigation/types';
 import {theme} from '../theme/theme';
 import {type as typography} from '../theme/typography';
 import {Button} from '../components/Button';
+import {AppIcon} from '../components/AppIcon';
+import {ArrowBuddy} from '../components/ArrowBuddy';
 import {Wordmark} from '../components/Wordmark';
 import {TierBadge} from '../components/TierBadge';
 import {climbFor} from '../game/leaderboard/board';
@@ -47,23 +50,25 @@ export function HomeScreen({navigation}: Props): React.JSX.Element {
 
   return (
     <SafeAreaView style={styles.root}>
-      <Pressable
+      <ClickPressable
         style={styles.gear}
         accessibilityRole="button"
         accessibilityLabel="Settings"
         onPress={() => navigation.navigate('Settings')}>
-        <Text style={styles.gearGlyph}>⚙</Text>
-      </Pressable>
+        <AppIcon name="settings" size={23} color={theme.brand.tagline} />
+      </ClickPressable>
 
       <View style={styles.header}>
-        <Wordmark size={40} />
-        <Text style={styles.progress}>LEVEL {level}</Text>
+        <Text style={styles.welcome}>A LITTLE PUZZLE. A HAPPY BREAK.</Text>
+        <ArrowBuddy />
+        <Wordmark size={34} />
+        <Text style={styles.progress}>Your next adventure · Level {level}</Text>
         <Text style={styles.best}>BEST {save.bestScore.toLocaleString()}</Text>
 
         {/* The ladder, kept in front of the player between sessions rather than only
             at the end of a level. Standings are a pure function of the lifetime score
             and the clock, so this costs a sort of 25 rows and no storage. */}
-        <Pressable
+        <ClickPressable
           onPress={() => setBoardOpen(true)}
           accessibilityRole="button"
           accessibilityLabel={`${standing.tier.tier.label} badge, rank ${standing.playerRank} in ${standing.leagueName} league`}
@@ -78,28 +83,34 @@ export function HomeScreen({navigation}: Props): React.JSX.Element {
               #{standing.playerRank} · {standing.leagueName} LEAGUE
             </Text>
           </View>
-        </Pressable>
-        <Pressable onPress={() => navigation.navigate('HowToPlay')}>
+          <AppIcon name="chevron" size={18} color={theme.brand.tagline} />
+        </ClickPressable>
+        <ClickPressable
+          style={styles.helpLink}
+          accessibilityRole="button"
+          accessibilityLabel="How to play"
+          onPress={() => navigation.navigate('HowToPlay')}>
+          <AppIcon name="help" size={18} color={theme.brand.tagline} />
           <Text style={styles.howTo}>HOW TO PLAY</Text>
-        </Pressable>
+        </ClickPressable>
       </View>
 
       <View style={styles.buttons}>
         <Button
-          label="PLAY"
-          icon="▶"
+          label="Let's play"
+          icon={<AppIcon name="play" color={theme.bg.panel} />}
           variant="play"
           onPress={() => navigation.navigate('Game', {levelId: level})}
         />
         <Button
-          label="LEVELS"
-          icon="▦"
+          label="Explore levels"
+          icon={<AppIcon name="levels" />}
           variant="levels"
           onPress={() => navigation.navigate('LevelSelection')}
         />
         <Button
-          label="SETTINGS"
-          icon="⚙"
+          label="Make it yours"
+          icon={<AppIcon name="settings" />}
           variant="settings"
           onPress={() => navigation.navigate('Settings')}
         />
@@ -108,10 +119,9 @@ export function HomeScreen({navigation}: Props): React.JSX.Element {
       {/* §5.2 — faint dotted silhouettes below as decoration, and nothing else: no
           store, no coins, no daily reward, no bottom navigation (§21). */}
       <View style={styles.decor} pointerEvents="none">
-        <Text style={styles.silhouette}>◉</Text>
-        <Text style={styles.silhouette}>⬟</Text>
-        <Text style={styles.silhouette}>✦</Text>
-        <Text style={styles.silhouette}>❤</Text>
+        <AppIcon name="sparkle" size={18} color={theme.button.play[0]} />
+        <AppIcon name="heart" size={20} color={theme.button.levels[1]} />
+        <AppIcon name="sparkle" size={18} color={theme.button.play[0]} />
       </View>
       <LeaderboardOverlay
         visible={boardOpen}
@@ -127,7 +137,7 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: theme.bg.base,
-    paddingHorizontal: theme.space.md,
+    paddingHorizontal: theme.space.lg,
   },
   gear: {
     position: 'absolute',
@@ -138,8 +148,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2,
+    backgroundColor: theme.bg.panel,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: theme.bg.border,
   },
-  gearGlyph: {fontSize: 22, color: theme.text.secondary},
+  welcome: {
+    ...typography.ui(10),
+    color: theme.brand.tagline,
+    letterSpacing: 1.4,
+    marginBottom: 10,
+  },
+  helpLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    minHeight: 44,
+    marginTop: theme.space.sm,
+  },
   header: {
     flex: 1,
     alignItems: 'center',
@@ -149,8 +175,8 @@ const styles = StyleSheet.create({
   progress: {
     ...typography.ui(14),
     color: theme.text.secondary,
-    letterSpacing: 2,
-    marginTop: theme.space.lg,
+    letterSpacing: 0.2,
+    marginTop: theme.space.md,
   },
   standing: {
     flexDirection: 'row',
@@ -158,7 +184,7 @@ const styles = StyleSheet.create({
     gap: theme.space.sm,
     marginTop: theme.space.md,
     paddingVertical: theme.space.sm,
-    paddingHorizontal: theme.space.md,
+    paddingHorizontal: theme.space.lg,
     borderRadius: theme.radius.pill,
     backgroundColor: theme.bg.panel,
     borderWidth: 1,
@@ -174,15 +200,20 @@ const styles = StyleSheet.create({
   howTo: {
     ...typography.ui(12),
     color: theme.brand.tagline,
-    letterSpacing: 2,
-    marginTop: theme.space.md,
+    letterSpacing: 0.8,
   },
-  buttons: {gap: 14, paddingBottom: theme.space.lg},
-  decor: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    opacity: 0.08,
+  buttons: {
+    width: '100%',
+    maxWidth: 420,
+    alignSelf: 'center',
+    gap: 12,
     paddingBottom: theme.space.lg,
   },
-  silhouette: {fontSize: 40, color: theme.text.primary},
+  decor: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 24,
+    opacity: 0.65,
+    paddingBottom: theme.space.lg,
+  },
 });

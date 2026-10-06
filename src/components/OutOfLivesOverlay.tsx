@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   scrim: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 40,
-    backgroundColor: 'rgba(2,5,12,0.86)',
+    backgroundColor: theme.bg.vignette,
     alignItems: 'center',
     justifyContent: 'center',
     padding: theme.space.lg,

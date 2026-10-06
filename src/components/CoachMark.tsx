@@ -6,6 +6,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import {ClickPressable} from './ClickPressable';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -268,12 +269,12 @@ export function CoachMark({
         ))}
 
       {onSkip && (
-        <Pressable
+        <ClickPressable
           style={styles.skip}
           onPress={onSkip}
           accessibilityRole="button">
           <Text style={styles.skipText}>SKIP</Text>
-        </Pressable>
+        </ClickPressable>
       )}
     </Animated.View>
   );

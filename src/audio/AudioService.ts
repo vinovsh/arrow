@@ -1,3 +1,5 @@
+import {AppState, Platform} from 'react-native';
+import type {NativeEventSubscription} from 'react-native';
 import Sound from 'react-native-sound';
 import {SaveStore} from '../storage/SaveStore';
 
@@ -12,6 +14,7 @@ import {SaveStore} from '../storage/SaveStore';
  */
 export type SoundName =
   | 'ui_tap'
+  | 'ui_click'
   | 'arrow_move'
   | 'arrow_blocked'
   | 'hint'
@@ -25,6 +28,7 @@ export type SoundName =
 
 const FILES: Record<SoundName, string> = {
   ui_tap: 'ui_tap.m4a',
+  ui_click: 'ui_click.m4a',
   arrow_move: 'arrow_move.m4a',
   arrow_blocked: 'arrow_blocked.m4a',
   hint: 'hint.m4a',
@@ -53,6 +57,8 @@ const BLOCKED_VOLUME = 0.4;
  * a second sound competing with it.
  */
 const TAP_TICK_VOLUME = 0.5;
+/** UI clicks sit well under the game sounds — about −9dB. */
+const CLICK_VOLUME = 0.35;
 
 interface Voice {
   sound: Sound;
@@ -65,17 +71,30 @@ class AudioServiceImpl {
   private lastPlayedAt = new Map<SoundName, number>();
   private music: Sound | null = null;
   private ready = false;
+  private loading: Promise<void> | null = null;
+  private appState: NativeEventSubscription | null = null;
 
   /** §5.1 — preloaded during the splash animation, alongside packs and save data. */
-  async preload(): Promise<void> {
+  preload(): Promise<void> {
     if (this.ready) {
-      return;
+      return Promise.resolve();
     }
-    Sound.setCategory('Ambient', true);
-    const names = Object.keys(FILES) as SoundName[];
-    await Promise.all(names.map(name => this.loadOne(name)));
-    await this.loadMusic();
-    this.ready = true;
+    // Shared, so a second caller joins the load in progress instead of starting
+    // another one and doubling every decoder.
+    this.loading ??= (async () => {
+      // react-native-sound maps 'Ambient' to STREAM_NOTIFICATION on Android, which
+      // put every effect and the music on the notification volume — silenced in
+      // silent mode and not on the media volume the player's keys control. 'Playback'
+      // is STREAM_MUSIC there. iOS keeps 'Ambient', which honours the mute switch.
+      // Both mix with others, so the game never takes audio focus from anything.
+      Sound.setCategory(Platform.OS === 'android' ? 'Playback' : 'Ambient', true);
+      const names = Object.keys(FILES) as SoundName[];
+      await Promise.all(names.map(name => this.loadOne(name)));
+      await this.loadMusic();
+      this.watchAppState();
+      this.ready = true;
+    })();
+    return this.loading;
   }
 
   private loadOne(name: SoundName): Promise<void> {
@@ -140,6 +159,11 @@ class AudioServiceImpl {
     }
     const copies = this.pool.get(name);
     if (!copies || copies.length === 0) {
+      // Normally preloaded on Splash, but a Fast Refresh of this module swaps in a
+      // fresh, empty instance mid-session — load on first use rather than stay mute.
+      if (!this.ready) {
+        void this.preload();
+      }
       return;
     }
 
@@ -173,6 +197,11 @@ class AudioServiceImpl {
     this.play('ui_tap', 1, TAP_TICK_VOLUME);
   }
 
+  /** Every UI button — see `ClickPressable`. The arrow tap keeps its own tick. */
+  playClick(): void {
+    this.play('ui_click', 1, CLICK_VOLUME);
+  }
+
   playStar(index: 0 | 1 | 2): void {
     this.play((['star_1', 'star_2', 'star_3'] as const)[index]);
   }
@@ -183,6 +212,22 @@ class AudioServiceImpl {
     }
     this.music.setVolume(MUSIC_VOLUME);
     this.music.play();
+  }
+
+  /**
+   * MediaPlayer keeps going when the app is backgrounded, so the loop would carry on
+   * over whatever the player switched to. Paused (not stopped) so it picks up where
+   * it left off on return; `startMusic` still honours the Settings toggle.
+   */
+  private watchAppState(): void {
+    this.appState?.remove();
+    this.appState = AppState.addEventListener('change', status => {
+      if (status === 'active') {
+        this.startMusic();
+      } else if (this.music?.isPlaying()) {
+        this.music.pause();
+      }
+    });
   }
 
   stopMusic(): void {
@@ -212,7 +257,10 @@ class AudioServiceImpl {
     this.pool.clear();
     this.music?.release();
     this.music = null;
+    this.appState?.remove();
+    this.appState = null;
     this.ready = false;
+    this.loading = null;
   }
 }
 

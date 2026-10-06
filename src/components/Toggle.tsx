@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import {ClickPressable} from './ClickPressable';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -41,7 +42,7 @@ export function Toggle({
   }));
 
   return (
-    <Pressable
+    <ClickPressable
       accessibilityRole="switch"
       accessibilityState={{checked: value}}
       accessibilityLabel={label}
@@ -58,7 +59,7 @@ export function Toggle({
       <Animated.View style={[styles.track, track]}>
         <Animated.View style={[styles.knob, knob]} />
       </Animated.View>
-    </Pressable>
+    </ClickPressable>
   );
 }
 
@@ -84,6 +85,6 @@ const styles = StyleSheet.create({
     width: KNOB,
     height: KNOB,
     borderRadius: KNOB / 2,
-    backgroundColor: theme.text.primary,
+    backgroundColor: theme.bg.panel,
   },
 });

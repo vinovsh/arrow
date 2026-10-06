@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {
   Alert,
-  Linking,
   Pressable,
+  Linking,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import {ClickPressable} from '../components/ClickPressable';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import type {RootStackParamList} from '../navigation/types';
@@ -35,18 +36,19 @@ export function SettingsScreen({navigation}: Props): React.JSX.Element {
   return (
     <SafeAreaView style={styles.root}>
       <View style={styles.header}>
-        <Pressable
+        <ClickPressable
           onPress={() => navigation.goBack()}
           accessibilityRole="button"
           accessibilityLabel="Back"
           style={styles.back}>
           <Text style={styles.backGlyph}>‹</Text>
-        </Pressable>
+        </ClickPressable>
         <Text style={styles.title}>SETTINGS</Text>
         <View style={styles.back} />
       </View>
 
       <ScrollView contentContainerStyle={styles.body}>
+        <Text style={styles.sectionLabel}>MAKE IT YOUR HAPPY PLACE</Text>
         <Panel>
           <Toggle
             icon="🔊"
@@ -162,12 +164,15 @@ function ChevronRow({
   onPress: () => void;
 }): React.JSX.Element {
   return (
-    <Pressable style={styles.row} onPress={onPress} accessibilityRole="button">
+    <ClickPressable
+      style={styles.row}
+      onPress={onPress}
+      accessibilityRole="button">
       <Text style={styles.rowIcon}>{icon}</Text>
       <Text style={styles.rowLabel}>{label}</Text>
       <View style={styles.spacer} />
       <Text style={styles.chevron}>›</Text>
-    </Pressable>
+    </ClickPressable>
   );
 }
 
@@ -177,18 +182,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: theme.space.md,
-    height: 56,
+    height: 76,
   },
-  back: {width: 44, height: 44, alignItems: 'center', justifyContent: 'center'},
+  back: {
+    width: 44,
+    height: 44,
+    borderRadius: 16,
+    backgroundColor: theme.bg.panel,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   backGlyph: {fontSize: 30, color: theme.text.primary, lineHeight: 32},
   title: {
     ...typography.display(20),
     flex: 1,
     textAlign: 'center',
-    letterSpacing: 2,
+    letterSpacing: 0.5,
   },
   body: {padding: theme.space.md, gap: theme.space.md},
   group: {marginTop: theme.space.xs},
+  sectionLabel: {
+    ...typography.ui(11),
+    color: theme.brand.tagline,
+    letterSpacing: 1.5,
+    marginVertical: theme.space.sm,
+  },
   divider: {height: 1, backgroundColor: theme.bg.border},
   row: {
     flexDirection: 'row',

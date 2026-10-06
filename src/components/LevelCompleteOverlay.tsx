@@ -1,5 +1,13 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Image, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {ClickPressable} from './ClickPressable';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated, {
   cancelAnimation,
@@ -37,8 +45,6 @@ interface Props {
   breakdown: ScoreBreakdown;
   newHighScore: boolean;
   levelId: number;
-  /** Fastest solve of this level so far, this run included. */
-  bestTime: number;
   newBestTime: boolean;
   levelsCompleted: number;
   onNext: () => void;
@@ -89,7 +95,6 @@ export function LevelCompleteOverlay({
   breakdown,
   newHighScore,
   levelId,
-  bestTime,
   newBestTime,
   levelsCompleted,
   onNext,
@@ -250,9 +255,7 @@ export function LevelCompleteOverlay({
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}>
         {/* Tapping anywhere fast-forwards to t=1.60. */}
-        <Pressable
-          style={styles.content}
-          onPress={ready ? undefined : finish}>
+        <Pressable style={styles.content} onPress={ready ? undefined : finish}>
           <Animated.View style={trophyStyle}>
             <Trophy />
           </Animated.View>
@@ -291,19 +294,12 @@ export function LevelCompleteOverlay({
             <Animated.View style={timeStyle}>
               <StatRow
                 icon={<ClockIcon />}
-                label={rare ? breakdown.speed.label : 'Time'}
+                label="Time"
                 value={formatDuration(breakdown.elapsedSeconds)}
                 valueColour={theme.reward.green}
+                isNew={ready && newBestTime}
               />
             </Animated.View>
-            <Divider />
-            <StatRow
-              icon={<BoltIcon />}
-              label="Best Time"
-              value={formatDuration(bestTime)}
-              valueColour={theme.reward.green}
-              isNew={ready && newBestTime}
-            />
             <Divider />
             <StatRow
               icon={<CupIcon />}
@@ -320,14 +316,14 @@ export function LevelCompleteOverlay({
 
           <View style={styles.buttons}>
             <NextButton onPress={onNext} disabled={!ready} />
-            <Pressable
+            <ClickPressable
               onPress={ready ? onHome : finish}
               accessibilityRole="button"
               accessibilityLabel="Home"
               style={[styles.home, !ready && styles.dimmed]}>
               <HomeIcon />
               <Text style={styles.homeLabel}>Home</Text>
-            </Pressable>
+            </ClickPressable>
           </View>
         </Pressable>
       </ScrollView>
@@ -372,7 +368,10 @@ function RewardStar({
     pop.value = withDelay(
       delayMs,
       withSequence(
-        withTiming(1.25, {duration: STAR_POP_MS, easing: Easing.out(Easing.quad)}),
+        withTiming(1.25, {
+          duration: STAR_POP_MS,
+          easing: Easing.out(Easing.quad),
+        }),
         withTiming(0.94, {duration: 110, easing: Easing.inOut(Easing.quad)}),
         withTiming(1, {duration: 120, easing: Easing.out(Easing.quad)}),
       ),
@@ -416,7 +415,11 @@ function RewardStar({
     <View style={[{width: size, height: size}, !large && styles.sideStar]}>
       <Image
         source={STAR_IMAGE}
-        style={[styles.starLayer, {width: size, height: size}, styles.emptyStar]}
+        style={[
+          styles.starLayer,
+          {width: size, height: size},
+          styles.emptyStar,
+        ]}
       />
       {filled ? (
         <>
@@ -559,7 +562,7 @@ function NextButton({
           pressed.value = withTiming(0, {duration: 90});
         }}
         onPress={() => {
-          Audio.play('ui_tap');
+          Audio.playClick();
           onPress();
         }}>
         <LinearGradient
@@ -567,7 +570,7 @@ function NextButton({
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={[styles.next, disabled && styles.dimmed]}>
-          <Text style={styles.nextLabel}>Next Level  →</Text>
+          <Text style={styles.nextLabel}>Next Level →</Text>
         </LinearGradient>
       </Pressable>
     </Animated.View>
@@ -576,7 +579,7 @@ function NextButton({
 
 // ------------------------------------------------------------------ artwork
 
-/** Gold cup between two blue laurel branches, gently glowing. */
+/** Sculpted gold trophy with a star medallion, pastel laurels and sparkles. */
 function Trophy(): React.JSX.Element {
   const glow = useSharedValue(0);
   useEffect(() => {
@@ -595,7 +598,7 @@ function Trophy(): React.JSX.Element {
     <G transform={side === -1 ? 'translate(200 0) scale(-1 1)' : undefined}>
       <Path
         d="M58 42 C40 60 36 90 52 118 C62 132 78 140 96 142"
-        stroke={theme.reward.laurel}
+        stroke={theme.button.settings[1]}
         strokeWidth={4}
         fill="none"
         strokeLinecap="round"
@@ -611,7 +614,7 @@ function Trophy(): React.JSX.Element {
         <Path
           key={i}
           d="M0 0 C-6 -10 -2 -20 6 -24 C10 -14 8 -6 0 0Z"
-          fill={theme.reward.laurel}
+          fill={theme.button.settings[1]}
           transform={`translate(${x} ${y}) rotate(${r - 90})`}
         />
       ))}
@@ -621,53 +624,129 @@ function Trophy(): React.JSX.Element {
   return (
     <View style={styles.trophyBox}>
       <Animated.View style={[styles.trophyGlow, glowStyle]} />
-      <Svg width={170} height={136} viewBox="0 0 200 160">
+      <Svg width={190} height={152} viewBox="0 0 200 160">
         <Defs>
           <SvgGradient id="cup" x1="0" y1="0" x2="1" y2="1">
             <Stop offset="0" stopColor={theme.reward.goldLight} />
             <Stop offset="0.55" stopColor={theme.reward.gold} />
             <Stop offset="1" stopColor={theme.reward.goldDeep} />
           </SvgGradient>
+          <SvgGradient id="cup-rim" x1="0" y1="0" x2="0" y2="1">
+            <Stop offset="0" stopColor="#FFF4CD" />
+            <Stop offset="1" stopColor={theme.reward.goldDeep} />
+          </SvgGradient>
+          <SvgGradient id="cup-plinth" x1="0" y1="0" x2="1" y2="1">
+            <Stop offset="0" stopColor={theme.button.play[0]} />
+            <Stop offset="1" stopColor={theme.button.play[1]} />
+          </SvgGradient>
         </Defs>
+        <Circle
+          cx={100}
+          cy={77}
+          r={65}
+          fill={theme.reward.goldLight}
+          opacity={0.25}
+        />
         {leaves(1)}
         {leaves(-1)}
         {/* Handles. */}
         <Path
-          d="M68 36 C44 36 44 76 76 80 M132 36 C156 36 156 76 124 80"
-          stroke="url(#cup)"
-          strokeWidth={8}
+          d="M67 35 H51 C39 35 42 72 71 78 M133 35 H149 C161 35 158 72 129 78"
+          stroke={theme.reward.goldDeep}
+          strokeWidth={10}
+          fill="none"
+          strokeLinecap="round"
+        />
+        <Path
+          d="M67 35 H51 C39 35 42 72 71 78 M133 35 H149 C161 35 158 72 129 78"
+          stroke={theme.reward.goldLight}
+          strokeWidth={4}
           fill="none"
           strokeLinecap="round"
         />
         {/* Bowl, stem, base. */}
-        <Path d="M64 24 H136 C136 72 122 94 100 98 C78 94 64 72 64 24Z" fill="url(#cup)" />
-        <Rect x={92} y={96} width={16} height={20} fill="url(#cup)" />
+        <Path
+          d="M64 24 H136 C136 72 122 94 100 98 C78 94 64 72 64 24Z"
+          fill="url(#cup)"
+        />
+        <Rect
+          x={60}
+          y={20}
+          width={80}
+          height={10}
+          rx={5}
+          fill="url(#cup-rim)"
+        />
+        <Rect x={92} y={96} width={16} height={20} rx={3} fill="url(#cup)" />
         <Rect x={74} y={114} width={52} height={10} rx={4} fill="url(#cup)" />
-        <Rect x={66} y={124} width={68} height={14} rx={5} fill="url(#cup)" />
+        <Rect
+          x={64}
+          y={123}
+          width={72}
+          height={20}
+          rx={7}
+          fill="url(#cup-plinth)"
+        />
+        <Rect
+          x={81}
+          y={128}
+          width={38}
+          height={10}
+          rx={4}
+          fill="url(#cup-rim)"
+        />
+        <Circle
+          cx={100}
+          cy={59}
+          r={22}
+          fill={theme.reward.goldDeep}
+          opacity={0.3}
+        />
+        <Circle cx={100} cy={58} r={19} fill={theme.reward.goldLight} />
         {/* Star on the bowl and a gloss stripe. */}
         <Path
-          d="M100 40 L106 53 L120 54 L109 63 L113 77 L100 69 L87 77 L91 63 L80 54 L94 53Z"
-          fill={theme.reward.goldLight}
-          opacity={0.9}
+          d="M100 43 L104 52 L114 53 L107 60 L109 70 L100 65 L91 70 L93 60 L86 53 L96 52Z"
+          fill={theme.reward.goldDeep}
         />
         <Path
           d="M74 30 C74 58 80 76 90 86"
-          stroke={theme.reward.title}
+          stroke="#FFFFFF"
           strokeOpacity={0.5}
           strokeWidth={5}
           fill="none"
           strokeLinecap="round"
         />
+        <Path
+          d="M29 19L32 10L35 19L44 22L35 25L32 34L29 25L20 22Z"
+          fill={theme.reward.gold}
+        />
+        <Path
+          d="M158 29L161 20L164 29L173 32L164 35L161 44L158 35L149 32Z"
+          fill={theme.button.play[0]}
+        />
+        <Path
+          d="M172 96L174 90L176 96L182 98L176 100L174 106L172 100L166 98Z"
+          fill={theme.button.levels[1]}
+        />
+        <Circle cx={46} cy={104} r={3} fill={theme.button.levels[1]} />
+        <Circle cx={145} cy={12} r={2.5} fill={theme.reward.goldDeep} />
       </Svg>
     </View>
   );
 }
 
-/** Rolling hills and a pine line across the foot of the screen. */
-function Hills(): React.JSX.Element {
+/**
+ * Rolling hills and a pine line across the foot of the screen. Shared with the
+ * leaderboard, which follows straight on and should read as the same place.
+ */
+export function Hills(): React.JSX.Element {
   return (
     <View style={styles.hills} pointerEvents="none">
-      <Svg width="100%" height="100%" viewBox="0 0 400 160" preserveAspectRatio="none">
+      <Svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 400 160"
+        preserveAspectRatio="none">
         <Path
           d="M0 80 C60 40 120 90 200 60 C280 30 340 80 400 50 V160 H0Z"
           fill={theme.reward.hills[0]}
@@ -691,7 +770,14 @@ function Hills(): React.JSX.Element {
 function ClockIcon(): React.JSX.Element {
   return (
     <Svg width={30} height={30} viewBox="0 0 30 30">
-      <Circle cx={15} cy={15} r={12} fill={theme.reward.title} stroke={theme.reward.clock} strokeWidth={3.5} />
+      <Circle
+        cx={15}
+        cy={15}
+        r={12}
+        fill={theme.reward.title}
+        stroke={theme.reward.clock}
+        strokeWidth={3.5}
+      />
       <Path
         d="M15 8 V15 L20 18"
         stroke={theme.reward.clock}
@@ -699,14 +785,6 @@ function ClockIcon(): React.JSX.Element {
         strokeLinecap="round"
         fill="none"
       />
-    </Svg>
-  );
-}
-
-function BoltIcon(): React.JSX.Element {
-  return (
-    <Svg width={30} height={30} viewBox="0 0 30 30">
-      <Path d="M17 2 L6 17 H14 L12 28 L24 12 H16Z" fill={theme.reward.bolt} />
     </Svg>
   );
 }
@@ -720,9 +798,19 @@ function CupIcon(): React.JSX.Element {
         strokeWidth={2.4}
         fill="none"
       />
-      <Path d="M8 4 H22 C22 13 19 17 15 18 C11 17 8 13 8 4Z" fill={theme.reward.gold} />
+      <Path
+        d="M8 4 H22 C22 13 19 17 15 18 C11 17 8 13 8 4Z"
+        fill={theme.reward.gold}
+      />
       <Rect x={13} y={17} width={4} height={5} fill={theme.reward.gold} />
-      <Rect x={9} y={22} width={12} height={4} rx={1.5} fill={theme.reward.goldDeep} />
+      <Rect
+        x={9}
+        y={22}
+        width={12}
+        height={4}
+        rx={1.5}
+        fill={theme.reward.goldDeep}
+      />
     </Svg>
   );
 }
@@ -780,10 +868,10 @@ const styles = StyleSheet.create({
     width: 130,
     height: 130,
     borderRadius: 65,
-    backgroundColor: theme.reward.gold,
+    backgroundColor: theme.reward.goldLight,
     shadowColor: theme.reward.gold,
-    shadowOpacity: 1,
-    shadowRadius: 40,
+    shadowOpacity: 0.25,
+    shadowRadius: 24,
   },
   titleBlock: {alignItems: 'center', marginTop: theme.space.xs},
   title: {
@@ -886,7 +974,7 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 4},
     elevation: 8,
   },
-  nextLabel: {...typography.display(18), color: theme.reward.title},
+  nextLabel: {...typography.display(18), color: '#FFFFFF'},
   home: {
     flexDirection: 'row',
     alignItems: 'center',

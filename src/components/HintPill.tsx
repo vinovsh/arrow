@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import {ClickPressable} from './ClickPressable';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated, {
   Easing,
@@ -49,7 +50,7 @@ export function HintPill({
 
   return (
     <Animated.View style={style}>
-      <Pressable
+      <ClickPressable
         accessibilityRole="button"
         accessibilityLabel={`Use hint, ${remaining} left`}
         disabled={disabled || remaining === 0}
@@ -71,7 +72,7 @@ export function HintPill({
             <Text style={styles.badgeText}>{remaining}</Text>
           </View>
         </LinearGradient>
-      </Pressable>
+      </ClickPressable>
     </Animated.View>
   );
 }

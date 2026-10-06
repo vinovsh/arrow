@@ -1,12 +1,12 @@
 import React, {useMemo, useState} from 'react';
 import {
   FlatList,
-  Pressable,
   StyleSheet,
   Text,
   View,
   useWindowDimensions,
 } from 'react-native';
+import {ClickPressable} from '../components/ClickPressable';
 import type {ListRenderItemInfo} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -109,7 +109,10 @@ export function HowToPlayScreen({navigation}: Props): React.JSX.Element {
   }: ListRenderItemInfo<(typeof cards)[number]>): React.JSX.Element => (
     <View style={[styles.page, {width}]}>
       <Panel style={styles.card}>
-        <MiniBoard arrows={item.board} size={Math.min(width - 96, 220)} />
+        <Text style={styles.step}>LITTLE LESSON {item.key + 1} / 5</Text>
+        <View style={styles.illustration}>
+          <MiniBoard arrows={item.board} size={Math.min(width - 96, 220)} />
+        </View>
         <Text style={styles.cardTitle}>{item.title}</Text>
         <Text style={styles.cardBody}>{item.body}</Text>
       </Panel>
@@ -119,13 +122,13 @@ export function HowToPlayScreen({navigation}: Props): React.JSX.Element {
   return (
     <SafeAreaView style={styles.root}>
       <View style={styles.header}>
-        <Pressable
+        <ClickPressable
           onPress={() => navigation.goBack()}
           accessibilityRole="button"
           accessibilityLabel="Back"
           style={styles.back}>
           <Text style={styles.backGlyph}>‹</Text>
-        </Pressable>
+        </ClickPressable>
         <Text style={styles.title}>HOW TO PLAY</Text>
         <View style={styles.back} />
       </View>
@@ -206,18 +209,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: theme.space.md,
-    height: 56,
+    height: 76,
   },
-  back: {width: 44, height: 44, alignItems: 'center', justifyContent: 'center'},
+  back: {
+    width: 44,
+    height: 44,
+    borderRadius: 16,
+    backgroundColor: theme.bg.panel,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   backGlyph: {fontSize: 30, color: theme.text.primary, lineHeight: 32},
   title: {
     ...typography.display(18),
     flex: 1,
     textAlign: 'center',
-    letterSpacing: 2,
+    letterSpacing: 0.5,
   },
   page: {paddingHorizontal: theme.space.lg, justifyContent: 'center'},
-  card: {alignItems: 'center', gap: theme.space.md},
+  card: {alignItems: 'center', gap: theme.space.lg},
+  step: {...typography.ui(11), color: theme.brand.tagline, letterSpacing: 1.5},
+  illustration: {backgroundColor: theme.bg.base, borderRadius: 28, padding: 8},
   cardTitle: {...typography.ui(20), textAlign: 'center'},
   cardBody: {...typography.body(15), textAlign: 'center', lineHeight: 22},
   dots: {

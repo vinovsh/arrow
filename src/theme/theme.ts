@@ -4,25 +4,25 @@
  */
 export const theme = {
   bg: {
-    base: '#050A16',
-    panel: '#0C1322',
-    panelAlt: '#111A2E',
-    border: 'rgba(255,255,255,0.08)',
-    vignette: 'rgba(0,0,0,0.55)',
+    base: '#F7F2FF',
+    panel: '#FFFFFF',
+    panelAlt: '#EEE5FA',
+    border: '#E4D9F2',
+    vignette: 'rgba(44,30,69,0.40)',
   },
   // Dimmer than it looks it should be, on purpose: the dots are a positioning aid
   // under thin arrows, and at the old 0.10 they competed with a 3dp line.
-  grid: {dot: 'rgba(255,255,255,0.06)', dotActive: 'rgba(255,255,255,0.12)'},
+  grid: {dot: 'rgba(117,84,161,0.10)', dotActive: 'rgba(117,84,161,0.20)'},
   text: {
-    primary: '#EAF1FF',
-    secondary: 'rgba(234,241,255,0.62)',
-    dim: 'rgba(234,241,255,0.38)',
+    primary: '#382650',
+    secondary: '#756286',
+    dim: '#887796',
   },
 
   brand: {
-    arrowWord: ['#FFD34A', '#FF9A3C'] as const,
-    escapeWord: ['#35E7F0', '#B06BFF', '#FF5FA2'] as const,
-    tagline: '#35E7F0',
+    arrowWord: ['#EA7797', '#F8B18C'] as const,
+    escapeWord: ['#8961CB', '#B490E6', '#EA92B7'] as const,
+    tagline: '#8961CB',
   },
 
   arrow: {
@@ -37,12 +37,12 @@ export const theme = {
   },
 
   button: {
-    play: ['#3B8CFF', '#1F5FD0'] as const,
-    levels: ['#8B5CFF', '#5B2FD6'] as const,
-    settings: ['#3ACB63', '#22A046'] as const,
-    primary: ['#3ACB63', '#22A046'] as const,
-    hint: ['#FFD34A', '#F5A623'] as const,
-    neutral: '#16203A',
+    play: ['#A180DA', '#7953B9'] as const,
+    levels: ['#F5B9C9', '#E79AB4'] as const,
+    settings: ['#B9E2D8', '#89C6B9'] as const,
+    primary: ['#B9E2D8', '#89C6B9'] as const,
+    hint: ['#FFE2AB', '#F4C77D'] as const,
+    neutral: '#EEE5FA',
   },
 
   state: {
@@ -54,7 +54,7 @@ export const theme = {
     badge: '#3ACB63',
     danger: '#FF4D5E',
     success: '#3ACB63',
-    currentLevel: '#FFD34A',
+    currentLevel: '#8961CB',
   },
 
   /**
@@ -73,16 +73,16 @@ export const theme = {
    */
   board: {
     bg: '#FFFFFF',
-    ink: '#061242',
+    ink: '#453160',
     /** §9.3 — the arrow the player tapped and could not free. */
     blocked: '#FF3B2D',
     /** §9.3 — the arrow standing in its way, muted so the two read as a pair. */
     blocker: '#A8342B',
-    dot: '#CBD2E0',
-    title: '#0B0B0C',
-    chip: '#EFF1F6',
-    chipText: '#5D6676',
-    chrome: '#2F9BFF',
+    dot: '#DED4EA',
+    title: '#382650',
+    chip: '#EEE5FA',
+    chipText: '#756286',
+    chrome: '#8961CB',
   },
 
   /**
@@ -99,7 +99,7 @@ export const theme = {
 
   /** The light launch screen — ref/screens (2).png, panel 6 ("Sharpen your mind"). */
   splash: {
-    bg: ['#E6F7FB', '#F3FAFF', '#EEF1FF'] as const,
+    bg: ['#FCE8EF', '#F7F2FF', '#EEE5FA'] as const,
     title: '#0B1F4D',
     body: '#4A5A80',
     brainTop: '#9FE3FF',
@@ -114,14 +114,14 @@ export const theme = {
 
   /** The level-complete overlay — ref/reward model.png, frame 4. */
   reward: {
-    bg: ['#0B1640', '#08102E', '#050A1E'] as const,
-    hills: ['#101D4E', '#0A1438'] as const,
-    card: 'rgba(16,30,78,0.72)',
-    cardBorder: 'rgba(90,140,255,0.35)',
-    divider: 'rgba(120,160,255,0.16)',
-    title: '#FFFFFF',
-    subtitle: 'rgba(230,238,255,0.86)',
-    label: 'rgba(226,234,255,0.82)',
+    bg: ['#F7F2FF', '#FCE8EF', '#FFF5E9'] as const,
+    hills: ['#E8DDF7', '#F5DCE8'] as const,
+    card: 'rgba(255,255,255,0.92)',
+    cardBorder: '#E4D9F2',
+    divider: '#E4D9F2',
+    title: '#382650',
+    subtitle: '#756286',
+    label: '#756286',
     gold: '#FFC53D',
     goldDeep: '#F59E0B',
     goldLight: '#FFE58A',
@@ -130,12 +130,12 @@ export const theme = {
     clock: '#3B82F6',
     bolt: '#F8FAFC',
     laurel: '#3B82F6',
-    next: ['#22D3EE', '#3B82F6', '#6D4BFF'] as const,
-    homeBorder: 'rgba(120,160,255,0.45)',
+    next: ['#AD8CE1', '#8961CB', '#7953B9'] as const,
+    homeBorder: '#CEBCE6',
     icon: '#60A5FA',
   },
 
-  radius: {sm: 10, md: 16, lg: 22, panel: 26, pill: 999},
+  radius: {sm: 14, md: 20, lg: 26, panel: 32, pill: 999},
   space: {xs: 4, sm: 8, md: 16, lg: 24, xl: 32},
   glow: {soft: 6, medium: 12, strong: 20},
   font: {

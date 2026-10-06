@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
-  Pressable,
   StatusBar,
   StyleSheet,
   Text,
   View,
   useWindowDimensions,
 } from 'react-native';
+import {ClickPressable} from '../components/ClickPressable';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import type {RootStackParamList} from '../navigation/types';
@@ -116,7 +116,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
   const [complete, setComplete] = useState<ScoreBreakdown | null>(null);
   const [newHighScore, setNewHighScore] = useState(false);
   const [bestTime, setBestTime] = useState<{
-    seconds: number;
+    seconds: number | null;
     isNew: boolean;
   } | null>(null);
   const [climb, setClimb] = useState<Climb | null>(null);
@@ -286,10 +286,9 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
 
     setNewHighScore(isHigh);
     setBestTime({
-      seconds: SaveStore.bestTimeFor(engine.level.id) ?? breakdown.elapsedSeconds,
+      seconds: previousTime,
       // A first solve is a best time by definition, but "New!" there is noise.
-      isNew:
-        previousTime !== null && breakdown.elapsedSeconds < previousTime,
+      isNew: previousTime !== null && breakdown.elapsedSeconds < previousTime,
     });
     setComplete(breakdown);
     setCoachMark(tutorialRef.current?.onWin() ?? null);
@@ -539,9 +538,9 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
         <Text style={styles.missingText}>
           Level {levelId} is not available.
         </Text>
-        <Pressable onPress={() => navigation.navigate('Home')}>
+        <ClickPressable onPress={() => navigation.navigate('Home')}>
           <Text style={styles.missingLink}>BACK TO HOME</Text>
-        </Pressable>
+        </ClickPressable>
       </View>
     );
   }
@@ -567,7 +566,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
       <View style={styles.header}>
         <Hearts hearts={hearts} visible={heartsVisible} />
         <Text style={styles.levelLabel}>LEVEL {level.id}</Text>
-        <Pressable
+        <ClickPressable
           onPress={() => {
             engine.pause();
             setPaused(true);
@@ -579,7 +578,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
           accessibilityLabel="Pause"
           style={styles.gear}>
           <Text style={styles.gearGlyph}>⚙</Text>
-        </Pressable>
+        </ClickPressable>
       </View>
 
       <View style={styles.boardArea}>
@@ -660,13 +659,13 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
           disabled={modalOpen}
           onPress={() => setHintModal(true)}
         />
-        <Pressable
+        <ClickPressable
           onPress={restart}
           accessibilityRole="button"
           accessibilityLabel="Restart level"
           style={styles.restart}>
           <Text style={styles.restartGlyph}>↻</Text>
-        </Pressable>
+        </ClickPressable>
       </View>
 
       {coachMark && (
@@ -750,7 +749,6 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
           breakdown={complete}
           newHighScore={newHighScore}
           levelId={level.id}
-          bestTime={bestTime?.seconds ?? complete.elapsedSeconds}
           newBestTime={bestTime?.isNew ?? false}
           levelsCompleted={SaveStore.data.completedLevels.length}
           onNext={onCompleteNext}
@@ -853,7 +851,7 @@ function spotlightFor(
  * unchanged and still dark; this screen owns `theme.board` and nothing else does.
  */
 const styles = StyleSheet.create({
-  root: {flex: 1, backgroundColor: theme.board.bg},
+  root: {flex: 1, backgroundColor: theme.bg.base},
   header: {
     height: HEADER_HEIGHT,
     flexDirection: 'row',
@@ -867,11 +865,22 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     color: theme.board.title,
   },
-  gear: {width: 44, height: 44, alignItems: 'center', justifyContent: 'center'},
+  gear: {
+    width: 44,
+    height: 44,
+    backgroundColor: theme.bg.panel,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   gearGlyph: {fontSize: 22, color: theme.board.chrome},
   boardArea: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   // Sized by the board, but never clipping it: the exit animation lives here.
-  boardStack: {overflow: 'visible'},
+  boardStack: {
+    overflow: 'visible',
+    backgroundColor: theme.board.bg,
+    borderRadius: 24,
+  },
   footer: {
     height: FOOTER_HEIGHT,
     flexDirection: 'row',

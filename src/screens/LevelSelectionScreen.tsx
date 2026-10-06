@@ -1,12 +1,12 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {
   FlatList,
-  Pressable,
   StyleSheet,
   Text,
   View,
   useWindowDimensions,
 } from 'react-native';
+import {ClickPressable} from '../components/ClickPressable';
 import type {ListRenderItemInfo} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -76,13 +76,13 @@ export function LevelSelectionScreen({navigation}: Props): React.JSX.Element {
   return (
     <SafeAreaView style={styles.root}>
       <View style={styles.header}>
-        <Pressable
+        <ClickPressable
           onPress={() => navigation.goBack()}
           accessibilityRole="button"
           accessibilityLabel="Back"
           style={styles.back}>
           <Text style={styles.backGlyph}>‹</Text>
-        </Pressable>
+        </ClickPressable>
         <View style={styles.titleBlock}>
           <Text style={styles.title}>LEVELS</Text>
           <Text style={styles.band}>{bandForPage(page)}</Text>
@@ -150,7 +150,7 @@ function LevelPage({
         const stars = SaveStore.starsFor(summary.id);
         const current = summary.id === SaveStore.data.currentLevel;
         return (
-          <Pressable
+          <ClickPressable
             key={summary.id}
             disabled={!unlocked}
             onPress={() => onSelect(summary.id)}
@@ -175,7 +175,7 @@ function LevelPage({
               // §5.3 — a locked card shows a padlock and no number.
               <Text style={styles.lock}>🔒</Text>
             )}
-          </Pressable>
+          </ClickPressable>
         );
       })}
     </View>
@@ -188,13 +188,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: theme.space.md,
-    height: 56,
+    height: 76,
   },
-  back: {width: 44, height: 44, alignItems: 'center', justifyContent: 'center'},
+  back: {
+    width: 44,
+    height: 44,
+    borderRadius: 16,
+    backgroundColor: theme.bg.panel,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   backGlyph: {fontSize: 30, color: theme.text.primary, lineHeight: 32},
   titleBlock: {flex: 1, alignItems: 'center'},
-  title: {...typography.display(20), letterSpacing: 2},
-  band: {...typography.body(11), color: theme.text.dim, letterSpacing: 2},
+  title: {...typography.display(20), letterSpacing: 0.5},
+  band: {...typography.body(11), color: theme.text.dim, letterSpacing: 0.5},
   page: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -211,9 +218,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 3,
+    shadowColor: theme.brand.tagline,
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    shadowOffset: {width: 0, height: 3},
+    elevation: 2,
   },
-  locked: {opacity: 0.35},
-  current: {borderColor: theme.state.currentLevel, borderWidth: 2},
+  locked: {opacity: 0.65, backgroundColor: theme.bg.panelAlt},
+  current: {
+    borderColor: theme.state.currentLevel,
+    borderWidth: 2,
+    backgroundColor: theme.bg.panelAlt,
+  },
   number: {...typography.ui(16)},
   numberCurrent: {color: theme.state.currentLevel},
   lock: {fontSize: 16, opacity: 0.7},
