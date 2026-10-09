@@ -1,0 +1,116 @@
+{
+  "id": 2,
+  "gridSize": 8,
+  "title": "Four corners",
+  "tier": "Tutorial",
+  "status": "Awaiting user review",
+  "stats": {
+    "arrows": 4,
+    "depth": 0,
+    "freeAtStart": 4,
+    "blockedStart": 0,
+    "D": 2.62
+  },
+  "arrows": [
+    {
+      "cells": [
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "direction": "L"
+    },
+    {
+      "cells": [
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          6,
+          2
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          7,
+          1
+        ]
+      ],
+      "direction": "R"
+    },
+    {
+      "cells": [
+        [
+          1,
+          5
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          0,
+          6
+        ]
+      ],
+      "direction": "L"
+    },
+    {
+      "cells": [
+        [
+          5,
+          6
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          6,
+          5
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          7,
+          6
+        ]
+      ],
+      "direction": "R"
+    }
+  ]
+}

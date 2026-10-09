@@ -1,6 +1,4 @@
-/**
- * The previous level packs were removed for a complete level redesign.
- * Keep this registry empty until the replacement packs are ready.
- * The level generator will populate it when new designs are approved.
- */
-export const PACK_LOADERS: (() => unknown)[] = [];
+/** First 20 replacement levels, awaiting design review. */
+export const PACK_LOADERS: (() => unknown)[] = [
+  () => require('./packs/pack_001_020.json'),
+];

@@ -13,7 +13,7 @@ export const FEATURES = {
   adsEnabled: true,
   /** §8.7 — 7 taps on the version string, and only in a debug build. */
   devMenuTapCount: 7,
-  totalLevels: 500,
+  totalLevels: 20,
   levelsPerPack: 25,
 } as const;
 

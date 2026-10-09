@@ -358,17 +358,9 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
           escapeStartedAt: tappedAt,
         });
         trace('setState escaping dispatched');
-        // Tick, move, buzz — all three answer the same tap, and all three now land
-        // within a frame or two of the arrow actually leaving. That timing is the
-        // whole reason they are here: the haptic was pulled at one point because the
-        // arrow took the better part of a second to start moving, so the buzz arrived
-        // a third of a second before the thing it was confirming and read as the game
-        // stalling. With the tap answered in roughly a tenth of that, the cue and the
-        // motion are simultaneous, which is what makes a tap feel like it connected.
-        Audio.playTap();
+        // One soft whoosh accompanies the arrow; no separate click on game taps.
         Audio.playArrowMove(arrow.cells.length);
         Haptics.light();
-        trace('tick, move and haptic returned');
         // No particle trail behind the escaping arrow. The arrow's own motion is the
         // feedback; the field of sparks behind it was decoration on top of that, and
         // filling it cost tens of milliseconds of marshalling between the JS and UI

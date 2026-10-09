@@ -32,9 +32,7 @@ describe('playing a real level to completion', () => {
   const cellSize = 32;
 
   it('empties the board by tapping free arrows, on a level from each band', () => {
-    for (const id of [
-      1, 5, 12, 30, 70, 120, 180, 230, 275, 330, 380, 430, 500,
-    ]) {
+    for (const id of [1, 2, 3, 6, 8, 10, 12, 15, 17, 19, 20]) {
       const level = getLevel(id) as Level;
       const engine = new GameEngine(level);
       let guard = level.arrows.length + 5;
@@ -57,7 +55,7 @@ describe('playing a real level to completion', () => {
   });
 
   it('awards three stars and the perfect bonus for a clean run', () => {
-    const level = getLevel(42) as Level;
+    const level = getLevel(8) as Level;
     const engine = new GameEngine(level);
     while (engine.activeCount > 0) {
       engine.resolveTap(engine.detector.freeIndices()[0]);
@@ -75,7 +73,7 @@ describe('playing a real level to completion', () => {
   });
 
   it('survives a player who taps blindly and never gets stuck (§2.3, §20)', () => {
-    const level = getLevel(310) as Level;
+    const level = getLevel(15) as Level;
     const engine = new GameEngine(level);
     const rng = createRng(31);
 
@@ -94,7 +92,7 @@ describe('playing a real level to completion', () => {
   });
 
   it('always names a legal move when asked for a hint, at every state (§20)', () => {
-    const level = getLevel(455) as Level;
+    const level = getLevel(20) as Level;
     const engine = new GameEngine(level);
     const hints = new HintService();
 
@@ -131,7 +129,7 @@ describe('playing a real level to completion', () => {
   });
 
   it('prefers the hint that unblocks the most other arrows', () => {
-    const level = getLevel(200) as Level;
+    const level = getLevel(19) as Level;
     const engine = new GameEngine(level);
     const hints = new HintService();
     const suggestion = hints.suggest(engine.detector);
@@ -147,7 +145,7 @@ describe('playing a real level to completion', () => {
   });
 
   it('keeps every arrow inside the board and off its neighbours, on a dense level', () => {
-    const level = getLevel(500) as Level;
+    const level = getLevel(20) as Level;
     const occupied = new Set<string>();
     for (const arrow of level.arrows) {
       for (const cell of arrow.cells) {
@@ -164,7 +162,7 @@ describe('playing a real level to completion', () => {
 
   it('renders geometry for every arrow shape, including single cells', () => {
     const CELL = 24;
-    for (const id of [1, 250, 500]) {
+    for (const id of [1, 10, 20]) {
       const level = getLevel(id) as Level;
       for (const arrow of level.arrows) {
         const geometry = buildArrowGeometry(arrow, CELL);

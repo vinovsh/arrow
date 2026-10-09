@@ -6,13 +6,13 @@ the record; a build that ships a sound not listed below is not clearable for rel
 
 ## Status
 
-**Eight of twelve effects ship, and the music loop.** The rest are still absent, and `AudioService`
+**Seven effects ship, and the music loop.** The rest are still absent, and `AudioService`
 degrades silently when a file is missing — every `play()` call for an unshipped
 sound is a no-op — so the game stays fully playable while the remainder is produced.
 
 | Shipped | Still absent |
 |---|---|
-| `ui_tap` `ui_click` `ambient_loop` `arrow_move` `arrow_blocked` `level_complete` `star_1` `star_2` `star_3` | `hint` `score_tick` `life_lost` `game_over` |
+| `ui_click` `ambient_loop` `arrow_move` `arrow_blocked` `level_complete` `star_1` `star_2` `star_3` | `hint` `score_tick` `life_lost` `game_over` |
 
 ### Licence of the shipped effects
 
@@ -28,8 +28,7 @@ Reproducible verbatim — the expressions *are* the masters, so the files can be
 regenerated or retuned at any time without re-clearing anything:
 
 ```
-ui_tap        aevalsrc='(0.62*sin(2*PI*1500*t)+0.28*sin(2*PI*2700*t))*exp(-t*150)':d=0.045
-arrow_move    (replaced by a third-party file — see the licence record)
+arrow_move    Original deterministic filtered-noise whoosh; see tools/audio/arrow_whoosh.py
 arrow_blocked aevalsrc='(0.66*sin(2*PI*175*t)+0.22*sin(2*PI*262*t))*exp(-t*17)':d=0.22
               -af lowpass=f=900
 ```
@@ -69,9 +68,8 @@ File names are fixed by `FILES` in `src/audio/AudioService.ts`.
 
 | File | Event | Notes |
 |---|---|---|
-| `ui_tap.m4a` | Arrow tap tick | Short, dry, no tail |
 | `ui_click.m4a` | Every UI button (`ClickPressable`, `Button`) | |
-| `arrow_move.m4a` | Arrow escapes | Pitch-varied ±2 semitones by path length; must survive a 45ms retrigger and four-voice overlap without turning into a buzz |
+| `arrow_move.m4a` | Arrow escapes | Pitch-varied ±1 semitone by path length; must survive a 45ms retrigger and four-voice overlap without turning into a buzz |
 | `arrow_blocked.m4a` | Arrow blocked | Soft and low, played at −8dB relative to a move. Information, not a buzzer — no harshness, no alarm colour |
 | `hint.m4a` | Hint used | |
 | `star_1.m4a` `star_2.m4a` `star_3.m4a` | Stars land | Rising pitch across the three |
@@ -85,7 +83,7 @@ File names are fixed by `FILES` in `src/audio/AudioService.ts`.
 
 | File | Source | Licence | Acquired |
 |---|---|---|---|
-| `arrow_move.m4a` | `ref/musicholder-woosh-260275.mp3` ("musicholder", apparently Pixabay item 260275), converted to mono 44.1kHz AAC 96k with +11dB gain, otherwise unedited | **To confirm** — presumably the Pixabay Content License (commercial use allowed, no attribution required); verify on the item page before release | 2026-09-27 |
+| `arrow_move.m4a` | Original synthesis in `tools/audio/arrow_whoosh.py`: seeded noise, warm band-pass filtering, smooth 270ms envelope, quiet descending tone | Original project-generated audio; no third-party samples | 2026-10-09 |
 | `ui_click.m4a` | `ref/universfield-menu-click-147357.mp3` ("universfield", apparently Pixabay item 147357), 70ms of leading silence trimmed, cut to 0.40s with an 80ms fade, +4dB, mono 44.1kHz AAC 96k | **To confirm** — presumably the Pixabay Content License; verify on the item page before release | 2026-09-27 |
 | `ambient_loop.m4a` | `ref/meditativetiger-ethereal-canopy-meditation-501353.mp3` ("meditativetiger", apparently Pixabay item 501353). Re-cut as a seamless 27s loop: `[3s,27s]` followed by `[27s,30s]` (quarter-sine fade out) mixed with `[0s,3s]` (quarter-sine fade in), so the file ends where it begins; +2dB, stereo 44.1kHz AAC 128k, 430KB | **To confirm** — presumably the Pixabay Content License; verify on the item page before release | 2026-09-27 |
 
@@ -98,7 +96,14 @@ Android resource names cannot contain uppercase or hyphens, and `react-native-so
 loads from the raw resource directory:
 
 ```
-android/app/src/main/res/raw/ui_tap.m4a
 ```
 
 Copy each file there. Nothing in `src/` changes.
+
+## Replacement movement sound (2026-10-09)
+
+The old `arrow_move.m4a` was replaced completely. The separate `ui_tap.m4a`
+arrow-click tick and its playback call were removed. UI menu buttons keep their
+existing click. Reproduce the replacement with `python3 tools/audio/arrow_whoosh.py`.
+The whoosh peaks at about -10.5dBFS before the service's 0.65 gain, starts and ends
+at silence, and is pitched within one semitone for paths of one to twelve cells.

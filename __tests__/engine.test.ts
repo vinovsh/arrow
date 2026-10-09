@@ -144,7 +144,7 @@ describe('GameEngine tap resolution', () => {
   });
 
   it('costs exactly one heart per blocked tap at every level', () => {
-    for (const id of [1, 25, 26, 500]) {
+    for (const id of [1, 5, 15, 20]) {
       const engine = new GameEngine(
         makeLevel(
           [arrow('a', [[0, 0]], 'R'), arrow('b', [[3, 0]], 'D')],

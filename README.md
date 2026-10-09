@@ -1,9 +1,8 @@
 # Arrow Escape
 
-> Level redesign in progress: the previous level JSON packs, mock designs, preview
-> images, and contact sheets have been removed. There are currently no playable
-> levels. The level-generation instructions below describe the previous pipeline;
-> replacement level designs must be added before generating or validating packs.
+**First replacement batch: 20 original levels, awaiting user design review.**
+No levels 21+ are included. The previous 500 levels and their previews remain removed.
+
 
 An offline, single-player, score-based tap puzzle for Android. Coloured arrow paths are
 packed onto a dotted grid so they collectively form a recognisable picture. Tapping an
@@ -26,100 +25,43 @@ npm start            # Metro
 npm run android      # build and install a debug APK
 ```
 
-## Verifying it
+## Review the first 20 levels
+
+`mock/first-20-overview.png` shows all designs. `mock/previews/` contains individual
+PNG and SVG previews rendered with the app's arrow geometry. The playable review is
+`mock/review-first-20.html`; open it locally, choose a level, and tap arrows.
+`mock/review-first-20.json` records each board's measured difficulty signals.
+
+The batch mixes picture silhouettes and compact interlocking mazes. Levels 1–2
+teach the mechanic without blockers. Easy and Medium boards introduce dependencies;
+Hard boards have chains at least 10 moves deep and at least 80% blocked arrows at
+the start. Very Hard boards have chains at least 16 moves deep and at least 90%
+blocked arrows. Every board is solved and structurally checked by the runtime
+validator; thirty random legal playthroughs per level check for deadlocks. These
+are design gates, not a substitute for the user's playtest and approval.
 
 ```bash
-npm run verify       # typecheck + lint + tests + level validation
+npm ci
+npm run verify                # typecheck, lint, tests, validate only the 20-board set
+npm run levels:generate       # reproduce only these 20 original replacement boards
+npm run levels:contactsheet   # write exact-geometry SVGs
+python3 tools/mock/renderFirst20.py  # PNGs and overview
+python3 tools/audio/arrow_whoosh.py  # original 270ms movement whoosh
 ```
 
-Individually:
+The old generator modules are retained as reusable tooling. Their historical
+500-level commands are not the current generation or validation route. Future
+batches must wait for approval of this first set.
 
-| Command | What it does |
-|---|---|
-| `npm run typecheck` | `tsc` over the app and, separately, over the build-time pipeline |
-| `npm run lint` | ESLint |
-| `npm test` | Jest — 100 tests, including a full play-through check of all 500 levels |
-| `npm run levels:validate` | §8.4's CI gate over the committed packs |
-| `npm run levels:curve` | The achieved difficulty curve against the plan |
-| `npm run levels:contactsheet` | §8.6's human review sheet, into `tools/out/` |
-| `npm run shapes:preview -- 12` | ASCII preview of the shape library at a grid size |
+## Arrow movement
 
-## Regenerating levels
-
-Levels are built offline and committed as data; the app never generates a level at
-runtime. Levels 3-500 are approved designs: each was reviewed as an image
-(`mock/level_NNN.png`) and is shipped exactly as drawn from `mock/data/level_NNN.json`.
-Levels 1-2 are the drawn tutorial boards.
-
-```bash
-npm run levels:generate                 # packs from the approved mocks, about 2 seconds
-npm run levels:validate                 # fails if any pack drifts from its approved mock
-npm run mock:build -- --from 501 --to 550   # design new boards (after adding plan rows)
-npm run mock:render -- 501 550              # images for review
-npm run levels:generate:procedural      # the old procedural generator; overwrites 3-500
-```
-
-The mock tooling lives in `tools/mock/`: `patterns.ts` holds the hand-drawn pictures and
-plan for 3-200, `families.ts` and `plan201.ts` the parametric families for 201-500.
-Every mock board is solvable by construction and re-proven by the shipped validator.
-The section below describes the procedural pipeline, which now only builds the tutorial
-levels.
-
----
-
-## How the level pipeline works
-
-`tools/` runs on Node's native TypeScript support and imports the app's own engine
-(`tools/register.mjs` supplies the resolution hook), so the generator and the game
-agree on what "solvable" means by construction rather than by convention.
-
-1. **Mask** (`pipeline/mask.ts`) — a shape from `tools/shapes/library.ts` is rasterised
-   at the slot's grid size and reshaped to the exact cell count the slot needs, one
-   boundary cell at a time, keeping the silhouette connected.
-2. **Decomposition** (`pipeline/decompose.ts`) — the mask is carved into 1–8 cell paths
-   matching the band's length mix. Lengths are allocated by largest-remainder quota
-   rather than sampled, then a merge/split repair pass drives the carve back onto that
-   multiset.
-3. **Orientation** (`pipeline/orient.ts`) — the search space is `4^k · 2^(n−k)`, which
-   is hopeless by brute force at n = 90. The way through is that **orientation never
-   changes which cells a path occupies**, only where its head points. Occupancy is
-   therefore fixed before the search starts, so a solvable assignment can be
-   *constructed*: peel paths one at a time, giving each a direction whose corridor is
-   clear of whatever is still on the board. The peel order is a valid solve order by
-   construction. Annealing over single-arrow flips then steers difficulty, rejecting
-   any move that breaks solvability.
-4. **Validation** (`src/game/engine/LevelValidator.ts`) — monotonicity (§2.3) makes a
-   greedy pass a *proof*, not a heuristic: removing an arrow only ever frees cells, so
-   a board that empties greedily is solvable from every reachable state.
-5. **Packing** — 25 levels per JSON pack, aligned to the level-select pager. 660KB for
-   the set; three packs stay resident and the rest are dropped.
-
-## Project layout
-
-```
-src/
-  app/          App.tsx, featureFlags.ts
-  navigation/   RootNavigator.tsx, types.ts
-  screens/      Splash, Home, LevelSelection, Game, Settings, HowToPlay
-  components/   Button, Panel, StarRow, Hearts, HintPill, CoachMark, GuideHand,
-                Confetti, Ribbon, Toggle, FitButton, Wordmark, and the five overlays
-  game/
-    engine/     GameEngine, CollisionDetector, LevelValidator, ScoreManager,
-                HintService, HitTester
-    models/     types.ts
-    renderer/   Board, BoardViewport, ArrowRenderer, DotGrid, DecorLayer,
-                ParticleSystem, arrowGeometry
-    tutorial/   TutorialController, steps
-    levels/     packs/*.json, codec, index (lazy loader)
-  storage/      SaveStore, migrations
-  audio/        AudioService
-  haptics/      HapticService
-  theme/        theme, typography
-  utils/        math, layout, rng
-tools/          generateLevels, validateLevels, curveReport, renderContactSheet,
-                previewShapes, pipeline/, shapes/
-__tests__/      engine, validator, score, hitTest, levels, storage, tutorial, packaging
-```
+Successful arrow taps use one soft original whoosh, without a separate click. The
+movement pitch is limited to ±1 semitone. Arrows unwind their bends along the exit
+lane over 280–460ms, with a small 2.5% tension cue and smooth acceleration. SVG path
+updates run on Reanimated's UI thread; fixed geometry is prepared once at launch.
+The animation honors the system's reduced-motion setting and cancels on unmount.
+No per-frame React state updates, glow layers or tap ripples are needed. The entire
+arrow travels past the viewport clip before its completion callback fires.
 
 ## Things worth knowing before changing them
 

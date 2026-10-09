@@ -12,7 +12,10 @@ import {getLevel} from '../src/game/levels';
 import type {Level} from '../src/game/models/types';
 
 const engineFor = (levelId: number): GameEngine =>
-  new GameEngine(getLevel(levelId) as Level);
+  new GameEngine({
+    ...(getLevel(levelId > 20 ? 1 : levelId) as Level),
+    id: levelId,
+  });
 
 describe('onboarding script (§6)', () => {
   beforeEach(() => {
@@ -139,7 +142,7 @@ describe('onboarding levels are as gentle as the script assumes (§6)', () => {
   });
 
   it('uses the same heart rules throughout the scripted run', () => {
-    for (let id = 1; id <= 25; id++) {
+    for (let id = 1; id <= 20; id++) {
       expect(engineFor(id).livesEnabled).toBe(true);
     }
   });

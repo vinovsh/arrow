@@ -267,3 +267,53 @@ describe('rope exit geometry', () => {
     expect(base).toBe(Math.round(span / ARROW_MOTION.escape.speedMultiplier));
   });
 });
+
+// The first and last frames must remain correct after moving drawing to a worklet.
+describe('prepared UI-thread rope motion', () => {
+  it('starts at the resting shape and clears every viewport direction', () => {
+    const {
+      buildArrowGeometry,
+      prepareRopeMotion,
+      drawRopeFrame,
+    } = require('../src/game/renderer/arrowGeometry');
+    for (const direction of ['U', 'D', 'L', 'R'] as const) {
+      const a = arrow([[3, 3]], direction);
+      const motion = prepareRopeMotion(a, GRID, CELL, 120);
+      expect(drawRopeFrame(motion, 0)).toEqual(
+        expect.objectContaining({
+          body: buildArrowGeometry(a, CELL).body,
+          head: buildArrowGeometry(a, CELL).head,
+        }),
+      );
+      const travel = exitTravelDistance(a, GRID, CELL, 120);
+      const points = pointsOf(drawRopeFrame(motion, travel).body);
+      expect(
+        points.every(p =>
+          direction === 'U'
+            ? p.y < -120
+            : direction === 'D'
+            ? p.y > GRID * CELL + 120
+            : direction === 'L'
+            ? p.x < -120
+            : p.x > GRID * CELL + 120,
+        ),
+      ).toBe(true);
+    }
+  });
+  it('moves forward immediately, without reverse motion or overshoot', () => {
+    const {
+      escapeProgress,
+      escapeStretch,
+    } = require('../src/config/arrowMotion');
+    let last = 0;
+    for (let i = 0; i <= 100; i++) {
+      const p = escapeProgress(i / 100);
+      expect(p).toBeGreaterThanOrEqual(last);
+      expect(p).toBeLessThanOrEqual(1);
+      expect(escapeStretch(i / 100)).toBeLessThanOrEqual(1.025);
+      last = p;
+    }
+    expect(escapeProgress(0.01)).toBeGreaterThan(0);
+    expect(escapeProgress(1)).toBe(1);
+  });
+});

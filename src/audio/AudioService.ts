@@ -13,7 +13,6 @@ import {SaveStore} from '../storage/SaveStore';
  * oldest-stolen, and any one effect refuses to retrigger inside 45ms.
  */
 export type SoundName =
-  | 'ui_tap'
   | 'ui_click'
   | 'arrow_move'
   | 'arrow_blocked'
@@ -27,7 +26,6 @@ export type SoundName =
   | 'game_over';
 
 const FILES: Record<SoundName, string> = {
-  ui_tap: 'ui_tap.m4a',
   ui_click: 'ui_click.m4a',
   arrow_move: 'arrow_move.m4a',
   arrow_blocked: 'arrow_blocked.m4a',
@@ -50,13 +48,6 @@ const MUSIC_VOLUME = 0.13;
 const MUSIC_DUCKED_VOLUME = 0.065;
 /** −8dB relative to a move, so blocked reads as information rather than a buzzer. */
 const BLOCKED_VOLUME = 0.4;
-/**
- * §14 — the tick sits under the move it accompanies rather than alongside it. Both
- * fire on the same tap, and at equal weight the click and the whoosh smear into one
- * muddy noise; half volume keeps the tick as the leading edge of the move instead of
- * a second sound competing with it.
- */
-const TAP_TICK_VOLUME = 0.5;
 /** UI clicks sit well under the game sounds — about −9dB. */
 const CLICK_VOLUME = 0.35;
 
@@ -87,7 +78,10 @@ class AudioServiceImpl {
       // silent mode and not on the media volume the player's keys control. 'Playback'
       // is STREAM_MUSIC there. iOS keeps 'Ambient', which honours the mute switch.
       // Both mix with others, so the game never takes audio focus from anything.
-      Sound.setCategory(Platform.OS === 'android' ? 'Playback' : 'Ambient', true);
+      Sound.setCategory(
+        Platform.OS === 'android' ? 'Playback' : 'Ambient',
+        true,
+      );
       const names = Object.keys(FILES) as SoundName[];
       await Promise.all(names.map(name => this.loadOne(name)));
       await this.loadMusic();
@@ -178,26 +172,18 @@ class AudioServiceImpl {
     this.playing.push({sound, startedAt: now});
   }
 
-  /** §9.2 — pitch varies ±2 semitones with path length so runs of taps stay musical. */
+  /** §9.2 — pitch varies ±1 semitone with path length so runs of taps stay musical. */
   playArrowMove(pathLength: number): void {
-    const semitones = 2 - ((pathLength - 1) / 7) * 4;
-    this.play('arrow_move', Math.pow(2, semitones / 12));
+    const length = Math.max(1, Math.min(12, pathLength));
+    const semitones = 1 - ((length - 1) / 11) * 2;
+    this.play('arrow_move', Math.pow(2, semitones / 12), 0.65);
   }
 
   playBlocked(): void {
     this.play('arrow_blocked', 1, BLOCKED_VOLUME);
   }
 
-  /**
-   * The tick that answers the tap itself — played *with* the move, not instead of it.
-   * The move sound is pitched by path length and reads as the arrow travelling; this
-   * is the shorter, flatter click that confirms the finger landed on something.
-   */
-  playTap(): void {
-    this.play('ui_tap', 1, TAP_TICK_VOLUME);
-  }
-
-  /** Every UI button — see `ClickPressable`. The arrow tap keeps its own tick. */
+  /** UI button sound; arrows use only the movement whoosh. */
   playClick(): void {
     this.play('ui_click', 1, CLICK_VOLUME);
   }

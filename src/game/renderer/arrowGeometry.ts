@@ -36,8 +36,10 @@ const centreOf = (cell: GridPoint, cellSize: number): Point => ({
   y: (cell.y + 0.5) * cellSize,
 });
 
-const distanceBetween = (a: Point, b: Point): number =>
-  Math.hypot(b.x - a.x, b.y - a.y);
+const distanceBetween = (a: Point, b: Point): number => {
+  'worklet';
+  return Math.hypot(b.x - a.x, b.y - a.y);
+};
 
 /**
  * A single-cell arrow has no run between cell centres to draw, and a bare triangle
@@ -81,6 +83,7 @@ function headTriangle(
   step: GridPoint,
   headSize: ArrowHeadSize,
 ): string {
+  'worklet';
   const tip = {
     x: nose.x + step.x * headSize.length * HEAD_AHEAD,
     y: nose.y + step.y * headSize.length * HEAD_AHEAD,
@@ -93,8 +96,12 @@ function headTriangle(
   const w = headSize.halfWidth;
   return (
     `M ${tip.x.toFixed(2)} ${tip.y.toFixed(2)} ` +
-    `L ${(base.x + perp.x * w).toFixed(2)} ${(base.y + perp.y * w).toFixed(2)} ` +
-    `L ${(base.x - perp.x * w).toFixed(2)} ${(base.y - perp.y * w).toFixed(2)} Z`
+    `L ${(base.x + perp.x * w).toFixed(2)} ${(base.y + perp.y * w).toFixed(
+      2,
+    )} ` +
+    `L ${(base.x - perp.x * w).toFixed(2)} ${(base.y - perp.y * w).toFixed(
+      2,
+    )} Z`
   );
 }
 
@@ -104,6 +111,7 @@ function headTriangle(
  * the head read as one object rather than as a stick with a blob on the end.
  */
 function bodyPath(points: Point[], headSize: ArrowHeadSize): string {
+  'worklet';
   if (points.length < 2) {
     return '';
   }
@@ -272,6 +280,7 @@ function extendedPath(
 
 /** The point at arc length `s` along the extended path. */
 function pointAt(path: ExtendedPath, s: number): Point {
+  'worklet';
   const {vertices, cumulative} = path;
   const clamped = Math.max(0, Math.min(cumulative[cumulative.length - 1], s));
   let i = 1;
@@ -287,6 +296,7 @@ function pointAt(path: ExtendedPath, s: number): Point {
 
 /** The stretch of the extended path between two arc lengths, as a polyline. */
 function sliceBetween(path: ExtendedPath, from: number, to: number): Point[] {
+  'worklet';
   const points: Point[] = [pointAt(path, from)];
   for (let i = 0; i < path.vertices.length; i++) {
     if (path.cumulative[i] > from && path.cumulative[i] < to) {
@@ -319,26 +329,57 @@ export function buildRopeGeometry(
   stretch = 1,
   clearance = 0,
 ): RopeGeometry {
-  const path = extendedPath(arrow, gridSize, cellSize, clearance);
-  const strokeWidth = strokeWidthFor(cellSize);
-  const headSize = arrowHeadSizeFor(cellSize, strokeWidth, arrow.cells.length);
-  const step = DIR_VECTORS[arrow.direction];
-
-  const points = sliceBetween(
-    path,
+  return drawRopeFrame(
+    prepareRopeMotion(arrow, gridSize, cellSize, clearance),
     travelled,
-    travelled + bodyLengthOf(arrow, cellSize) * stretch,
+    stretch,
   );
-
-  // The curve is straight past the head, so the moment the arrow moves at all its
-  // head points the way it was pointing when tapped, and keeps doing so (§2.1).
-  return {
-    body: bodyPath(points, headSize),
-    head: headTriangle(points[points.length - 1], step, headSize),
-    strokeWidth,
-    headSize,
-  };
 }
 
 // The exit flight's duration now lives with the rest of the arrow-speed tuning, in
 // src/config/arrowMotion.ts — `escapeDurationMs` is exported from there.
+
+/** Fixed geometry is prepared once per arrow, never rebuilt for every frame. */
+export interface RopeMotion {
+  path: ExtendedPath;
+  length: number;
+  step: GridPoint;
+  strokeWidth: number;
+  headSize: ArrowHeadSize;
+}
+
+export function prepareRopeMotion(
+  arrow: ArrowPath,
+  gridSize: number,
+  cellSize: number,
+  clearance = 0,
+): RopeMotion {
+  const strokeWidth = strokeWidthFor(cellSize);
+  return {
+    path: extendedPath(arrow, gridSize, cellSize, clearance),
+    length: bodyLengthOf(arrow, cellSize),
+    step: DIR_VECTORS[arrow.direction],
+    strokeWidth,
+    headSize: arrowHeadSizeFor(cellSize, strokeWidth, arrow.cells.length),
+  };
+}
+
+/** UI-thread worklet: preserve bends while pulling the tail along the exit lane. */
+export function drawRopeFrame(
+  motion: RopeMotion,
+  travelled: number,
+  stretch = 1,
+): RopeGeometry {
+  'worklet';
+  const points = sliceBetween(
+    motion.path,
+    travelled,
+    travelled + motion.length * stretch,
+  );
+  return {
+    body: bodyPath(points, motion.headSize),
+    head: headTriangle(points[points.length - 1], motion.step, motion.headSize),
+    strokeWidth: motion.strokeWidth,
+    headSize: motion.headSize,
+  };
+}

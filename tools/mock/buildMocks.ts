@@ -629,7 +629,7 @@ function climb(n: number, arrows: ArrowPath[], gids: number[], tier: Tier, rng: 
   return current;
 }
 
-function buildOne(plan: MockPlan, tries: number): Candidate | null {
+export function buildOne(plan: MockPlan, tries: number): Candidate | null {
   const n = plan.grid;
   const sym = symmetryFor(plan);
   const mask = buildMask(plan, sym);
@@ -733,4 +733,6 @@ function main(): void {
   }
 }
 
-main();
+if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+  main();
+}

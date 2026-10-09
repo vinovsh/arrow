@@ -11,7 +11,7 @@ import {Audio} from '../audio/AudioService';
  * The click rides on `onPress`, so a disabled button stays silent for free.
  */
 export const ClickPressable = forwardRef<View, PressableProps>(
-  function ClickPressable({onPress, ...rest}, ref) {
+  function ClickPressable({onPress, ...rest}, ref): React.JSX.Element {
     const handlePress = useCallback(
       (event: GestureResponderEvent) => {
         Audio.playClick();
@@ -20,7 +20,11 @@ export const ClickPressable = forwardRef<View, PressableProps>(
       [onPress],
     );
     return (
-      <Pressable ref={ref} {...rest} onPress={onPress ? handlePress : undefined} />
+      <Pressable
+        ref={ref}
+        {...rest}
+        onPress={onPress ? handlePress : undefined}
+      />
     );
   },
 );

@@ -1,0 +1,222 @@
+[
+  {
+    "id": 1,
+    "title": "First paths",
+    "tier": "Tutorial",
+    "grid": 7,
+    "arrows": 3,
+    "depth": 0,
+    "freeAtStart": 3,
+    "blockedStart": 0,
+    "D": 4.13
+  },
+  {
+    "id": 2,
+    "title": "Four corners",
+    "tier": "Tutorial",
+    "grid": 8,
+    "arrows": 4,
+    "depth": 0,
+    "freeAtStart": 4,
+    "blockedStart": 0,
+    "D": 2.62
+  },
+  {
+    "id": 3,
+    "title": "Crossroads",
+    "tier": "Easy",
+    "grid": 10,
+    "arrows": 14,
+    "depth": 2,
+    "freeAtStart": 8,
+    "blockedStart": 43,
+    "D": 4.4
+  },
+  {
+    "id": 4,
+    "title": "Diamond steps",
+    "tier": "Easy",
+    "grid": 11,
+    "arrows": 16,
+    "depth": 3,
+    "freeAtStart": 10,
+    "blockedStart": 38,
+    "D": 4.39
+  },
+  {
+    "id": 5,
+    "title": "Heart lanes",
+    "tier": "Easy",
+    "grid": 13,
+    "arrows": 18,
+    "depth": 4,
+    "freeAtStart": 9,
+    "blockedStart": 50,
+    "D": 4.4
+  },
+  {
+    "id": 6,
+    "title": "Lightning",
+    "tier": "Medium",
+    "grid": 15,
+    "arrows": 9,
+    "depth": 5,
+    "freeAtStart": 3,
+    "blockedStart": 67,
+    "D": 6.08
+  },
+  {
+    "id": 7,
+    "title": "Roundabout",
+    "tier": "Medium",
+    "grid": 15,
+    "arrows": 27,
+    "depth": 6,
+    "freeAtStart": 8,
+    "blockedStart": 70,
+    "D": 6.25
+  },
+  {
+    "id": 8,
+    "title": "Interlock",
+    "tier": "Hard",
+    "grid": 17,
+    "arrows": 32,
+    "depth": 10,
+    "freeAtStart": 4,
+    "blockedStart": 88,
+    "D": 7.38
+  },
+  {
+    "id": 9,
+    "title": "Lucky clover",
+    "tier": "Medium",
+    "grid": 16,
+    "arrows": 30,
+    "depth": 6,
+    "freeAtStart": 9,
+    "blockedStart": 70,
+    "D": 5.76
+  },
+  {
+    "id": 10,
+    "title": "Star gate",
+    "tier": "Hard",
+    "grid": 21,
+    "arrows": 28,
+    "depth": 11,
+    "freeAtStart": 5,
+    "blockedStart": 82,
+    "D": 6.78
+  },
+  {
+    "id": 11,
+    "title": "Leaf trail",
+    "tier": "Medium",
+    "grid": 17,
+    "arrows": 23,
+    "depth": 7,
+    "freeAtStart": 7,
+    "blockedStart": 70,
+    "D": 5.6
+  },
+  {
+    "id": 12,
+    "title": "Hourglass",
+    "tier": "Hard",
+    "grid": 20,
+    "arrows": 27,
+    "depth": 11,
+    "freeAtStart": 4,
+    "blockedStart": 85,
+    "D": 7.33
+  },
+  {
+    "id": 13,
+    "title": "Reef fish",
+    "tier": "Medium",
+    "grid": 18,
+    "arrows": 25,
+    "depth": 7,
+    "freeAtStart": 6,
+    "blockedStart": 76,
+    "D": 5.6
+  },
+  {
+    "id": 14,
+    "title": "Night owl",
+    "tier": "Hard",
+    "grid": 21,
+    "arrows": 32,
+    "depth": 14,
+    "freeAtStart": 4,
+    "blockedStart": 88,
+    "D": 7.44
+  },
+  {
+    "id": 15,
+    "title": "Vault",
+    "tier": "Very Hard",
+    "grid": 22,
+    "arrows": 50,
+    "depth": 19,
+    "freeAtStart": 4,
+    "blockedStart": 92,
+    "D": 7.48
+  },
+  {
+    "id": 16,
+    "title": "Butterfly",
+    "tier": "Medium",
+    "grid": 19,
+    "arrows": 49,
+    "depth": 7,
+    "freeAtStart": 13,
+    "blockedStart": 73,
+    "D": 6.11
+  },
+  {
+    "id": 17,
+    "title": "Compass",
+    "tier": "Hard",
+    "grid": 26,
+    "arrows": 47,
+    "depth": 16,
+    "freeAtStart": 8,
+    "blockedStart": 83,
+    "D": 7.22
+  },
+  {
+    "id": 18,
+    "title": "Royal maze",
+    "tier": "Hard",
+    "grid": 23,
+    "arrows": 30,
+    "depth": 13,
+    "freeAtStart": 3,
+    "blockedStart": 90,
+    "D": 7.53
+  },
+  {
+    "id": 19,
+    "title": "Locksmith",
+    "tier": "Very Hard",
+    "grid": 26,
+    "arrows": 47,
+    "depth": 16,
+    "freeAtStart": 4,
+    "blockedStart": 91,
+    "D": 7.47
+  },
+  {
+    "id": 20,
+    "title": "Grand labyrinth",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 88,
+    "depth": 18,
+    "freeAtStart": 8,
+    "blockedStart": 91,
+    "D": 7.3
+  }
+]

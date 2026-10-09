@@ -10,9 +10,7 @@
  * between `minDurationMs` and `maxDurationMs`, and `speedMultiplier` scales the whole
  * window at once.
  *
- * Shape of the flight — the easing curve, the rope stretch, the geometry — is not
- * here. That is `EscapingArrow` and `arrowGeometry`, and it is design rather than
- * tuning.
+ * Easing and stretch are tuned below; path geometry is in `arrowGeometry`.
  */
 export const ARROW_MOTION = {
   /**
@@ -22,9 +20,9 @@ export const ARROW_MOTION = {
    */
   escape: {
     /** Shortest flight: an arrow one hop from the edge. Lower = faster. */
-    minDurationMs: 340,
+    minDurationMs: 280,
     /** Longest flight: an arrow crossing the full board. Lower = faster. */
-    maxDurationMs: 560,
+    maxDurationMs: 460,
     /**
      * Scales both ends at once. 1 leaves the window as written; 2 halves every
      * duration (arrows twice as fast); 0.5 doubles them (half speed).
@@ -59,4 +57,16 @@ export function escapeDurationMs(travel: number, boardSize: number): number {
   // Guarded so a zero or negative multiplier left in the config cannot divide the
   // duration to zero or below and freeze an arrow mid-flight.
   return Math.round(span / Math.max(0.01, speedMultiplier));
+}
+
+/** Immediate lift, then smooth acceleration without an overshoot or an end pause. */
+export function escapeProgress(progress: number): number {
+  'worklet';
+  const t = Math.max(0, Math.min(1, progress));
+  return 0.55 * t + 0.45 * t * t;
+}
+
+export function escapeStretch(progress: number): number {
+  'worklet';
+  return 1 + 0.025 * Math.sin(Math.PI * Math.max(0, Math.min(1, progress)));
 }
