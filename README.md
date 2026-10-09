@@ -1,5 +1,10 @@
 # Arrow Escape
 
+> Level redesign in progress: the previous level JSON packs, mock designs, preview
+> images, and contact sheets have been removed. There are currently no playable
+> levels. The level-generation instructions below describe the previous pipeline;
+> replacement level designs must be added before generating or validating packs.
+
 An offline, single-player, score-based tap puzzle for Android. Coloured arrow paths are
 packed onto a dotted grid so they collectively form a recognisable picture. Tapping an
 arrow slides its whole path off the board in the direction its head points — but only
