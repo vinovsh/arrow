@@ -16,6 +16,7 @@ import {GameHeader, GAME_HEADER_HEIGHT} from '../components/GameHeader';
 import {HintPill} from '../components/HintPill';
 import {FitButton} from '../components/FitButton';
 import {CoachMark} from '../components/CoachMark';
+import {TutorialTapGuide} from '../components/TutorialTapGuide';
 import {DevOverlay} from '../components/DevOverlay';
 import {HintModal} from '../components/HintModal';
 import {PauseOverlay} from '../components/PauseOverlay';
@@ -334,7 +335,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
       if (!engine || complete || paused || outOfLives) {
         return;
       }
-      if (coachMark) {
+      if (coachMark && engine.level.id !== 1) {
         // §6 — a coach mark is dismissible by tapping anywhere, and the overlay never
         // blocks the target, so the same tap also plays.
         tutorialRef.current?.dismiss();
@@ -352,6 +353,9 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
       trace('resolveTap done');
 
       if (outcome.kind === 'escaped') {
+        if (engine.level.id === 1) {
+          setCoachMark(tutorialRef.current?.onArrowRemoved() ?? null);
+        }
         const arrow = engine.level.arrows[outcome.arrowIndex];
         // 'escaping' hands the arrow to MovingArrow, which flies it off the board and
         // only then reports back. The engine has already cleared its cells, so the
@@ -582,7 +586,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
       />
 
       <View style={styles.coachSlot}>
-        {coachMark && (
+        {coachMark && level.id !== 1 && (
           <CoachMark
             mark={coachMark}
             onDismiss={() => {
@@ -619,6 +623,13 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
               arrowStates={visuals}
               renderScale={renderScale}
             />
+            {level.id === 1 && coachMark && coachMark.arrowIndex >= 0 && (
+              <TutorialTapGuide
+                arrow={level.arrows[coachMark.arrowIndex]}
+                cellSize={metrics.cellSize}
+                boardSize={metrics.size}
+              />
+            )}
 
             {/* Arrows in motion, each in its own layer above the board. An escaping
                 arrow deforms like a rope being pulled out; a blocked one keeps its

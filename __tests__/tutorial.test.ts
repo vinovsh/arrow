@@ -61,6 +61,19 @@ describe('onboarding script (§6)', () => {
     expect(mark?.arrowIndex).toBeGreaterThanOrEqual(0);
     expect(engine.detector.isFree(mark?.arrowIndex ?? -1)).toBe(true);
   });
+  it('guides every tutorial arrow and finishes after the fourth removal', () => {
+    const engine = engineFor(1),
+      controller = new TutorialController(engine);
+    let mark = controller.onLevelStart();
+    for (let i = 0; i < 4; i++) {
+      expect(mark).not.toBeNull();
+      expect(mark?.step.caption).toBe('Tap to remove');
+      expect(engine.resolveTap(mark!.arrowIndex).kind).toBe('escaped');
+      mark = controller.onArrowRemoved();
+    }
+    expect(mark).toBeNull();
+    expect(SaveStore.data.tutorialStepsSeen).toContain(1);
+  });
 
   it('skips tips without skipping puzzles and retains the zoom lesson', () => {
     expect(SKIP_FROM_LEVEL).toBe(1);
@@ -93,8 +106,8 @@ describe('onboarding script (§6)', () => {
 });
 
 describe('challenging early boards', () => {
-  it('requires unlocking other arrows even in levels one and two', () => {
-    for (const id of [1, 2]) {
+  it('requires unlocking arrows after the simple tutorial', () => {
+    for (const id of [2, 3]) {
       const engine = engineFor(id);
       const free = engine.detector.freeIndices().length;
       expect(free).toBeGreaterThan(0);

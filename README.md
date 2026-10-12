@@ -4,7 +4,7 @@
 
 A tap puzzle built from dense, interlocking maze paths. Follow the arrowhead: an
 arrow can leave only after every other arrow in its exit lane has cleared.
-Every board has blocking dependencies from the start, including level 1.
+Level 1 teaches tapping with four straight arrows. Blocking puzzles start at level 2.
 
 React Native CLI + TypeScript. No Expo dependencies.
 
@@ -17,13 +17,15 @@ their bodies into empty lanes, and checks every orientation change for solvabili
 It introduces short and medium arrows into selected lanes while keeping long
 winding arrows and checking every resulting dependency for solvability.
 
-- Exactly 20 unique mazes, from 16×16 to 40×40.
+- One 12×12 tutorial and 19 unique mazes, from 20×20 to 40×40.
 - No arrowhead points toward its own body anywhere along its forward exit lane.
-- Every board mixes short (4–7 cells), medium (8–19) and long (20–64) arrows.
+- Levels 2–20 mix short (4–7 cells), medium (8–19) and long (20–64) arrows.
 - At least 20% short, 25% medium and 25% long arrows; long arrows occupy at most
   half the arrow count. No head-only arrows. Average length stays at least 12 cells.
-- At least 94% board coverage, with many turns, nested lanes and interlocking exits.
-- Minimum dependency depths: 3 on level 1, 5 on level 2, 8 on levels 3–9,
+- Level 1 has four separate five-cell arrows and a solid “Tap to remove” bubble
+  that follows the next arrow until all four are removed.
+- Levels 2–20 have at least 94% board coverage, with nested lanes and interlocking exits.
+- Minimum dependency depths: 5 on level 2, 8 on levels 3–9,
   and 12 on levels 10–20. Opening moves are limited as well.
 - Labels use board scale and dependency structure. The numeric difficulty signal
   supports validation; real player review remains the final test of challenge.
@@ -37,7 +39,8 @@ coverage, opening moves and dependency depths. Levels 21+ wait for user approval
 
 The old cartoon hand, white tutorial veil, decorative board overlays and translucent
 arrow halos are removed. An original tap-target icon accompanies an inline tip above
-the board. Level 1 colors one free arrow blue. Tips never cover or block the puzzle;
+the board. Level 1 uses a solid bubble below its four practice arrows, highlights
+the next arrow blue and shows the touch-target icon on its body. Guides never block taps;
 they explain blocking after a failed move on level 2, zoom on level 3 and hints on
 level 4. Dismissing tips never skips a puzzle.
 

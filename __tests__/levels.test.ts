@@ -53,7 +53,7 @@ describe('first 20 replacement levels', () => {
     }
   });
   it('mixes short, medium and long arrows, with blocking from level one', () => {
-    for (let id = 1; id <= 20; id++) {
+    for (let id = 2; id <= 20; id++) {
       const level = getLevel(id) as Level;
       const s = validate(level).signals!;
       const lengths = level.arrows.map(a => a.cells.length);
@@ -95,6 +95,16 @@ describe('first 20 replacement levels', () => {
           expect(arrow.cells.some(p => p.x === x && p.y === y)).toBe(false);
         }
       }
+    }
+  });
+  it('starts with four isolated straight practice arrows', () => {
+    const level = getLevel(1) as Level;
+    expect(level.band).toBe('Tutorial');
+    expect(level.arrows).toHaveLength(4);
+    expect(validate(level).freeCounts[0]).toBe(4);
+    for (const arrow of level.arrows) {
+      expect(arrow.cells).toHaveLength(5);
+      expect(new Set(arrow.cells.map(p => p.x)).size).toBe(1);
     }
   });
 });

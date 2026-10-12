@@ -30,7 +30,7 @@ interface Design {
   maxLength: number;
 }
 const rows: [string, number, Band][] = [
-  ['First weave', 16, 'Medium'],
+  ['Tap to remove', 12, 'Tutorial'],
   ['Nested lanes', 20, 'Medium'],
   ['Switchback', 22, 'Hard'],
   ['Coiled square', 24, 'Hard'],
@@ -56,12 +56,12 @@ export const REVIEW_PLAN: Design[] = rows.map(([title, grid, tier], i) => ({
   title,
   grid,
   tier,
-  minDepth: i === 0 ? 3 : i === 1 ? 5 : i < 9 ? 8 : 12,
-  minBlocked: i === 0 ? 0.55 : i === 1 ? 0.65 : i < 9 ? 0.75 : 0.8,
-  maxFree: i === 0 ? 0.45 : i === 1 ? 0.35 : i < 9 ? 0.25 : 0.2,
-  minFill: 0.94,
+  minDepth: i === 0 ? 0 : i === 1 ? 5 : i < 9 ? 8 : 12,
+  minBlocked: i === 0 ? 0 : i === 1 ? 0.65 : i < 9 ? 0.75 : 0.8,
+  maxFree: i === 0 ? 1 : i === 1 ? 0.35 : i < 9 ? 0.25 : 0.2,
+  minFill: i === 0 ? 0 : 0.94,
   minLength: 4,
-  meanLength: 12,
+  meanLength: i === 0 ? 4 : 12,
   maxLength: 64,
 }));
 const steps: GridPoint[] = [
@@ -71,6 +71,21 @@ const steps: GridPoint[] = [
   {x: 0, y: -1},
 ];
 const key = (p: GridPoint, n: number) => p.y * n + p.x;
+/** Four isolated, straight arrows teach tapping before level two teaches blocking. */
+export function tutorialArrows(): ArrowPath[] {
+  return [3, 5, 7, 9].map((x, i) => {
+    const cells = Array.from({length: 5}, (_, k) => ({x, y: 4 + k}));
+    if (i < 2) {
+      cells.reverse();
+    }
+    return {
+      id: `a${i}`,
+      color: 'white',
+      cells,
+      direction: directionFromCells(cells)!,
+    };
+  });
+}
 export function lengthMix(arrows: ArrowPath[]) {
   const short = arrows.filter(a => a.cells.length <= 7).length;
   const medium = arrows.filter(
@@ -407,9 +422,9 @@ export function main(): void {
     if (only && d.id !== only) {
       continue;
     }
-    let arrows: ArrowPath[] = [],
+    let arrows: ArrowPath[] = d.id === 1 ? tutorialArrows() : [],
       bestScore = -Infinity;
-    for (let attempt = 0; attempt < 1024; attempt++) {
+    for (let attempt = 0; d.id !== 1 && attempt < 1024; attempt++) {
       const rng = createRng(hashSeed(`mixed-weave-v4:${d.id}:${attempt}`)),
         candidate = refine(
           mixLengths(fillLanes(carve(d, rng), d, rng), d, rng),
@@ -453,7 +468,7 @@ export function main(): void {
     if (
       v.errors.length ||
       arrows.some(headFacesOwnBody) ||
-      !hasLengthMix(arrows) ||
+      (d.id !== 1 && !hasLengthMix(arrows)) ||
       !v.solvable ||
       s.depth < d.minDepth ||
       s.blockedStart + 1e-9 < d.minBlocked ||

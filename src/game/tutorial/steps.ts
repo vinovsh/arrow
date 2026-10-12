@@ -15,7 +15,7 @@ export interface TutorialStep {
 export const TUTORIAL_STEPS: readonly TutorialStep[] = [
   {
     level: 1,
-    caption: 'Tap the blue arrow to start',
+    caption: 'Tap to remove',
     target: {kind: 'arrow', pick: 'first-free'},
     gesture: 'tap',
     trigger: 'level-start',

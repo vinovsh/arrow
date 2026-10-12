@@ -119,13 +119,15 @@ Once per attempt, when any of these fire — 4 blocked taps in a row, 25s with n
 
 ### 4.1 Boards
 
-Exactly 20 levels with grids from 16×16 to 40×40. Each is an original, dense maze;
+Exactly 20 levels: a 12×12 tutorial followed by original dense mazes from 20×20 to 40×40;
 no copied competitor geometry, picture masks or recycled old boards. No level 21+
 is designed until this batch is approved.
 
 ### 4.2 Paths
 
-Every board mixes short (4–7 cells), medium (8–19) and long (20–64) arrows.
+Level 1 is a tutorial with four isolated straight five-cell arrows and a solid
+“Tap to remove” guide following each remaining arrow. No blocking is required.
+Levels 2–20 mix short (4–7 cells), medium (8–19) and long (20–64) arrows.
 At least 20% of arrows are short, 25% medium and 25% long; at most 50% are long.
 Board-average length is at least 12 cells and coverage at least 94%. No head-only
 arrows. Keep bodies clearly separated and directional, with winding long paths.
@@ -133,8 +135,8 @@ No head points at its own body anywhere along its complete forward exit lane.
 
 ### 4.3 Dependencies
 
-Level 1 has a dependency chain of at least 3 and at least 55% initially blocked
-arrows. Level 2 requires 5 and 65%; levels 3–9 require 8 and 75%; levels 10–20
+Level 1 has four free arrows for guided tapping. Level 2 requires dependency depth
+5 and 65% initially blocked; levels 3–9 require 8 and 75%; levels 10–20
 require 12 and 80%. These are minimum structural gates, not claims about a player's
 solve time. Every possible sequence of legal removals must remain solvable.
 
@@ -638,13 +640,13 @@ publishing are separate requests. Player approval is required before later level
 
 - Exactly 20 new levels; every board solvable and unique.
 - No shipped arrow shorter than 4 cells or longer than 64.
-- Every board meets the short, medium and long arrow proportions in §4.2.
+- Levels 2–20 meet the short, medium and long arrow proportions in §4.2.
 - No head points into its own body along its forward exit lane.
-- At least 94% coverage and at least 12 cells per arrow on average.
+- Levels 2–20 have at least 94% coverage and at least 12 cells per arrow on average.
 - Current dependency and blocked-start gates pass for every board.
 - 30 random legal playthroughs per board finish without deadlocks.
 - Preview JSON and shipped pack agree exactly.
-- First level presents an actual blocking puzzle and one indicated free move.
+- First level presents four separate straight arrows and a guide for each tap.
 - Tutorial icon and text sit above the board; no veil, hand or translucent underlay.
 - Existing saves start the new campaign at level 1 without losing settings or lifetime score.
 - New campaign progress survives reloads; dismissing tips never skips a puzzle.

@@ -31,7 +31,7 @@ for (const [i, packed] of pack.levels.entries()) {
     throw Error(`Level ${level.id}: ${result.errors.join(', ')}`);
   }
   if (
-    !hasLengthMix(level.arrows) ||
+    (level.id !== 1 && !hasLengthMix(level.arrows)) ||
     s.depth < design.minDepth ||
     s.blockedStart + 1e-9 < design.minBlocked ||
     1 - s.blockedStart > design.maxFree + 1e-9

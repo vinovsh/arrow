@@ -1,24 +1,24 @@
 [
   {
     "id": 1,
-    "title": "First weave",
-    "tier": "Medium",
-    "grid": 16,
-    "arrows": 12,
-    "depth": 8,
-    "freeAtStart": 2,
-    "blockedStart": 83,
-    "fill": 98,
+    "title": "Tap to remove",
+    "tier": "Tutorial",
+    "grid": 12,
+    "arrows": 4,
+    "depth": 0,
+    "freeAtStart": 4,
+    "blockedStart": 0,
+    "fill": 14,
     "minLength": 5,
-    "meanLength": 20.9,
-    "longest": 40,
+    "meanLength": 5,
+    "longest": 5,
     "mix": {
-      "short": 3,
-      "medium": 3,
-      "long": 6
+      "short": 4,
+      "medium": 0,
+      "long": 0
     },
-    "turns": 8.4,
-    "D": 7.93
+    "turns": 0,
+    "D": 1.83
   },
   {
     "id": 2,

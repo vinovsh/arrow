@@ -57,6 +57,20 @@ export class TutorialController {
     return this.active;
   }
 
+  /** Keep guiding the next arrow until the four-arrow practice is complete. */
+  onArrowRemoved(): ActiveCoachMark | null {
+    if (this.engine.level.id !== 1 || !this.active) {
+      return this.active;
+    }
+    const arrowIndex = this.engine.detector.freeIndices()[0] ?? -1;
+    if (arrowIndex < 0) {
+      this.dismiss();
+      return null;
+    }
+    this.active = {...this.active, arrowIndex};
+    return this.active;
+  }
+
   /** Called after the first blocked tap of the attempt — level 3's beat. */
   onFirstBlocked(blockerIndex: number): ActiveCoachMark | null {
     const step = stepFor(this.engine.level.id);
