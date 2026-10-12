@@ -14,3 +14,9 @@ are included. The previous Font Awesome tutorial hand has been removed.
 **`assets/art/star.png`** — supplied by the project owner as `ref/star.png`
 (2026-09-25), trimmed and scaled to 192px. Shown on the level-complete overlay. Its
 provenance and licence are the owner's to record here before release.
+
+## Menu artwork (2026-10-12)
+
+The folded blue arrow emblem, confetti accents, pause bars and menu line icons
+are original code-generated SVGs in `MenuArt.tsx` and `AppIcon.tsx`. Emoji use the
+device system font. No competitor assets or extracted storyboard bitmap crops.

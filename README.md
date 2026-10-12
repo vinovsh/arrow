@@ -72,7 +72,8 @@ a completion emoji celebrates before the existing reward screen. Captions vary b
 level and result: “You got it!”, “Great job!”, “Impressive!” or “Genius!”.
 Restart resets the halfway milestone. Reduced-motion settings show a static reaction.
 
-Successful moves use the existing original soft whoosh. Reanimated drives rope-like
+Successful moves use a new original 235ms silky glide: rounded onset, airy zip and
+warm falling tone. Pitch varies subtly across short, medium and long arrows. Reanimated drives rope-like
 exit paths on the UI thread, preserving bends while the tail follows the head.
 Hint and blocked states use solid color changes, with no translucent underlays.
 Pinch-to-zoom, pan and fit remain available for precise taps on dense boards.
@@ -100,3 +101,12 @@ no rewarded unit configured reports the ad as unavailable. Configure your AdMob
 privacy messages before serving production ads. Required consent forms run before
 ad initialization; Settings provides **Ad privacy choices** to change consent.
 Ads need internet, while restarting and playing puzzles still work offline.
+
+## Menu UI revision (2026-10-12)
+
+The approved white-and-blue storyboard is implemented across launch, home, level
+selection, settings, help, pause, hints, lives, rewards and the leaderboard. A
+separate menu palette preserves gameplay colors and geometry. Menus use opaque
+surfaces, navy text, blue main buttons and numbered level tiles. Home shows actual
+progress and best score. Help has five working Next steps. Dialogs scroll on short
+screens; reward and ranking animations, ad behavior and saved progress are retained.

@@ -172,10 +172,10 @@ class AudioServiceImpl {
     this.playing.push({sound, startedAt: now});
   }
 
-  /** §9.2 — pitch varies ±1 semitone with path length so runs of taps stay musical. */
+  /** Subtle variation across the full 4–64 cell campaign, not just short paths. */
   playArrowMove(pathLength: number): void {
-    const length = Math.max(1, Math.min(12, pathLength));
-    const semitones = 1 - ((length - 1) / 11) * 2;
+    const length = Math.max(4, Math.min(64, pathLength));
+    const semitones = 0.8 - (Math.log2(length / 4) / 4) * 1.6;
     this.play('arrow_move', Math.pow(2, semitones / 12), 0.65);
   }
 

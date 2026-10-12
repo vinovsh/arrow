@@ -31,9 +31,10 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import {theme} from '../theme/theme';
-import {type as typography} from '../theme/typography';
+import {menuTheme as theme} from '../theme/menuTheme';
+import {type as typography} from '../theme/menuTypography';
 import {TierBadge} from './TierBadge';
+import {MenuHero} from './MenuArt';
 import {Hills} from './LevelCompleteOverlay';
 import {Audio} from '../audio/AudioService';
 import {Haptics} from '../haptics/HapticService';
@@ -120,7 +121,7 @@ export function LeaderboardOverlay({
       7,
       Math.floor(
         (usableHeight -
-          (showDetails ? 230 : 150) * Math.max(1, fontScale) -
+          (showDetails ? 310 : 230) * Math.max(1, fontScale) -
           (showTier ? 112 : 0)) /
           rowHeight,
       ),
@@ -582,7 +583,7 @@ function LeagueRow({
         style={[styles.playerHalo, haloStyle]}
       />
       <LinearGradient
-        colors={[theme.bg.panelAlt, '#FCE8EF', '#FFF5E9']}
+        colors={[theme.bg.panelAlt, '#D9EEFF', theme.bg.panelAlt]}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
         style={[styles.row, styles.playerCard, {height: rowHeight - 6}]}>
@@ -606,7 +607,7 @@ interface RibbonProps {
 const RIBBON_COLOURS = {
   up: theme.button.play,
   promoted: ['#75B6A7', '#458D7C'],
-  hold: ['#AF92D4', '#8961CB'],
+  hold: ['#22AEFF', '#0785F5'],
 } as const;
 
 /** The swallow-tailed ribbon under the season pill: blue for a climb. */
@@ -905,6 +906,7 @@ const LEAF_DARK = theme.button.settings[1];
 function LeagueHeader({league}: {league: string}): React.JSX.Element {
   return (
     <View style={styles.compactHeader}>
+      <MenuHero kind="trophy" size={70} />
       <Text style={styles.headerTitle}>Leaderboard</Text>
       <Text style={styles.headerSubtitle}>{league} league</Text>
     </View>
@@ -1101,7 +1103,7 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingLeft: 8,
     paddingRight: 16,
-    borderRadius: 22,
+    borderRadius: 16,
   },
   card: {
     position: 'absolute',
@@ -1122,7 +1124,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.button.levels[0],
   },
   playerCard: {
-    borderWidth: 2.5,
+    borderWidth: 1,
     borderColor: theme.button.play[0],
     shadowColor: theme.brand.tagline,
     shadowOpacity: 0.15,
@@ -1140,7 +1142,7 @@ const styles = StyleSheet.create({
   },
   rankChipPlayer: {backgroundColor: theme.button.play[1]},
   rank: {...typography.display(15), color: theme.text.secondary},
-  rankPlayer: {color: '#FFF4DC'},
+  rankPlayer: {color: '#FFFFFF'},
   avatar: {
     width: 34,
     height: 34,

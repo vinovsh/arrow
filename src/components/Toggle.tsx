@@ -6,12 +6,12 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {theme} from '../theme/theme';
-import {type as typography} from '../theme/typography';
+import {menuTheme as theme} from '../theme/menuTheme';
+import {type as typography} from '../theme/menuTypography';
 import {Haptics} from '../haptics/HapticService';
 
 interface Props {
-  icon: string;
+  icon: React.ReactNode;
   label: string;
   value: boolean;
   onChange: (next: boolean) => void;
@@ -51,7 +51,11 @@ export function Toggle({
         Haptics.selection();
         onChange(!value);
       }}>
-      <Text style={styles.icon}>{icon}</Text>
+      {typeof icon === 'string' ? (
+        <Text style={styles.icon}>{icon}</Text>
+      ) : (
+        icon
+      )}
       <Text style={styles.label}>{label}</Text>
       <View style={styles.spacer} />
       {/* The ON/OFF word matters: colour is never the sole signal for state (§10.2). */}

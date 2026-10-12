@@ -1,20 +1,22 @@
-import React, {useMemo, useState} from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import {
   FlatList,
+  ScrollView,
   StyleSheet,
   Text,
   View,
   useWindowDimensions,
 } from 'react-native';
-import {ClickPressable} from '../components/ClickPressable';
 import type {ListRenderItemInfo} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Svg, {G, Path} from 'react-native-svg';
 import type {RootStackParamList} from '../navigation/types';
-import {theme} from '../theme/theme';
-import {type as typography} from '../theme/typography';
+import {menuTheme as theme} from '../theme/menuTheme';
+import {type as typography} from '../theme/menuTypography';
 import {Button} from '../components/Button';
+import {MenuHeader} from '../components/MenuHeader';
+import {TapCue} from '../components/TapCue';
 import {Panel} from '../components/Panel';
 import {HOW_TO_PLAY_CARDS} from '../game/tutorial/steps';
 import {buildArrowGeometry} from '../game/renderer/arrowGeometry';
@@ -93,6 +95,7 @@ const CARD_BOARDS: ArrowPath[][] = [
 export function HowToPlayScreen({navigation}: Props): React.JSX.Element {
   const {width} = useWindowDimensions();
   const [page, setPage] = useState(0);
+  const pager = useRef<FlatList>(null);
 
   const cards = useMemo(
     () =>
@@ -108,32 +111,30 @@ export function HowToPlayScreen({navigation}: Props): React.JSX.Element {
     item,
   }: ListRenderItemInfo<(typeof cards)[number]>): React.JSX.Element => (
     <View style={[styles.page, {width}]}>
-      <Panel style={styles.card}>
-        <Text style={styles.step}>LITTLE LESSON {item.key + 1} / 5</Text>
-        <View style={styles.illustration}>
-          <MiniBoard arrows={item.board} size={Math.min(width - 96, 220)} />
-        </View>
-        <Text style={styles.cardTitle}>{item.title}</Text>
-        <Text style={styles.cardBody}>{item.body}</Text>
-      </Panel>
+      <ScrollView contentContainerStyle={styles.lessonScroll}>
+        <Panel style={styles.card}>
+          <Text style={styles.step}>{item.key + 1} / 5</Text>
+          <View style={styles.illustration}>
+            <MiniBoard arrows={item.board} size={Math.min(width - 96, 220)} />
+            {item.key === 0 && (
+              <View style={styles.tapCue}>
+                <TapCue size={42} />
+              </View>
+            )}
+          </View>
+          <Text style={styles.cardTitle}>{item.title}</Text>
+          <Text style={styles.cardBody}>{item.body}</Text>
+        </Panel>
+      </ScrollView>
     </View>
   );
 
   return (
     <SafeAreaView style={styles.root}>
-      <View style={styles.header}>
-        <ClickPressable
-          onPress={() => navigation.goBack()}
-          accessibilityRole="button"
-          accessibilityLabel="Back"
-          style={styles.back}>
-          <Text style={styles.backGlyph}>‹</Text>
-        </ClickPressable>
-        <Text style={styles.title}>HOW TO PLAY</Text>
-        <View style={styles.back} />
-      </View>
+      <MenuHeader title="How to play" onBack={() => navigation.goBack()} />
 
       <FlatList
+        ref={pager}
         data={cards}
         renderItem={renderCard}
         keyExtractor={item => String(item.key)}
@@ -161,9 +162,16 @@ export function HowToPlayScreen({navigation}: Props): React.JSX.Element {
 
       <View style={styles.footer}>
         <Button
-          label="GOT IT"
+          label={page === cards.length - 1 ? 'Got it' : 'Next'}
           variant="primary"
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            if (page === cards.length - 1) {
+              navigation.goBack();
+            } else {
+              pager.current?.scrollToIndex({index: page + 1, animated: true});
+              setPage(page + 1);
+            }
+          }}
         />
       </View>
     </SafeAreaView>
@@ -204,6 +212,8 @@ function MiniBoard({
 }
 
 const styles = StyleSheet.create({
+  lessonScroll: {flexGrow: 1, justifyContent: 'center', paddingVertical: 16},
+  tapCue: {position: 'absolute', bottom: 18, right: 24},
   root: {flex: 1, backgroundColor: theme.bg.base},
   header: {
     flexDirection: 'row',
@@ -227,9 +237,16 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   page: {paddingHorizontal: theme.space.lg, justifyContent: 'center'},
-  card: {alignItems: 'center', gap: theme.space.lg},
+  card: {
+    borderWidth: 0,
+    elevation: 0,
+    shadowOpacity: 0,
+    backgroundColor: theme.bg.base,
+    alignItems: 'center',
+    gap: theme.space.lg,
+  },
   step: {...typography.ui(11), color: theme.brand.tagline, letterSpacing: 1.5},
-  illustration: {backgroundColor: theme.bg.base, borderRadius: 28, padding: 8},
+  illustration: {backgroundColor: theme.bg.panel, borderRadius: 28, padding: 8},
   cardTitle: {...typography.ui(20), textAlign: 'center'},
   cardBody: {...typography.body(15), textAlign: 'center', lineHeight: 22},
   dots: {

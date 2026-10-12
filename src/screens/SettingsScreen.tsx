@@ -12,9 +12,11 @@ import {ClickPressable} from '../components/ClickPressable';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import type {RootStackParamList} from '../navigation/types';
-import {theme} from '../theme/theme';
-import {type as typography} from '../theme/typography';
+import {menuTheme as theme} from '../theme/menuTheme';
+import {type as typography} from '../theme/menuTypography';
 import {Panel} from '../components/Panel';
+import {MenuHeader} from '../components/MenuHeader';
+import {AppIcon} from '../components/AppIcon';
 import {Toggle} from '../components/Toggle';
 import {SaveStore} from '../storage/SaveStore';
 import type {SaveData} from '../storage/SaveStore';
@@ -36,24 +38,14 @@ export function SettingsScreen({navigation}: Props): React.JSX.Element {
 
   return (
     <SafeAreaView style={styles.root}>
-      <View style={styles.header}>
-        <ClickPressable
-          onPress={() => navigation.goBack()}
-          accessibilityRole="button"
-          accessibilityLabel="Back"
-          style={styles.back}>
-          <Text style={styles.backGlyph}>‹</Text>
-        </ClickPressable>
-        <Text style={styles.title}>SETTINGS</Text>
-        <View style={styles.back} />
-      </View>
+      <MenuHeader title="Settings" onBack={() => navigation.goBack()} />
 
       <ScrollView contentContainerStyle={styles.body}>
-        <Text style={styles.sectionLabel}>MAKE IT YOUR HAPPY PLACE</Text>
+        <Text style={styles.sectionLabel}>Preferences</Text>
         <Panel>
           <Toggle
-            icon="🔊"
-            label="SOUND"
+            icon={<AppIcon name="sound" color={theme.brand.tagline} />}
+            label="Sound"
             value={save.soundEnabled}
             onChange={next => {
               SaveStore.update({soundEnabled: next});
@@ -61,8 +53,8 @@ export function SettingsScreen({navigation}: Props): React.JSX.Element {
           />
           <View style={styles.divider} />
           <Toggle
-            icon="🎵"
-            label="MUSIC"
+            icon={<AppIcon name="music" color={theme.brand.tagline} />}
+            label="Music"
             value={save.musicEnabled}
             onChange={next => {
               SaveStore.update({musicEnabled: next});
@@ -72,8 +64,8 @@ export function SettingsScreen({navigation}: Props): React.JSX.Element {
           />
           <View style={styles.divider} />
           <Toggle
-            icon="📳"
-            label="VIBRATION"
+            icon={<AppIcon name="vibration" color={theme.brand.tagline} />}
+            label="Vibration"
             value={save.vibrationEnabled}
             onChange={next => {
               SaveStore.update({vibrationEnabled: next});
@@ -90,7 +82,7 @@ export function SettingsScreen({navigation}: Props): React.JSX.Element {
             <>
               <ChevronRow
                 icon="?"
-                label="AD PRIVACY CHOICES"
+                label="Ad privacy"
                 onPress={() => {
                   void Ads.showPrivacyOptions().catch((error: unknown) =>
                     Alert.alert(
@@ -107,7 +99,7 @@ export function SettingsScreen({navigation}: Props): React.JSX.Element {
           )}
           <ChevronRow
             icon="★"
-            label="RATE US"
+            label="Rate us"
             onPress={() => {
               void Linking.openURL('market://details?id=com.arrowescape').catch(
                 () =>
@@ -121,7 +113,7 @@ export function SettingsScreen({navigation}: Props): React.JSX.Element {
           <View style={styles.divider} />
           <ChevronRow
             icon="🛡"
-            label="PRIVACY POLICY"
+            label="Privacy policy"
             onPress={() =>
               Alert.alert(
                 'Privacy',
@@ -137,7 +129,7 @@ export function SettingsScreen({navigation}: Props): React.JSX.Element {
           <View style={styles.divider} />
           <ChevronRow
             icon="ⓘ"
-            label="ABOUT"
+            label="About"
             onPress={() =>
               Alert.alert(
                 'Arrow Escape',
@@ -148,7 +140,7 @@ export function SettingsScreen({navigation}: Props): React.JSX.Element {
           <View style={styles.divider} />
           <ChevronRow
             icon="?"
-            label="HOW TO PLAY"
+            label="How to play"
             onPress={() => navigation.navigate('HowToPlay')}
           />
         </Panel>
@@ -189,7 +181,18 @@ function ChevronRow({
       style={styles.row}
       onPress={onPress}
       accessibilityRole="button">
-      <Text style={styles.rowIcon}>{icon}</Text>
+      <AppIcon
+        name={
+          icon === '★'
+            ? 'star'
+            : icon === '🛡'
+            ? 'shield'
+            : icon === 'ⓘ'
+            ? 'info'
+            : 'help'
+        }
+        color={theme.brand.tagline}
+      />
       <Text style={styles.rowLabel}>{label}</Text>
       <View style={styles.spacer} />
       <Text style={styles.chevron}>›</Text>
@@ -241,7 +244,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: theme.text.secondary,
   },
-  rowLabel: {...typography.ui(16)},
+  rowLabel: {...typography.body(15), color: theme.text.primary, flex: 1},
   spacer: {flex: 1},
   chevron: {fontSize: 24, color: theme.text.dim},
   version: {

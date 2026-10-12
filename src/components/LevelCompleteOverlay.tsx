@@ -16,21 +16,13 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withDelay,
-  withRepeat,
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import Svg, {
-  Circle,
-  Defs,
-  G,
-  LinearGradient as SvgGradient,
-  Path,
-  Rect,
-  Stop,
-} from 'react-native-svg';
-import {theme} from '../theme/theme';
-import {type as typography} from '../theme/typography';
+import Svg, {Circle, G, Path, Rect} from 'react-native-svg';
+import {menuTheme as theme} from '../theme/menuTheme';
+import {type as typography} from '../theme/menuTypography';
+import {MenuHero} from './MenuArt';
 import {Confetti} from './Confetti';
 import {Audio} from '../audio/AudioService';
 import {Haptics} from '../haptics/HapticService';
@@ -261,11 +253,8 @@ export function LevelCompleteOverlay({
           </Animated.View>
 
           <Animated.View style={[styles.titleBlock, titleStyle]}>
-            <Text style={styles.title}>
-              Level {levelId}
-              {'\n'}Completed!
-            </Text>
-            <Text style={styles.subtitle}>{breakdown.speed.blurb}</Text>
+            <Text style={styles.title}>Impressive!</Text>
+            <Text style={styles.subtitle}>Level {levelId} complete</Text>
           </Animated.View>
 
           <Animated.View style={[styles.stars, starRowStyle]}>
@@ -570,7 +559,7 @@ function NextButton({
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={[styles.next, disabled && styles.dimmed]}>
-          <Text style={styles.nextLabel}>Next Level →</Text>
+          <Text style={styles.nextLabel}>Continue →</Text>
         </LinearGradient>
       </Pressable>
     </Animated.View>
@@ -581,158 +570,7 @@ function NextButton({
 
 /** Sculpted gold trophy with a star medallion, pastel laurels and sparkles. */
 function Trophy(): React.JSX.Element {
-  const glow = useSharedValue(0);
-  useEffect(() => {
-    glow.value = withRepeat(
-      withTiming(1, {duration: 1300, easing: Easing.inOut(Easing.sin)}),
-      -1,
-      true,
-    );
-  }, [glow]);
-  const glowStyle = useAnimatedStyle(() => ({
-    opacity: 0.35 + glow.value * 0.35,
-    transform: [{scale: 0.92 + glow.value * 0.12}],
-  }));
-
-  const leaves = (side: 1 | -1): React.JSX.Element => (
-    <G transform={side === -1 ? 'translate(200 0) scale(-1 1)' : undefined}>
-      <Path
-        d="M58 42 C40 60 36 90 52 118 C62 132 78 140 96 142"
-        stroke={theme.button.settings[1]}
-        strokeWidth={4}
-        fill="none"
-        strokeLinecap="round"
-      />
-      {[
-        [50, 52, -40],
-        [42, 72, -20],
-        [40, 94, 0],
-        [46, 114, 25],
-        [60, 130, 50],
-        [78, 140, 75],
-      ].map(([x, y, r], i) => (
-        <Path
-          key={i}
-          d="M0 0 C-6 -10 -2 -20 6 -24 C10 -14 8 -6 0 0Z"
-          fill={theme.button.settings[1]}
-          transform={`translate(${x} ${y}) rotate(${r - 90})`}
-        />
-      ))}
-    </G>
-  );
-
-  return (
-    <View style={styles.trophyBox}>
-      <Animated.View style={[styles.trophyGlow, glowStyle]} />
-      <Svg width={190} height={152} viewBox="0 0 200 160">
-        <Defs>
-          <SvgGradient id="cup" x1="0" y1="0" x2="1" y2="1">
-            <Stop offset="0" stopColor={theme.reward.goldLight} />
-            <Stop offset="0.55" stopColor={theme.reward.gold} />
-            <Stop offset="1" stopColor={theme.reward.goldDeep} />
-          </SvgGradient>
-          <SvgGradient id="cup-rim" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor="#FFF4CD" />
-            <Stop offset="1" stopColor={theme.reward.goldDeep} />
-          </SvgGradient>
-          <SvgGradient id="cup-plinth" x1="0" y1="0" x2="1" y2="1">
-            <Stop offset="0" stopColor={theme.button.play[0]} />
-            <Stop offset="1" stopColor={theme.button.play[1]} />
-          </SvgGradient>
-        </Defs>
-        <Circle
-          cx={100}
-          cy={77}
-          r={65}
-          fill={theme.reward.goldLight}
-          opacity={0.25}
-        />
-        {leaves(1)}
-        {leaves(-1)}
-        {/* Handles. */}
-        <Path
-          d="M67 35 H51 C39 35 42 72 71 78 M133 35 H149 C161 35 158 72 129 78"
-          stroke={theme.reward.goldDeep}
-          strokeWidth={10}
-          fill="none"
-          strokeLinecap="round"
-        />
-        <Path
-          d="M67 35 H51 C39 35 42 72 71 78 M133 35 H149 C161 35 158 72 129 78"
-          stroke={theme.reward.goldLight}
-          strokeWidth={4}
-          fill="none"
-          strokeLinecap="round"
-        />
-        {/* Bowl, stem, base. */}
-        <Path
-          d="M64 24 H136 C136 72 122 94 100 98 C78 94 64 72 64 24Z"
-          fill="url(#cup)"
-        />
-        <Rect
-          x={60}
-          y={20}
-          width={80}
-          height={10}
-          rx={5}
-          fill="url(#cup-rim)"
-        />
-        <Rect x={92} y={96} width={16} height={20} rx={3} fill="url(#cup)" />
-        <Rect x={74} y={114} width={52} height={10} rx={4} fill="url(#cup)" />
-        <Rect
-          x={64}
-          y={123}
-          width={72}
-          height={20}
-          rx={7}
-          fill="url(#cup-plinth)"
-        />
-        <Rect
-          x={81}
-          y={128}
-          width={38}
-          height={10}
-          rx={4}
-          fill="url(#cup-rim)"
-        />
-        <Circle
-          cx={100}
-          cy={59}
-          r={22}
-          fill={theme.reward.goldDeep}
-          opacity={0.3}
-        />
-        <Circle cx={100} cy={58} r={19} fill={theme.reward.goldLight} />
-        {/* Star on the bowl and a gloss stripe. */}
-        <Path
-          d="M100 43 L104 52 L114 53 L107 60 L109 70 L100 65 L91 70 L93 60 L86 53 L96 52Z"
-          fill={theme.reward.goldDeep}
-        />
-        <Path
-          d="M74 30 C74 58 80 76 90 86"
-          stroke="#FFFFFF"
-          strokeOpacity={0.5}
-          strokeWidth={5}
-          fill="none"
-          strokeLinecap="round"
-        />
-        <Path
-          d="M29 19L32 10L35 19L44 22L35 25L32 34L29 25L20 22Z"
-          fill={theme.reward.gold}
-        />
-        <Path
-          d="M158 29L161 20L164 29L173 32L164 35L161 44L158 35L149 32Z"
-          fill={theme.button.play[0]}
-        />
-        <Path
-          d="M172 96L174 90L176 96L182 98L176 100L174 106L172 100L166 98Z"
-          fill={theme.button.levels[1]}
-        />
-        <Circle cx={46} cy={104} r={3} fill={theme.button.levels[1]} />
-        <Circle cx={145} cy={12} r={2.5} fill={theme.reward.goldDeep} />
-      </Svg>
-    </View>
-  );
+  return <MenuHero kind="party" size={118} />;
 }
 
 /**

@@ -1,13 +1,14 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {theme} from '../theme/theme';
-import {type as typography} from '../theme/typography';
+import {menuTheme as theme} from '../theme/menuTheme';
+import {type as typography} from '../theme/menuTypography';
 import {Button} from './Button';
-import {HintPill} from './HintPill';
 import {Toggle} from './Toggle';
+import {MenuHero} from './MenuArt';
+import {MenuModal} from './MenuModal';
+import {AppIcon} from './AppIcon';
 import {SaveStore} from '../storage/SaveStore';
 import {Audio} from '../audio/AudioService';
-
 interface Props {
   visible: boolean;
   hintsRemaining: number;
@@ -16,22 +17,6 @@ interface Props {
   onQuit: () => void;
   onHint: () => void;
 }
-
-/**
- * Rendered as an in-tree layer rather than in a `Modal`.
- *
- * On Android a Modal's content lives in its own window, which
- * `GestureHandlerRootView` does not wrap — react-native-gesture-handler then
- * swallows every touch inside it and the overlay is visible but completely inert.
- * These overlays are full-screen layers over the game screen anyway, so keeping them
- * in the same tree fixes the touches, avoids a second Modal window fighting the
- * first when one overlay hands over to another, and lets Fabric size them correctly.
- */
-
-/**
- * §5.11 — a translucent overlay with the board still visible behind it. The header
- * stays put, the game clock stops, and zoom is locked while this is open (§5.5).
- */
 export function PauseOverlay({
   visible,
   hintsRemaining,
@@ -40,72 +25,63 @@ export function PauseOverlay({
   onQuit,
   onHint,
 }: Props): React.JSX.Element | null {
+  const [save, setSave] = useState(SaveStore.data);
+  useEffect(() => SaveStore.subscribe(setSave), []);
   if (!visible) {
     return null;
   }
-
   return (
-    <View style={styles.scrim}>
-      <Text style={styles.title}>PAUSED</Text>
-
-      <View style={styles.buttons}>
-        <Button label="RESUME" icon="▶" variant="play" onPress={onResume} />
+    <MenuModal>
+      <MenuHero kind="pause" size={116} />
+      <Text accessibilityRole="header" style={styles.title}>
+        Take a breather
+      </Text>
+      <View style={styles.actions}>
+        <Button label="Resume" variant="play" onPress={onResume} />
         <Button
-          label="RESTART"
-          icon="↻"
+          label="Restart level"
           variant="neutral"
+          icon="↻"
           glow={false}
           onPress={onRestart}
         />
         <Button
-          label="QUIT LEVEL"
-          icon="⌂"
+          label="Home"
           variant="neutral"
+          icon={<AppIcon name="home" color={theme.brand.tagline} />}
           glow={false}
           onPress={onQuit}
         />
       </View>
-
-      <View style={styles.pills}>
-        <HintPill remaining={hintsRemaining} onPress={onHint} />
-        <View style={styles.soundPill}>
-          <Toggle
-            icon="🔊"
-            label="SOUND"
-            value={SaveStore.data.soundEnabled}
-            onChange={next => {
-              SaveStore.update({soundEnabled: next});
-              Audio.applySettings();
-            }}
-          />
-        </View>
+      <View style={styles.sound}>
+        <Toggle
+          icon={<AppIcon name="sound" color={theme.brand.tagline} />}
+          label="Sound"
+          value={save.soundEnabled}
+          onChange={value => {
+            SaveStore.update({soundEnabled: value});
+            Audio.applySettings();
+          }}
+        />
       </View>
-    </View>
+      <Button
+        label={`Use hint · ${hintsRemaining} left`}
+        disabled={hintsRemaining === 0}
+        variant="neutral"
+        glow={false}
+        onPress={onHint}
+        style={styles.actions}
+      />
+    </MenuModal>
   );
 }
-
 const styles = StyleSheet.create({
-  scrim: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 40,
-    backgroundColor: theme.bg.vignette,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: theme.space.lg,
-    gap: theme.space.xl,
-  },
-  title: {
-    ...typography.display(30),
-    color: theme.state.star,
-    letterSpacing: 4,
-  },
-  buttons: {alignSelf: 'stretch', gap: 14, maxWidth: 340, width: '100%'},
-  pills: {flexDirection: 'row', alignItems: 'center', gap: theme.space.md},
-  soundPill: {
-    backgroundColor: theme.bg.panel,
-    borderRadius: theme.radius.pill,
-    borderWidth: 1,
-    borderColor: theme.bg.border,
-    paddingHorizontal: theme.space.md,
+  title: {...typography.display(27), textAlign: 'center'},
+  actions: {alignSelf: 'stretch', gap: 12},
+  sound: {
+    alignSelf: 'stretch',
+    borderTopWidth: 1,
+    borderTopColor: theme.bg.border,
+    marginTop: 12,
   },
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import type {StyleProp, ViewStyle} from 'react-native';
-import {theme} from '../theme/theme';
+import {menuTheme as theme} from '../theme/menuTheme';
 
 interface Props {
   children: React.ReactNode;

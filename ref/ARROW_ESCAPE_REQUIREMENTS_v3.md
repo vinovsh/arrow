@@ -1,5 +1,15 @@
 # Arrow Escape — Product & Technical Requirements
 
+> Approved UI revision (2026-10-12): menus and reward screens use the white-and-blue
+> storyboard implemented in `src/theme/menuTheme.ts`. Gameplay screen, its palette
+> and level geometry stay unchanged. Launch uses the folded blue arrow emblem;
+> Home displays progress and best score; level selection uses numbered four-column
+> tiles; help advances through five lessons. Pause, hints and lives use opaque,
+> scrollable surfaces. Existing navigation, saves, rewards and ad rules remain.
+> Arrow movement uses the new original 235ms silky glide, with subtle pitch
+> variation across the complete 4–64-cell range. These revisions supersede older
+> menu appearance and movement-sound descriptions below.
+
 > Level-design revision: 2026-10-12. The current 20-level mixed-arrow campaign
 > replaces the previous short-arrow, silhouette and 500-level rules. See README.md
 > and tools/designFirst20.ts for the current measured design gates. Other sections

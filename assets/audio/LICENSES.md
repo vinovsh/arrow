@@ -83,7 +83,7 @@ File names are fixed by `FILES` in `src/audio/AudioService.ts`.
 
 | File | Source | Licence | Acquired |
 |---|---|---|---|
-| `arrow_move.m4a` | Original synthesis in `tools/audio/arrow_whoosh.py`: seeded noise, warm band-pass filtering, smooth 270ms envelope, quiet descending tone | Original project-generated audio; no third-party samples | 2026-10-09 |
+| `arrow_move.m4a` | Original synthesis in `tools/audio/arrow_whoosh.py`: seeded swept noise, quick rounded onset, warm continuous-phase falling glide and soft 235ms envelope | Original project-generated audio; no third-party samples | 2026-10-12 |
 | `ui_click.m4a` | `ref/universfield-menu-click-147357.mp3` ("universfield", apparently Pixabay item 147357), 70ms of leading silence trimmed, cut to 0.40s with an 80ms fade, +4dB, mono 44.1kHz AAC 96k | **To confirm** — presumably the Pixabay Content License; verify on the item page before release | 2026-09-27 |
 | `ambient_loop.m4a` | `ref/meditativetiger-ethereal-canopy-meditation-501353.mp3` ("meditativetiger", apparently Pixabay item 501353). Re-cut as a seamless 27s loop: `[3s,27s]` followed by `[27s,30s]` (quarter-sine fade out) mixed with `[0s,3s]` (quarter-sine fade in), so the file ends where it begins; +2dB, stereo 44.1kHz AAC 128k, 430KB | **To confirm** — presumably the Pixabay Content License; verify on the item page before release | 2026-09-27 |
 
@@ -107,3 +107,10 @@ arrow-click tick and its playback call were removed. UI menu buttons keep their
 existing click. Reproduce the replacement with `python3 tools/audio/arrow_whoosh.py`.
 The whoosh peaks at about -10.5dBFS before the service's 0.65 gain, starts and ends
 at silence, and is pitched within one semitone for paths of one to twelve cells.
+
+## New arrow glide (2026-10-12)
+
+Replaced the movement sample with a shorter 235ms original silky glide: a soft
+rounded onset, filtered airy zip and warm falling tone, with silent edges and no
+separate arrow-click effect. The service now varies pitch by ±0.8 semitone across
+the full 4–64-cell range. Original synthesis only; no third-party samples.

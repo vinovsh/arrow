@@ -9,7 +9,14 @@ type IconName =
   | 'help'
   | 'chevron'
   | 'sparkle'
-  | 'heart';
+  | 'heart'
+  | 'sound'
+  | 'music'
+  | 'vibration'
+  | 'shield'
+  | 'info'
+  | 'star'
+  | 'home';
 
 /** Rounded vector icons share one stroke weight and remain crisp on every device. */
 export function AppIcon({
@@ -61,6 +68,39 @@ export function AppIcon({
         </>
       )}
       {name === 'chevron' && <Path d="M9 6L15 12L9 18" />}
+      {name === 'sound' && (
+        <>
+          <Path d="M3 9H7L12 5V19L7 15H3Z" />
+          <Path d="M16 8Q20 12 16 16 M19 5Q25 12 19 19" />
+        </>
+      )}
+      {name === 'music' && (
+        <>
+          <Path d="M10 17V5L20 3V15 M10 8L20 6" />
+          <Circle cx={7} cy={17} r={3} />
+          <Circle cx={17} cy={15} r={3} />
+        </>
+      )}
+      {name === 'vibration' && (
+        <>
+          <Rect x={7} y={3} width={10} height={18} rx={2} />
+          <Path d="M3 7V17 M21 7V17 M11 18H13" />
+        </>
+      )}
+      {name === 'shield' && <Path d="M12 3L21 7V12Q21 19 12 22Q3 19 3 12V7Z" />}
+      {name === 'info' && (
+        <>
+          <Circle cx={12} cy={12} r={9} />
+          <Path d="M12 11V17" />
+          <Circle cx={12} cy={7} r={0.8} fill={color} />
+        </>
+      )}
+      {name === 'star' && (
+        <Path d="M12 2L15 9L22 10L17 15L18 22L12 18L6 22L7 15L2 10L9 9Z" />
+      )}
+      {name === 'home' && (
+        <Path d="M3 11L12 3L21 11M5 10V21H10V15H14V21H19V10" />
+      )}
       {name === 'sparkle' && (
         <Path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9Z" />
       )}

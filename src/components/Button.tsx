@@ -7,8 +7,8 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {theme} from '../theme/theme';
-import {type as typography} from '../theme/typography';
+import {menuTheme as theme} from '../theme/menuTheme';
+import {type as typography} from '../theme/menuTypography';
 import {Audio} from '../audio/AudioService';
 import {Haptics} from '../haptics/HapticService';
 
@@ -71,6 +71,7 @@ export function Button({
     variant === 'neutral'
       ? ([theme.button.neutral, theme.button.neutral] as const)
       : theme.button[variant];
+  const filled = ['play', 'reward', 'primary', 'hint'].includes(variant);
 
   return (
     <Animated.View style={[animated, style]}>
@@ -93,20 +94,15 @@ export function Button({
             disabled && styles.disabled,
           ]}>
           {typeof icon === 'string' ? (
-            <Text
-              style={[
-                styles.icon,
-                (variant === 'play' || variant === 'reward') && styles.playText,
-              ]}>
-              {icon}
-            </Text>
+            <Text style={[styles.icon, filled && styles.playText]}>{icon}</Text>
           ) : icon ? (
             <View style={styles.vectorIcon}>{icon}</View>
           ) : null}
           <Text
             style={[
               styles.label,
-              (variant === 'play' || variant === 'reward') && styles.playText,
+              filled && styles.playText,
+              compact && styles.compactLabel,
             ]}
             numberOfLines={1}>
             {label}
@@ -122,7 +118,7 @@ export function Button({
 
 const styles = StyleSheet.create({
   surface: {
-    height: BUTTON_HEIGHT + 4,
+    minHeight: BUTTON_HEIGHT,
     borderWidth: 1,
     borderColor: theme.bg.border,
     borderRadius: theme.radius.lg,
@@ -131,7 +127,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: theme.space.lg,
   },
-  compact: {height: 44, borderRadius: theme.radius.md},
+  compact: {
+    minHeight: 48,
+    borderRadius: theme.radius.md,
+    paddingHorizontal: 12,
+  },
+  compactLabel: {fontSize: 14},
   glow: {
     shadowColor: theme.brand.tagline,
     shadowOpacity: 0.18,
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
   },
   disabled: {opacity: 0.45},
   icon: {...typography.ui(18), marginRight: theme.space.sm},
-  label: {...typography.ui(17), color: theme.text.primary, letterSpacing: 0.3},
+  label: {...typography.ui(17), color: theme.text.primary, flexShrink: 1},
   playText: {color: theme.bg.panel},
   vectorIcon: {marginRight: theme.space.sm},
   spacer: {width: 0},
