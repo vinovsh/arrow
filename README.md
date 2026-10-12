@@ -1,6 +1,6 @@
 # Arrow Escape
 
-**Long-arrow redesign: 20 completely new levels, awaiting player review.**
+**Mixed-arrow redesign: 20 completely new levels, awaiting player review.**
 
 A tap puzzle built from dense, interlocking maze paths. Follow the arrowhead: an
 arrow can leave only after every other arrow in its exit lane has cleared.
@@ -14,11 +14,14 @@ The previous packs, silhouette templates, short-arrow distributions, difficulty
 ceiling and 500-level generator have been replaced. `tools/designFirst20.ts` is
 now the only generator. It builds original paths in reverse solve order, expands
 their bodies into empty lanes, and checks every orientation change for solvability.
-It never repairs a puzzle by breaking arrows into tiny pieces.
+It introduces short and medium arrows into selected lanes while keeping long
+winding arrows and checking every resulting dependency for solvability.
 
 - Exactly 20 unique mazes, from 16×16 to 40×40.
 - No arrowhead points toward its own body anywhere along its forward exit lane.
-- Every arrow has 8–64 cells; board averages are about 28–42 cells per arrow.
+- Every board mixes short (4–7 cells), medium (8–19) and long (20–64) arrows.
+- At least 20% short, 25% medium and 25% long arrows; long arrows occupy at most
+  half the arrow count. No head-only arrows. Average length stays at least 12 cells.
 - At least 94% board coverage, with many turns, nested lanes and interlocking exits.
 - Minimum dependency depths: 3 on level 1, 5 on level 2, 8 on levels 3–9,
   and 12 on levels 10–20. Opening moves are limited as well.
@@ -55,7 +58,7 @@ python3 tools/mock/renderFirst20.py
 ```
 
 Verification covers typing, lint, unit and gameplay tests, exact preview/pack parity,
-long-arrow design gates, and 30 random legal playthroughs of each board. Regenerating
+mixed-length design gates, and 30 random legal playthroughs of each board. Regenerating
 previews does not build an APK or deploy anything.
 
 ## Arrow movement

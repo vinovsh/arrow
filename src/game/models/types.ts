@@ -50,7 +50,7 @@ export interface GridPoint {
 export interface ArrowPath {
   id: string;
   color: ArrowColor;
-  /** Ordered tail to head; current boards use long, multi-turn paths. */
+  /** Ordered tail to head; current boards mix short, medium and winding long paths. */
   cells: GridPoint[];
   /** Explicit; required for 1-cell arrows, redundant validation for the rest. */
   direction: Direction;
@@ -141,5 +141,5 @@ export function pointsEqual(a: GridPoint, b: GridPoint): boolean {
 export const cellIndex = (p: GridPoint, gridSize: number): number =>
   p.y * gridSize + p.x;
 
-/** Runtime capacity for the long-path campaign; shipped arrows use 8..64 cells. */
+/** Runtime capacity for the mixed-path campaign; shipped arrows use 4..64 cells. */
 export const MAX_PATH_CELLS = 64;

@@ -1,4 +1,4 @@
-/** Original long-path mazes. No silhouette templates or short-arrow repair. */
+/** Original mixed-length mazes with clear arrowheads and interlocking paths. */
 import {mkdirSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import type {
@@ -60,8 +60,8 @@ export const REVIEW_PLAN: Design[] = rows.map(([title, grid, tier], i) => ({
   minBlocked: i === 0 ? 0.55 : i === 1 ? 0.65 : i < 9 ? 0.75 : 0.8,
   maxFree: i === 0 ? 0.45 : i === 1 ? 0.35 : i < 9 ? 0.25 : 0.2,
   minFill: 0.94,
-  minLength: 8,
-  meanLength: 16,
+  minLength: 4,
+  meanLength: 12,
   maxLength: 64,
 }));
 const steps: GridPoint[] = [
@@ -71,6 +71,25 @@ const steps: GridPoint[] = [
   {x: 0, y: -1},
 ];
 const key = (p: GridPoint, n: number) => p.y * n + p.x;
+export function lengthMix(arrows: ArrowPath[]) {
+  const short = arrows.filter(a => a.cells.length <= 7).length;
+  const medium = arrows.filter(
+    a => a.cells.length >= 8 && a.cells.length <= 19,
+  ).length;
+  const long = arrows.length - short - medium;
+  return {short, medium, long};
+}
+function mixDeficit(arrows: ArrowPath[]): number {
+  const m = lengthMix(arrows),
+    n = arrows.length;
+  return (
+    Math.max(0, 0.2 - m.short / n) +
+    Math.max(0, 0.25 - m.medium / n) +
+    Math.max(0, 0.25 - m.long / n) +
+    Math.max(0, m.long / n - 0.5)
+  );
+}
+export const hasLengthMix = (arrows: ArrowPath[]) => mixDeficit(arrows) < 1e-9;
 function turns(cells: GridPoint[]): number {
   let count = 0;
   for (let i = 2; i < cells.length; i++) {
@@ -92,7 +111,7 @@ function carve(d: Design, rng: Rng): ArrowPath[] {
   const empty = (x: number, y: number) => inside(x, y) && !used[y * n + x];
   const degree = (p: GridPoint) =>
     steps.filter(s => empty(p.x + s.x, p.y + s.y)).length;
-  for (let round = 0; round < (n * n) / d.minLength; round++) {
+  for (let round = 0; round < (n * n) / 8; round++) {
     const starts: {p: GridPoint; s: GridPoint}[] = [];
     for (let y = 0; y < n; y++) {
       for (let x = 0; x < n; x++) {
@@ -174,7 +193,7 @@ function carve(d: Design, rng: Rng): ArrowPath[] {
       for (const q of path) {
         used[key(q, n)] = 0;
       }
-      if (path.length >= d.minLength && value > bestScore) {
+      if (path.length >= 8 && value > bestScore) {
         best = path;
         bestScore = value;
       }
@@ -284,6 +303,61 @@ function fillLanes(input: ArrowPath[], d: Design, rng: Rng): ArrowPath[] {
   }
   return arrows;
 }
+/** Divide selected lanes into readable short and medium arrows, preserving coverage. */
+function mixLengths(input: ArrowPath[], d: Design, rng: Rng): ArrowPath[] {
+  let arrows = input;
+  for (let round = 0; round < 80 && !hasLengthMix(arrows); round++) {
+    let best = arrows,
+      bestScore = -Infinity;
+    const deficit = mixDeficit(arrows);
+    for (let trial = 0; trial < 100; trial++) {
+      const ix = rng.int(arrows.length),
+        source = arrows[ix];
+      const size = 4 + rng.int(16);
+      if (source.cells.length < size + 20) {
+        continue;
+      }
+      const cut = rng.next() < 0.5 ? size : source.cells.length - size;
+      const parts = [source.cells.slice(0, cut), source.cells.slice(cut)];
+      for (let orientation = 0; orientation < 4; orientation++) {
+        const pieces = parts.map((part, i) => {
+          const reverse = i === 0 ? orientation % 2 === 1 : orientation >= 2;
+          const cells = reverse ? [...part].reverse() : part;
+          return {
+            ...source,
+            id: `${source.id}_${round}_${i}`,
+            cells,
+            direction: directionFromCells(cells)!,
+          };
+        });
+        if (pieces.some(headFacesOwnBody)) {
+          continue;
+        }
+        const next = [
+          ...arrows.slice(0, ix),
+          ...pieces,
+          ...arrows.slice(ix + 1),
+        ];
+        if (mixDeficit(next) >= deficit - 1e-9) {
+          continue;
+        }
+        const value = score(next, d) - mixDeficit(next) * 100000;
+        if (
+          value > bestScore &&
+          analyse({gridSize: d.grid, arrows: next}).solvable
+        ) {
+          best = next;
+          bestScore = value;
+        }
+      }
+    }
+    if (best === arrows) {
+      break;
+    }
+    arrows = best;
+  }
+  return arrows.map((a, i) => ({...a, id: `a${i}`}));
+}
 function score(arrows: ArrowPath[], d: Design): number {
   if (arrows.some(headFacesOwnBody)) {
     return -1e6;
@@ -336,11 +410,16 @@ export function main(): void {
     let arrows: ArrowPath[] = [],
       bestScore = -Infinity;
     for (let attempt = 0; attempt < 1024; attempt++) {
-      const rng = createRng(hashSeed(`clear-exits-v3:${d.id}:${attempt}`)),
-        candidate = refine(fillLanes(carve(d, rng), d, rng), d, rng);
+      const rng = createRng(hashSeed(`mixed-weave-v4:${d.id}:${attempt}`)),
+        candidate = refine(
+          mixLengths(fillLanes(carve(d, rng), d, rng), d, rng),
+          d,
+          rng,
+        );
       const signals = analyse({gridSize: d.grid, arrows: candidate}).signals;
       const eligible =
         signals &&
+        hasLengthMix(candidate) &&
         signals.depth >= d.minDepth &&
         signals.blockedStart + 1e-9 >= d.minBlocked &&
         signals.occupancy >= d.minFill;
@@ -366,6 +445,7 @@ export function main(): void {
       minLength: Math.min(...lengths),
       meanLength: Math.round(mean * 10) / 10,
       longest: Math.max(...lengths),
+      mix: lengthMix(arrows),
       turns: Math.round(s?.turns * 10) / 10,
       D: v.difficulty,
     };
@@ -373,6 +453,7 @@ export function main(): void {
     if (
       v.errors.length ||
       arrows.some(headFacesOwnBody) ||
+      !hasLengthMix(arrows) ||
       !v.solvable ||
       s.depth < d.minDepth ||
       s.blockedStart + 1e-9 < d.minBlocked ||

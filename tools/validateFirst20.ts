@@ -8,7 +8,7 @@ import {
   randomPlayStaysSolvable,
 } from '../src/game/engine/LevelValidator.ts';
 import {createRng} from '../src/utils/rng.ts';
-import {REVIEW_PLAN} from './designFirst20.ts';
+import {REVIEW_PLAN, hasLengthMix} from './designFirst20.ts';
 import {headFacesOwnBody} from '../src/game/models/types.ts';
 const root = join(import.meta.dirname, '..');
 const pack = JSON.parse(
@@ -31,6 +31,7 @@ for (const [i, packed] of pack.levels.entries()) {
     throw Error(`Level ${level.id}: ${result.errors.join(', ')}`);
   }
   if (
+    !hasLengthMix(level.arrows) ||
     s.depth < design.minDepth ||
     s.blockedStart + 1e-9 < design.minBlocked ||
     1 - s.blockedStart > design.maxFree + 1e-9
@@ -51,7 +52,7 @@ for (const [i, packed] of pack.levels.entries()) {
     s.occupancy < design.minFill ||
     level.decor?.length
   ) {
-    throw Error(`Level ${level.id} fails long-path visual gate`);
+    throw Error(`Level ${level.id} fails mixed-length visual gate`);
   }
   if (level.arrows.length > 254) {
     throw Error('Engine capacity exceeded');

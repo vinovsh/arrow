@@ -52,16 +52,25 @@ describe('first 20 replacement levels', () => {
       }
     }
   });
-  it('ships only dense long-arrow mazes, with blocking from level one', () => {
+  it('mixes short, medium and long arrows, with blocking from level one', () => {
     for (let id = 1; id <= 20; id++) {
       const level = getLevel(id) as Level;
       const s = validate(level).signals!;
       const lengths = level.arrows.map(a => a.cells.length);
-      expect(Math.min(...lengths)).toBeGreaterThanOrEqual(8);
+      expect(Math.min(...lengths)).toBeGreaterThanOrEqual(4);
+      expect(
+        lengths.filter(n => n <= 7).length / lengths.length,
+      ).toBeGreaterThanOrEqual(0.2);
+      expect(
+        lengths.filter(n => n >= 8 && n <= 19).length / lengths.length,
+      ).toBeGreaterThanOrEqual(0.25);
+      const longShare = lengths.filter(n => n >= 20).length / lengths.length;
+      expect(longShare).toBeGreaterThanOrEqual(0.25);
+      expect(longShare).toBeLessThanOrEqual(0.5);
       expect(Math.max(...lengths)).toBeLessThanOrEqual(64);
       expect(
         lengths.reduce((a, b) => a + b, 0) / lengths.length,
-      ).toBeGreaterThanOrEqual(16);
+      ).toBeGreaterThanOrEqual(12);
       expect(s.occupancy).toBeGreaterThanOrEqual(0.94);
       expect(s.depth).toBeGreaterThanOrEqual(
         id === 1 ? 3 : id === 2 ? 5 : id < 10 ? 8 : 12,

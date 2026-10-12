@@ -1,6 +1,6 @@
 # Arrow Escape — Product & Technical Requirements
 
-> Level-design revision: 2026-10-12. The current 20-level long-arrow campaign
+> Level-design revision: 2026-10-12. The current 20-level mixed-arrow campaign
 > replaces the previous short-arrow, silhouette and 500-level rules. See README.md
 > and tools/designFirst20.ts for the current measured design gates. Other sections
 > retain historical product context and are subject to the current implementation.
@@ -36,7 +36,7 @@ The October 2026 user redesign replaces previous level-pattern rules. Sections 3
 ### 2.1 Definitions
 
 - **Grid** — `gridSize × gridSize` cells, drawn as faint dots at cell centres.
-- **Arrow** — an ordered list of 8–64 orthogonally adjacent cells in the shipped campaign. `cells[0]` = tail, `cells[n-1]` = head.
+- **Arrow** — an ordered list of 4–64 orthogonally adjacent cells in the shipped campaign. `cells[0]` = tail, `cells[n-1]` = head.
   - For paths of 2+ cells, direction = vector from `cells[n-2]` to `cells[n-1]`.
   - Head-only arrows are not permitted in any shipped level.
 - **Corridor** — every cell from the head, stepping in `direction`, out to the board edge.
@@ -115,7 +115,7 @@ Once per attempt, when any of these fire — 4 blocked taps in a row, 25s with n
 
 ---
 
-## 4. Current progression: 20 original long-arrow mazes
+## 4. Current progression: 20 original mixed-arrow mazes
 
 ### 4.1 Boards
 
@@ -125,9 +125,11 @@ is designed until this batch is approved.
 
 ### 4.2 Paths
 
-Every shipped arrow has 8–64 cells. Board-average length is at least 16 cells,
-coverage at least 94%. Never produce head-only arrows or short fragments to repair
-a deadlock. Keep arrow bodies clearly separated, directional and bend-rich.
+Every board mixes short (4–7 cells), medium (8–19) and long (20–64) arrows.
+At least 20% of arrows are short, 25% medium and 25% long; at most 50% are long.
+Board-average length is at least 12 cells and coverage at least 94%. No head-only
+arrows. Keep bodies clearly separated and directional, with winding long paths.
+No head points at its own body anywhere along its complete forward exit lane.
 
 ### 4.3 Dependencies
 
@@ -635,8 +637,10 @@ publishing are separate requests. Player approval is required before later level
 ## 20. Acceptance criteria
 
 - Exactly 20 new levels; every board solvable and unique.
-- No shipped arrow shorter than 8 cells or longer than 64.
-- At least 94% coverage and at least 16 cells per arrow on average.
+- No shipped arrow shorter than 4 cells or longer than 64.
+- Every board meets the short, medium and long arrow proportions in §4.2.
+- No head points into its own body along its forward exit lane.
+- At least 94% coverage and at least 12 cells per arrow on average.
 - Current dependency and blocked-start gates pass for every board.
 - 30 random legal playthroughs per board finish without deadlocks.
 - Preview JSON and shipped pack agree exactly.
