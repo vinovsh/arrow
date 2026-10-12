@@ -194,11 +194,10 @@ class SaveStoreImpl {
     this.update({tutorialStepsSeen: [...this.state.tutorialStepsSeen, step]});
   }
 
-  /** §6 — skipping the tutorial jumps to level 11, where the zoom mark still fires. */
+  /** Dismiss future tutorial tips without bypassing any puzzle. */
   skipTutorial(): void {
     this.update({
       tutorialCompleted: true,
-      currentLevel: Math.max(this.state.currentLevel, 11),
     });
   }
 

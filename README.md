@@ -1,179 +1,68 @@
 # Arrow Escape
 
-**First replacement batch: 20 original levels, awaiting user design review.**
-No levels 21+ are included. The previous 500 levels and their previews remain removed.
+**Long-arrow redesign: 20 completely new levels, awaiting player review.**
 
+A tap puzzle built from dense, interlocking maze paths. Follow the arrowhead: an
+arrow can leave only after every other arrow in its exit lane has cleared.
+Every board has blocking dependencies from the start, including level 1.
 
-An offline, single-player, score-based tap puzzle for Android. Coloured arrow paths are
-packed onto a dotted grid so they collectively form a recognisable picture. Tapping an
-arrow slides its whole path off the board in the direction its head points — but only
-if nothing blocks the way. Clear the board to finish the level.
+React Native CLI + TypeScript. No Expo dependencies.
 
-React Native CLI + TypeScript. **Not Expo**, and nothing `expo-*` may enter the
-dependency graph, including transitively (`__tests__/packaging.test.ts` enforces this).
+## Current level design
 
-The full specification is `ref/ARROW_ESCAPE_REQUIREMENTS_v3.md`. Section references
-throughout the source (`§4.2`, `§9.4`, …) point into it.
+The previous packs, silhouette templates, short-arrow distributions, difficulty
+ceiling and 500-level generator have been replaced. `tools/designFirst20.ts` is
+now the only generator. It builds original paths in reverse solve order, expands
+their bodies into empty lanes, and checks every orientation change for solvability.
+It never repairs a puzzle by breaking arrows into tiny pieces.
 
----
+- Exactly 20 unique mazes, from 16×16 to 40×40.
+- Every arrow has 8–64 cells; board averages are about 28–42 cells per arrow.
+- At least 94% board coverage, with many turns, nested lanes and interlocking exits.
+- Minimum dependency depths: 3 on level 1, 5 on level 2, 8 on levels 3–9,
+  and 12 on levels 10–20. Opening moves are limited as well.
+- Labels use board scale and dependency structure. The numeric difficulty signal
+  supports validation; real player review remains the final test of challenge.
 
-## Running it
+`mock/first-20-overview.png` shows every board. `mock/previews/` contains individual
+PNG and SVG images rendered with the app's geometry. Open `mock/review-first-20.html`
+for the playable review. `mock/review-first-20.json` records measured lengths,
+coverage, opening moves and dependency depths. Levels 21+ wait for user approval.
 
-```bash
-npm install
-npm start            # Metro
-npm run android      # build and install a debug APK
-```
+## Tutorial and visuals
 
-## Review the first 20 levels
+The old cartoon hand, white tutorial veil, decorative board overlays and translucent
+arrow halos are removed. An original tap-target icon accompanies an inline tip above
+the board. Level 1 colors one free arrow blue. Tips never cover or block the puzzle;
+they explain blocking after a failed move on level 2, zoom on level 3 and hints on
+level 4. Dismissing tips never skips a puzzle.
 
-`mock/first-20-overview.png` shows all designs. `mock/previews/` contains individual
-PNG and SVG previews rendered with the app's arrow geometry. The playable review is
-`mock/review-first-20.html`; open it locally, choose a level, and tap arrows.
-`mock/review-first-20.json` records each board's measured difficulty signals.
+Campaign revision 2 starts these new puzzles at level 1 with fresh completions, stars,
+per-level scores, times and tutorial history. Sound, music and vibration preferences
+and the lifetime best score survive. Progress within this revision is preserved.
 
-The batch mixes picture silhouettes and compact interlocking mazes. Levels 1–2
-teach the mechanic without blockers. Easy and Medium boards introduce dependencies;
-Hard boards have chains at least 10 moves deep and at least 80% blocked arrows at
-the start. Very Hard boards have chains at least 16 moves deep and at least 90%
-blocked arrows. Every board is solved and structurally checked by the runtime
-validator; thirty random legal playthroughs per level check for deadlocks. These
-are design gates, not a substitute for the user's playtest and approval.
+## Development and verification
 
 ```bash
 npm ci
-npm run verify                # typecheck, lint, tests, validate only the 20-board set
-npm run levels:generate       # reproduce only these 20 original replacement boards
-npm run levels:contactsheet   # write exact-geometry SVGs
-python3 tools/mock/renderFirst20.py  # PNGs and overview
-python3 tools/audio/arrow_whoosh.py  # original 270ms movement whoosh
+npm start
+npm run android
+npm run verify
+npm run levels:generate
+npm run levels:contactsheet
+python3 tools/mock/renderFirst20.py
 ```
 
-The old generator modules are retained as reusable tooling. Their historical
-500-level commands are not the current generation or validation route. Future
-batches must wait for approval of this first set.
+Verification covers typing, lint, unit and gameplay tests, exact preview/pack parity,
+long-arrow design gates, and 30 random legal playthroughs of each board. Regenerating
+previews does not build an APK or deploy anything.
 
 ## Arrow movement
 
-Successful arrow taps use one soft original whoosh, without a separate click. The
-movement pitch is limited to ±1 semitone. Arrows unwind their bends along the exit
-lane over 280–460ms, with a small 2.5% tension cue and smooth acceleration. SVG path
-updates run on Reanimated's UI thread; fixed geometry is prepared once at launch.
-The animation honors the system's reduced-motion setting and cancels on unmount.
-No per-frame React state updates, glow layers or tap ripples are needed. The entire
-arrow travels past the viewport clip before its completion callback fires.
-
-## Things worth knowing before changing them
-
-- **Game state never lives in React state.** `GameEngine` is held in a ref;
-  viewport state lives entirely in Reanimated shared values on the UI thread.
-- **Zoom transforms the container view, not the SVG.** No SVG work happens during a
-  gesture. One debounced re-render, 120ms after the gesture settles and only above
-  1.5×, restores crispness (§5.5, §13).
-- **An arrow is a line, not a pipe, and it has exactly one colour.** Two paths per
-  arrow — a stroke and a filled triangle, both `theme.board.ink` — and nothing
-  underneath. The glow, casing and gloss are gone, and so is `arrow.color`: the data
-  still carries a palette and nothing reads it. On a maze of interlocking paths the
-  only separator that works is the white page between them, which is why
-  `strokeWidthFor(cellSize)` is 19% of a cell. That ratio and the arrowhead's
-  (`HEAD_LENGTH_RATIO`, `HEAD_HALF_WIDTH_RATIO`) are all measured off the reference
-  screenshots in `ref/Arrow`, not chosen.
-- **A small board does not fill the screen.** `computeBoardMetrics` divides by
-  `max(gridSize, FULL_WIDTH_GRID)`, so a 6×6 draws at the same cell size as a 17×17
-  and simply sits small in the middle of the page. Fitting it to the width instead is
-  what turned the tutorial levels into three enormous pipes.
-- **The game screen is the app's one light surface.** `theme.board` belongs to it and
-  nothing else; Home, Level Select and Settings are still dark.
-- **Touch targets are unrelated to what is drawn.** `HIT_RADIUS_DP` is 44dp around a
-  3-7dp line, because hit-testing is by proximity to the centreline (§4.4). Thinning
-  the arrows cost nothing here, and nothing here constrains how thin they can get.
-- **Rendering is no longer tiered.** `renderTierFor` returns one shared object.
-  There used to be a layer count, a glow scale and a baked-underlay flag above 60
-  arrows; all three described a five-layer arrow, and a two-path arrow makes the
-  densest board cheaper than a 40-arrow one used to be. Idle breathing is off
-  everywhere, for the reason recorded on the flag.
-- **The dot grid is a single `<Path>`, and it only marks cells a path runs through.**
-  A 22×22 board is 484 dots; as individual nodes that alone blows the frame budget
-  before an arrow is drawn. The dots are also not a sheet of graph paper under the
-  board: the reference shows none at all on its level 1 until an arrow leaves, and
-  then exactly the six cells it vacated (`ref/Arrow`, 210909 and 210919). A dot is the
-  ghost of a path, which is what lets a small board read as a few lines on a blank
-  page. Above the tutorial every dot is covered by the arrow drawn over it anyway.
-- **Path length has one home, `MAX_PATH_CELLS` in `src/game/models/types.ts`.** The
-  carver and the runtime structural validator both read it. They held separate copies
-  once, and widening the carver turned 2,840 legal paths into fatal errors.
-- **An escaping arrow travels to the viewport's clip, not to the board edge**, and
-  never fades. `BoardViewport` clips, and the board is centred inside it, so those two
-  edges are ~100dp apart top and bottom — an arrow retired at the board edge is
-  retired in full view. `EscapingArrow` takes a `clearance` prop because only the
-  screen can measure that gap.
-- **Hit slop is capped in cell units, not just in dp.** 22dp of slop is one and a half
-  cells on a 22×22 board, which reaches the neighbouring path; `MAX_HIT_RADIUS_CELLS`
-  keeps an ambiguous tap resolving to nothing rather than to the wrong arrow.
-- **Audio does not ship yet.** `AudioService` is wired to the whole §14 event table and
-  no-ops on missing files, so the game plays silently. See `assets/audio/LICENSES.md`.
-- **The coach-mark hand is a third-party icon** — Font Awesome Free's `hand-pointer`,
-  embedded as path data in `src/components/GuideHand.tsx`. It is CC BY 4.0, so it
-  needs a visible credit before release; `assets/art/LICENSES.md` records the licence
-  and what still has to happen.
-
-## Where the spec and the implementation disagree
-
-Three §7.2/§3.1 tensions surfaced during level generation and are resolved in code with
-the reasoning recorded at the site:
-
-- **`freeMinCount` is measured over the decision phase**, not literally over every
-  state. Every solve ends with one free arrow, so the literal reading pins the signal
-  to 1 on every level ever generated and makes §8.3's `freeMinCount ≥ 3` gate
-  unsatisfiable. See `LevelValidator.ts`.
-- **Slot targets are anchored to a measured floor**, not to §4.1's absolute band
-  averages. §7.2's D cannot score below roughly 2.0 on any real board, so a target of
-  1.0 is unreachable and drives every level to the floor. The floor is per grid size
-  for levels 11-500 (`MEASURED_FLOOR`) and per level for the ten onboarding boards
-  (`ONBOARDING_FLOOR`), which share grid sizes with bands carrying entirely different
-  arrow counts. Both are in `tools/pipeline/plan.ts`.
-- **§4.1's grid and arrow columns are re-cut below level 11, against `ref/Arrow`.**
-  The published table opened at 8-12 arrows on an 8×8 by level 5; the reference's
-  level 5 is 36 arrows and its level 10 is 86. Levels 1-10 are now one row each — a
-  scripted ramp rather than a band, which is how the reference treats them too — and
-  their arrow counts are read off the counter in those screenshots. Mean path length
-  roughly doubled to pay for it, since `cells = arrows × length` and the mask has to
-  hold them. **Levels 11-500 are untouched**: ten boards is all the reference shows,
-  and widening the refit means regenerating 490 levels and reviewing the contact sheet
-  again. See `BAND_TABLE` and `meanLengthFor` in `tools/pipeline/plan.ts`.
-- **Level 2 is the generated board with its left corner re-carved.** The carver left a
-  single-cell path there — a lone arrowhead with no body behind it — sealed in a
-  pocket the 12-cell arrow wrapped around, so the neighbour gives up the left column:
-  it now starts at (1,1) and keeps the rest of its route, and the stub becomes the
-  column below the corner arrow, five cells pointing off the bottom edge. Down rather
-  than left, because a left-pointing head at (0,2) can only be fed from a cell that is
-  mid-path for the neighbour. Every head still leaves the board directly, which is
-  what §6's "Any order works" needs. The board is pinned in `handcrafted.ts` for the
-  same reason level 1 is: regenerating would otherwise put the stub back.
-- **Level 1 is drawn by hand, not generated.** `tools/pipeline/handcrafted.ts` holds
-  the board and `generateLevel` returns it before the search runs. It is the first
-  thing a player ever sees and the reference treats it as a diagram: three 6-cell
-  columns on a 7-wide grid, two pointing up and one down, one empty column between
-  each pair. The generator can draw three paths on a small grid but not *those* three,
-  and a tutorial board that changes shape whenever the carver is retuned is one whose
-  coach mark has to be re-aimed every time. Its slot in `BAND_TABLE`, its
-  `ONBOARDING_FLOOR` entry and the §4.1 row in `__tests__/levels.test.ts` all describe
-  that drawing rather than constrain it, and `validateLevels` skips the path-length
-  mix rule for it — a drawn board has no carver output to audit.
-- **Levels 2-9 have no silhouette.** They are carved out of a rectangular region of
-  the grid (`BLOCK_SHAPE`, punched through with interior gaps by `poreCandidates`);
-  the picture arrives at level 10, the first showcase. That is the reference's own
-  split — its levels 5, 7, 8 and 9 are plain fields and the picture is the reward for
-  reaching 10. Every level above 10 still draws a silhouette as it always has.
-- **The onboarding levels have their own difficulty floors**, per level rather than
-  per grid (`ONBOARDING_FLOOR`). Levels 5-10 share grid sizes with bands hundreds of
-  levels above them that carry entirely different arrow counts, so one floor cannot
-  describe both, and correcting the shared entry would move the targets of 400 levels
-  that were not regenerated.
-- **§3.1's "three levels at blockAvg − 1.5" is not reachable everywhere.** Each band's
-  average sits within 1.5 of its own floor, so the gap does not exist to use.
-  `curveReport` scores both the literal rule and what was achieved, and the §7.2 refit
-  the spec already calls for after playtest is what would widen it.
+Successful moves use the existing original soft whoosh. Reanimated drives rope-like
+exit paths on the UI thread, preserving bends while the tail follows the head.
+Hint and blocked states use solid color changes, with no translucent underlays.
+Pinch-to-zoom, pan and fit remain available for precise taps on dense boards.
 
 ## Rewarded lives (Google AdMob)
 

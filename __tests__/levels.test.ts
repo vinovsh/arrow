@@ -46,24 +46,29 @@ describe('first 20 replacement levels', () => {
         .join('|');
       expect(seen.has(key)).toBe(false);
       seen.add(key);
-      for (let run = 0; run < 30; run++)
-        {expect(randomPlayStaysSolvable(level, () => rng.next())).toBe(true);}
+      for (let run = 0; run < 30; run++) {
+        expect(randomPlayStaysSolvable(level, () => rng.next())).toBe(true);
+      }
     }
   });
-  it('keeps teaching boards open and gives hard boards genuine dependencies', () => {
-    for (let id = 1; id <= 2; id++)
-      {expect(validate(getLevel(id) as Level).signals?.blockedStart).toBe(0);}
-    for (let id = 3; id <= 20; id++) {
-      const level = getLevel(id) as Level,
-        s = validate(level).signals!;
-      if (level.band === 'Hard') {
-        expect(s.depth).toBeGreaterThanOrEqual(10);
-        expect(s.blockedStart).toBeGreaterThanOrEqual(0.8);
-      }
-      if (level.band === 'Very Hard') {
-        expect(s.depth).toBeGreaterThanOrEqual(16);
-        expect(s.blockedStart).toBeGreaterThanOrEqual(0.9);
-      }
+  it('ships only dense long-arrow mazes, with blocking from level one', () => {
+    for (let id = 1; id <= 20; id++) {
+      const level = getLevel(id) as Level;
+      const s = validate(level).signals!;
+      const lengths = level.arrows.map(a => a.cells.length);
+      expect(Math.min(...lengths)).toBeGreaterThanOrEqual(8);
+      expect(Math.max(...lengths)).toBeLessThanOrEqual(64);
+      expect(
+        lengths.reduce((a, b) => a + b, 0) / lengths.length,
+      ).toBeGreaterThanOrEqual(16);
+      expect(s.occupancy).toBeGreaterThanOrEqual(0.94);
+      expect(s.depth).toBeGreaterThanOrEqual(
+        id === 1 ? 3 : id === 2 ? 5 : id < 10 ? 8 : 12,
+      );
+      expect(s.blockedStart).toBeGreaterThanOrEqual(
+        id === 1 ? 0.55 : id === 2 ? 0.65 : id < 10 ? 0.75 : 0.8,
+      );
+      expect(level.decor ?? []).toEqual([]);
     }
   });
 });

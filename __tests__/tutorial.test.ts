@@ -37,21 +37,11 @@ describe('onboarding script (§6)', () => {
     expect(new Set(levels).size).toBe(levels.length);
   });
 
-  it('covers the beats the spec names, in order', () => {
-    expect(TUTORIAL_STEPS.map(s => s.level)).toEqual([
-      1, 2, 3, 4, 5, 6, 7, 8, 11, 26,
-    ]);
-  });
-
-  it('shows level 3 only after the shake, never before it', () => {
-    expect(stepFor(3)?.trigger).toBe('after-first-blocked');
-  });
-
-  it('tunes level 5 to a tighter silent assist than the 25s default (§3.3)', () => {
-    const engine = engineFor(5);
-    const controller = new TutorialController(engine);
-    expect(controller.assistAfterSeconds()).toBe(12);
-    expect(new TutorialController(engineFor(9)).assistAfterSeconds()).toBe(25);
+  it('keeps the campaign to four short lessons', () => {
+    expect(TUTORIAL_STEPS.map(s => s.level)).toEqual([1, 2, 3, 4]);
+    expect(stepFor(2)?.trigger).toBe('after-first-blocked');
+    expect(stepFor(3)?.gesture).toBe('pinch');
+    expect(stepFor(5)).toBeNull();
   });
 
   it('fires a level-start mark once, then never again on this install', () => {
@@ -72,28 +62,25 @@ describe('onboarding script (§6)', () => {
     expect(engine.detector.isFree(mark?.arrowIndex ?? -1)).toBe(true);
   });
 
-  it('offers SKIP from level 2 onward, but not on level 1 (§6)', () => {
-    expect(SKIP_FROM_LEVEL).toBe(2);
-    expect(new TutorialController(engineFor(1)).canSkip).toBe(false);
-    expect(new TutorialController(engineFor(2)).canSkip).toBe(true);
-  });
-
-  it('still fires the zoom and hearts marks after a skip (§6)', () => {
+  it('skips tips without skipping puzzles and retains the zoom lesson', () => {
+    expect(SKIP_FROM_LEVEL).toBe(1);
     SaveStore.skipTutorial();
-    expect(UNSKIPPABLE_LEVELS).toEqual([11, 26]);
-
-    // A scripted mark the skip covered stays silent...
-    expect(new TutorialController(engineFor(4)).onLevelStart()).toBeNull();
-    // ...but pinch-to-zoom and the heart economy cannot be inferred from the board.
-    expect(new TutorialController(engineFor(11)).onLevelStart()).not.toBeNull();
-    expect(new TutorialController(engineFor(26)).onLevelStart()).not.toBeNull();
+    expect(SaveStore.data.currentLevel).toBe(1);
+    expect(UNSKIPPABLE_LEVELS).toEqual([3]);
+    expect(new TutorialController(engineFor(1)).onLevelStart()).toBeNull();
+    expect(new TutorialController(engineFor(3)).onLevelStart()).not.toBeNull();
   });
 
-  it('keeps the dedicated hearts reminder and enables lives on earlier levels', () => {
-    const step = stepFor(26);
-    expect(step?.target.kind).toBe('hearts');
-    expect(engineFor(26).livesEnabled).toBe(true);
-    expect(engineFor(25).livesEnabled).toBe(true);
+  it('explains a blocked move once on level two', () => {
+    const engine = engineFor(2),
+      controller = new TutorialController(engine);
+    const index = engine.detector
+      .activeIndices()
+      .find(i => !engine.detector.isFree(i))!;
+    expect(controller.onLevelStart()).toBeNull();
+    expect(controller.onFirstBlocked(index)?.arrowIndex).toBe(index);
+    controller.dismiss();
+    expect(controller.onFirstBlocked(index)).toBeNull();
   });
 
   it('ships five How To Play cards, reachable from Home and Settings', () => {
@@ -105,13 +92,13 @@ describe('onboarding script (§6)', () => {
   });
 });
 
-describe('onboarding levels are as gentle as the script assumes (§6)', () => {
-  it('gives levels 1 and 2 boards where every arrow is already free', () => {
+describe('challenging early boards', () => {
+  it('requires unlocking other arrows even in levels one and two', () => {
     for (const id of [1, 2]) {
       const engine = engineFor(id);
-      expect(engine.detector.freeIndices()).toHaveLength(
-        engine.level.arrows.length,
-      );
+      const free = engine.detector.freeIndices().length;
+      expect(free).toBeGreaterThan(0);
+      expect(free).toBeLessThan(engine.level.arrows.length / 2);
     }
   });
 

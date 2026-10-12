@@ -17,6 +17,7 @@ interface Props {
   pulsing?: boolean;
   /** The reference turns only the departing arrow cyan. */
   escaping?: boolean;
+  guided?: boolean;
 }
 
 /**
@@ -40,25 +41,13 @@ interface Props {
  * paths per arrow is already below the budget the tier existed to defend.
  */
 
-/** Wide enough to clear the stroke and be seen as a halo rather than as a thicker line. */
-const HIGHLIGHT = 2.6;
-const PULSE = 3.4;
-
-/**
- * The arrow itself, with no animation and no state of its own.
- *
- * Both the static board and the moving overlay draw through this, so an arrow that
- * lifts off to leave the board is pixel-identical to the one that was sitting there a
- * frame earlier — which is the whole point of the exit animation: the player has to
- * believe it is the same object. `ArrowStrokes` is the narrowest thing that can be
- * drawn, so a resting `ArrowGeometry` and a deforming `RopeGeometry` both satisfy it.
- */
 function ArrowShapeBase({
   geometry,
   highlighted = false,
   blocked = false,
   pulsing = false,
   escaping = false,
+  guided = false,
 }: Props): React.JSX.Element {
   const {body, head, strokeWidth: w} = geometry;
   const hasBody = body !== '';
@@ -72,81 +61,12 @@ function ArrowShapeBase({
     ? theme.board.blocked
     : highlighted
     ? theme.board.blocker
-    : escaping
+    : escaping || guided || pulsing
     ? theme.board.escaping
     : theme.board.ink;
 
   return (
     <G>
-      {escaping && (
-        <G opacity={0.16}>
-          {hasBody && (
-            <Path
-              d={body}
-              stroke={theme.board.escapeGlow}
-              strokeWidth={w * 2.4}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-            />
-          )}
-          <Path
-            d={head}
-            fill={theme.board.escapeGlow}
-            stroke={theme.board.escapeGlow}
-            strokeWidth={w}
-            strokeLinejoin="round"
-          />
-        </G>
-      )}
-      {pulsing && (
-        <>
-          {hasBody && (
-            <Path
-              d={body}
-              stroke={theme.state.star}
-              strokeWidth={w * PULSE}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-              opacity={0.45}
-            />
-          )}
-          <Path
-            d={head}
-            fill="none"
-            stroke={theme.state.star}
-            strokeWidth={w * 1.6}
-            strokeLinejoin="round"
-            opacity={0.45}
-          />
-        </>
-      )}
-
-      {highlighted && (
-        <>
-          {hasBody && (
-            <Path
-              d={body}
-              stroke={theme.board.blocker}
-              strokeWidth={w * HIGHLIGHT}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-              opacity={0.18}
-            />
-          )}
-          <Path
-            d={head}
-            fill="none"
-            stroke={theme.board.blocker}
-            strokeWidth={w * 1.2}
-            strokeLinejoin="round"
-            opacity={0.18}
-          />
-        </>
-      )}
-
       {hasBody && (
         <Path
           d={body}

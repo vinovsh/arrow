@@ -11,6 +11,7 @@ describe('save migration (§15)', () => {
   it('keeps good fields when neighbouring ones are corrupt', () => {
     const result = migrate({
       schemaVersion: 1,
+      campaignVersion: 2,
       currentLevel: 41,
       completedLevels: [1, 2, 'three', null, 4],
       levelStars: {1: 3, 2: 'gold', 3: 9},
@@ -30,6 +31,38 @@ describe('save migration (§15)', () => {
     expect(result.soundEnabled).toBe(true);
     expect(result.musicEnabled).toBe(false);
     expect(result.tutorialCompleted).toBe(true);
+  });
+
+  it('starts the replacement campaign at one while retaining preferences and lifetime score', () => {
+    const old = {
+      ...defaultSave(),
+      campaignVersion: 1,
+      currentLevel: 20,
+      completedLevels: [1, 2, 3],
+      levelStars: {1: 3},
+      levelScores: {1: 800},
+      levelBestTimes: {1: 10},
+      bestScore: 5000,
+      soundEnabled: false,
+      vibrationEnabled: false,
+      tutorialCompleted: true,
+      tutorialStepsSeen: [1, 2, 3],
+    };
+    const next = migrate(old);
+    expect(next.currentLevel).toBe(1);
+    expect(next.completedLevels).toEqual([]);
+    expect(next.levelStars).toEqual({});
+    expect(next.levelBestTimes).toEqual({});
+    expect(next.levelScores).toEqual({});
+    expect(next.tutorialStepsSeen).toEqual([]);
+    expect(next.tutorialCompleted).toBe(false);
+    expect(next.bestScore).toBe(5000);
+    expect(next.soundEnabled).toBe(false);
+    expect(next.vibrationEnabled).toBe(false);
+    expect(
+      migrate({...next, currentLevel: 5, completedLevels: [1, 2, 3, 4]})
+        .currentLevel,
+    ).toBe(5);
   });
 
   it('never discards a recoverable bestScore (§15)', () => {
@@ -104,10 +137,10 @@ describe('SaveStore progress rules', () => {
     expect(SaveStore.isNewHighScore(5, 700)).toBe(false);
   });
 
-  it('skipping the tutorial jumps to level 11 (§6)', () => {
+  it('skipping tips keeps the current puzzle', () => {
     SaveStore.skipTutorial();
     expect(SaveStore.data.tutorialCompleted).toBe(true);
-    expect(SaveStore.data.currentLevel).toBe(11);
+    expect(SaveStore.data.currentLevel).toBe(1);
   });
 
   it('records each tutorial step at most once', () => {

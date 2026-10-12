@@ -5,7 +5,6 @@ import type {Level} from '../models/types';
 import {renderTierFor} from '../../app/featureFlags';
 import {BASE_RESOLUTION_SCALE} from '../../utils/layout';
 import {DotGrid, pathCells} from './DotGrid';
-import {DecorLayer} from './DecorLayer';
 import {ArrowRenderer} from './ArrowRenderer';
 import type {ArrowVisualState} from './ArrowRenderer';
 // TEMPORARY — tap-latency instrumentation, see src/utils/tapTrace.ts.
@@ -13,6 +12,7 @@ import {trace} from '../../utils/tapTrace';
 
 interface Props {
   level: Level;
+  guidedArrow?: number;
   cellSize: number;
   arrowStates: readonly ArrowVisualState[];
   /**
@@ -32,6 +32,7 @@ interface Props {
  */
 function BoardBase({
   level,
+  guidedArrow = -1,
   cellSize,
   arrowStates,
   renderScale,
@@ -89,7 +90,6 @@ function BoardBase({
 
           <G clipPath="url(#board-clip)">
             <DotGrid cells={dots} cellSize={cellSize} />
-            {level.decor && <DecorLayer decor={level.decor} boardSize={size} />}
 
             {arrows.map((arrow, index) => {
               const visual = arrowStates[index];
@@ -106,6 +106,7 @@ function BoardBase({
                   index={index}
                   cellSize={cellSize}
                   tier={tier}
+                  guided={index === guidedArrow}
                   highlighted={visual.highlighted}
                   pulsing={visual.pulsing}
                 />

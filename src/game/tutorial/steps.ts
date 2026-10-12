@@ -1,123 +1,49 @@
-/**
- * §6 — the scripted onboarding.
- *
- * The rules the table below encodes: one idea per level, no timer, no stars shown, no
- * failure possible, no caption longer than six words, and every coach mark dismissible
- * by tapping anywhere. Levels 9, 10 and 12-25 run clean on purpose — the touch gets
- * lighter rather than stopping dead.
- */
-
+/** Short, inline lessons for the new long-arrow campaign. */
 export type CoachTarget =
   | {kind: 'arrow'; pick: 'first-free' | 'first-blocked' | 'longest'}
   | {kind: 'hint-pill'}
   | {kind: 'board'}
   | {kind: 'hearts'};
-
 export interface TutorialStep {
   level: number;
-  /** Empty string means the beat has no caption — level 5 teaches by silence. */
   caption: string;
   target: CoachTarget;
-  /** A looping ghost hand demonstrates the gesture. */
   gesture: 'tap' | 'pinch' | 'none';
-  /**
-   * Whether the rest of the board is dimmed behind the mark. Defaults to true; level
-   * 1 turns it off, because a board of three arrows has nothing to be picked out from
-   * and the reference dims nothing there either.
-   */
-  veil?: boolean;
-  /** Some marks only make sense after something has happened. */
   trigger: 'level-start' | 'after-first-blocked' | 'on-win';
-  /** §3.3 — level 5 tunes the silent assist tighter than the global 25s. */
   assistAfterSeconds?: number;
 }
-
 export const TUTORIAL_STEPS: readonly TutorialStep[] = [
   {
     level: 1,
-    caption: 'Tap to remove',
+    caption: 'Tap the blue arrow to start',
     target: {kind: 'arrow', pick: 'first-free'},
     gesture: 'tap',
     trigger: 'level-start',
-    veil: false,
   },
   {
     level: 2,
-    caption: 'Any order works',
-    target: {kind: 'board'},
-    gesture: 'none',
-    trigger: 'level-start',
-  },
-  {
-    level: 3,
-    // Appears only *after* the shake, so the rule is explained by the thing that
-    // just happened rather than pre-empting it.
-    caption: 'Clear its path first',
+    caption: 'Clear the arrow in its way',
     target: {kind: 'arrow', pick: 'first-blocked'},
     gesture: 'none',
     trigger: 'after-first-blocked',
   },
   {
-    level: 4,
-    caption: 'It follows the arrowhead',
-    target: {kind: 'arrow', pick: 'longest'},
-    gesture: 'none',
-    trigger: 'level-start',
-  },
-  {
-    level: 5,
-    caption: '',
-    target: {kind: 'board'},
-    gesture: 'none',
-    trigger: 'level-start',
-    assistAfterSeconds: 12,
-  },
-  {
-    level: 6,
-    caption: 'Nice — it was lightning!',
-    target: {kind: 'board'},
-    gesture: 'none',
-    trigger: 'on-win',
-  },
-  {
-    level: 7,
-    caption: 'Stuck? Use a hint',
-    target: {kind: 'hint-pill'},
-    gesture: 'none',
-    trigger: 'level-start',
-  },
-  {
-    level: 8,
-    caption: 'Fewer mistakes, more stars',
-    target: {kind: 'board'},
-    gesture: 'none',
-    trigger: 'on-win',
-  },
-  {
-    // §6 — fires on the first 8x8 board, and still fires for a player who skipped,
-    // because zoom is a mechanic nobody can infer.
-    level: 11,
-    caption: 'Pinch to zoom in',
+    level: 3,
+    caption: 'Pinch to zoom into the maze',
     target: {kind: 'board'},
     gesture: 'pinch',
     trigger: 'level-start',
   },
   {
-    // Likewise hearts: the first time a mistake can cost something, say so.
-    level: 26,
-    caption: 'Careful — mistakes cost hearts',
-    target: {kind: 'hearts'},
+    level: 4,
+    caption: 'Need help? Tap Hint below',
+    target: {kind: 'hint-pill'},
     gesture: 'none',
     trigger: 'level-start',
   },
 ];
-
-/** §6 — SKIP appears from level 2 onward. */
-export const SKIP_FROM_LEVEL = 2;
-
-/** The two marks that survive a skip, because they teach mechanics, not just rules. */
-export const UNSKIPPABLE_LEVELS = [11, 26];
-
+export const SKIP_FROM_LEVEL = 1;
+export const UNSKIPPABLE_LEVELS = [3];
 export function stepFor(level: number): TutorialStep | null {
   return TUTORIAL_STEPS.find(step => step.level === level) ?? null;
 }

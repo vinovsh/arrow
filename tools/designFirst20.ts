@@ -1,341 +1,353 @@
-/** Reproducible first review batch. Never generates levels beyond 20. */
+/** Original long-path mazes. No silhouette templates or short-arrow repair. */
 import {mkdirSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
-import {buildOne} from './mock/buildMocks.ts';
-import {circle, ellipse, poly, starPts} from './mock/patterns.ts';
-import type {Pattern, MockPlan} from './mock/patterns.ts';
-import type {ArrowPath, Band, Level} from '../src/game/models/types.ts';
+import type {
+  ArrowPath,
+  Band,
+  GridPoint,
+  Level,
+} from '../src/game/models/types.ts';
 import {directionFromCells} from '../src/game/models/types.ts';
 import {analyse, validate} from '../src/game/engine/LevelValidator.ts';
-import type {Validation} from '../src/game/engine/LevelValidator.ts';
 import {packLevel} from '../src/game/levels/codec.ts';
 import {createRng, hashSeed} from '../src/utils/rng.ts';
-
+import type {Rng} from '../src/utils/rng.ts';
 const root = join(import.meta.dirname, '..');
-const diamond: Pattern = {
-  fill: (x, y) => Math.abs(x - 0.5) + Math.abs(y - 0.5) < 0.48,
-};
-const disk: Pattern = {fill: (x, y) => circle(x, y, 0.5, 0.5, 0.46)};
-const square: Pattern = {
-  fill: (x, y) => x > 0.07 && x < 0.93 && y > 0.07 && y < 0.93,
-};
-const cross: Pattern = {
-  fill: (x, y) =>
-    (Math.abs(x - 0.5) < 0.16 && Math.abs(y - 0.5) < 0.45) ||
-    (Math.abs(y - 0.5) < 0.16 && Math.abs(x - 0.5) < 0.45),
-};
-const heart: Pattern = {
-  fill: (x, y) =>
-    circle(x, y, 0.32, 0.33, 0.23) ||
-    circle(x, y, 0.68, 0.33, 0.23) ||
-    poly(x, y, [
-      [0.1, 0.36],
-      [0.9, 0.36],
-      [0.5, 0.92],
-    ]),
-};
-const bolt: Pattern = {
-  fill: (x, y) =>
-    poly(x, y, [
-      [0.55, 0.04],
-      [0.16, 0.57],
-      [0.43, 0.57],
-      [0.35, 0.96],
-      [0.85, 0.39],
-      [0.56, 0.39],
-    ]),
-};
-const clover: Pattern = {
-  fill: (x, y) =>
-    circle(x, y, 0.33, 0.33, 0.25) ||
-    circle(x, y, 0.67, 0.33, 0.25) ||
-    circle(x, y, 0.33, 0.67, 0.25) ||
-    circle(x, y, 0.67, 0.67, 0.25),
-};
-const star: Pattern = {
-  fill: (x, y) => poly(x, y, starPts(0.5, 0.5, 0.48, 0.27, 5)),
-};
-const leaf: Pattern = {
-  fill: (x, y) => ellipse(x, y, 0.5, 0.5, 0.3, 0.46, -0.45),
-};
-const hourglass: Pattern = {
-  fill: (x, y) =>
-    poly(x, y, [
-      [0.12, 0.07],
-      [0.88, 0.07],
-      [0.58, 0.5],
-      [0.88, 0.93],
-      [0.12, 0.93],
-      [0.42, 0.5],
-    ]),
-};
-const fish: Pattern = {
-  fill: (x, y) =>
-    ellipse(x, y, 0.45, 0.5, 0.36, 0.3) ||
-    poly(x, y, [
-      [0.68, 0.5],
-      [0.95, 0.21],
-      [0.95, 0.79],
-    ]),
-};
-const owl: Pattern = {
-  fill: (x, y) =>
-    ellipse(x, y, 0.5, 0.57, 0.38, 0.36) ||
-    poly(x, y, [
-      [0.15, 0.41],
-      [0.13, 0.06],
-      [0.4, 0.23],
-      [0.6, 0.23],
-      [0.87, 0.06],
-      [0.85, 0.41],
-    ]),
-};
-const butterfly: Pattern = {
-  fill: (x, y) =>
-    ellipse(x, y, 0.29, 0.34, 0.25, 0.29, -0.2) ||
-    ellipse(x, y, 0.71, 0.34, 0.25, 0.29, 0.2) ||
-    ellipse(x, y, 0.31, 0.71, 0.21, 0.23, 0.2) ||
-    ellipse(x, y, 0.69, 0.71, 0.21, 0.23, -0.2) ||
-    Math.abs(x - 0.5) < 0.07,
-};
-const crown: Pattern = {
-  fill: (x, y) =>
-    poly(x, y, [
-      [0.08, 0.25],
-      [0.3, 0.46],
-      [0.5, 0.07],
-      [0.7, 0.46],
-      [0.92, 0.25],
-      [0.81, 0.88],
-      [0.19, 0.88],
-    ]),
-};
-const lock: Pattern = {
-  fill: (x, y) =>
-    (x > 0.12 && x < 0.88 && y > 0.4 && y < 0.94) ||
-    (circle(x, y, 0.5, 0.37, 0.3) &&
-      !circle(x, y, 0.5, 0.37, 0.16) &&
-      y < 0.48),
-};
 interface Design {
   id: number;
   title: string;
   grid: number;
   tier: Band;
-  pattern: Pattern;
   minDepth: number;
   minBlocked: number;
   maxFree: number;
+  minFill: number;
+  minLength: number;
+  meanLength: number;
+  maxLength: number;
 }
-const rows: [string, number, Band, Pattern, number, number, number][] = [
-  ['First paths', 7, 'Tutorial', square, 0, 0, 1],
-  ['Four corners', 8, 'Tutorial', square, 0, 0, 1],
-  ['Crossroads', 10, 'Easy', cross, 2, 0.25, 0.75],
-  ['Diamond steps', 11, 'Easy', diamond, 3, 0.35, 0.65],
-  ['Heart lanes', 13, 'Easy', heart, 4, 0.45, 0.55],
-  ['Lightning', 15, 'Medium', bolt, 5, 0.65, 0.4],
-  ['Roundabout', 15, 'Medium', disk, 6, 0.68, 0.35],
-  ['Interlock', 17, 'Hard', square, 10, 0.85, 0.15],
-  ['Lucky clover', 16, 'Medium', clover, 6, 0.68, 0.35],
-  ['Star gate', 21, 'Hard', star, 10, 0.8, 0.2],
-  ['Leaf trail', 17, 'Medium', leaf, 6, 0.68, 0.35],
-  ['Hourglass', 20, 'Hard', hourglass, 11, 0.85, 0.15],
-  ['Reef fish', 18, 'Medium', fish, 7, 0.7, 0.3],
-  ['Night owl', 21, 'Hard', owl, 12, 0.87, 0.13],
-  ['Vault', 22, 'Very Hard', square, 16, 0.92, 0.08],
-  ['Butterfly', 19, 'Medium', butterfly, 7, 0.72, 0.28],
-  ['Compass', 26, 'Hard', diamond, 12, 0.82, 0.18],
-  ['Royal maze', 23, 'Hard', crown, 13, 0.88, 0.12],
-  ['Locksmith', 26, 'Very Hard', lock, 16, 0.9, 0.1],
-  ['Grand labyrinth', 32, 'Very Hard', square, 18, 0.9, 0.1],
+const rows: [string, number, Band][] = [
+  ['First weave', 16, 'Medium'],
+  ['Nested lanes', 20, 'Medium'],
+  ['Switchback', 22, 'Hard'],
+  ['Coiled square', 24, 'Hard'],
+  ['Cross stitch', 24, 'Hard'],
+  ['Inner circuit', 26, 'Hard'],
+  ['Winding vault', 26, 'Hard'],
+  ['Double spiral', 28, 'Hard'],
+  ['Braided routes', 28, 'Hard'],
+  ['Hidden exits', 30, 'Very Hard'],
+  ['Folded maze', 30, 'Very Hard'],
+  ['Deep weave', 32, 'Very Hard'],
+  ['Offset chambers', 32, 'Very Hard'],
+  ['Tangled circuit', 34, 'Very Hard'],
+  ['Spiral fortress', 34, 'Very Hard'],
+  ['Long way out', 36, 'Very Hard'],
+  ['Interwoven', 36, 'Very Hard'],
+  ['Labyrinth', 38, 'Very Hard'],
+  ['Final turns', 38, 'Very Hard'],
+  ['Grand weave', 40, 'Very Hard'],
 ];
-export const REVIEW_PLAN: Design[] = rows.map((r, i) => ({
+export const REVIEW_PLAN: Design[] = rows.map(([title, grid, tier], i) => ({
   id: i + 1,
-  title: r[0],
-  grid: r[1],
-  tier: r[2],
-  pattern: r[3],
-  minDepth: r[4],
-  minBlocked: r[5],
-  maxFree: r[6],
+  title,
+  grid,
+  tier,
+  minDepth: i === 0 ? 3 : i === 1 ? 5 : i < 9 ? 8 : 12,
+  minBlocked: i === 0 ? 0.55 : i === 1 ? 0.65 : i < 9 ? 0.75 : 0.8,
+  maxFree: i === 0 ? 0.45 : i === 1 ? 0.35 : i < 9 ? 0.25 : 0.2,
+  minFill: 0.94,
+  minLength: 8,
+  meanLength: 16,
+  maxLength: 64,
 }));
-
-function tutorial(id: number): ArrowPath[] {
-  const paths =
-    id === 1
-      ? [
-          [
-            [1, 4],
-            [2, 4],
-            [2, 3],
-            [1, 3],
-            [1, 2],
-          ],
-          [
-            [4, 2],
-            [4, 3],
-            [5, 3],
-            [5, 4],
-            [5, 5],
-          ],
-          [
-            [2, 5],
-            [2, 6],
-            [3, 6],
-            [4, 6],
-          ],
-        ]
-      : [
-          [
-            [1, 2],
-            [2, 2],
-            [2, 1],
-            [1, 1],
-            [0, 1],
-          ],
-          [
-            [5, 1],
-            [5, 2],
-            [6, 2],
-            [6, 1],
-            [7, 1],
-          ],
-          [
-            [1, 5],
-            [2, 5],
-            [2, 6],
-            [1, 6],
-            [0, 6],
-          ],
-          [
-            [5, 6],
-            [5, 5],
-            [6, 5],
-            [6, 6],
-            [7, 6],
-          ],
-        ];
-  return paths.map((p, i) => {
-    const cells = p.map(([x, y]) => ({x, y}));
-    return {
-      id: `a${i}`,
-      color: 'white',
-      cells,
-      direction: directionFromCells(cells)!,
-    };
-  });
-}
-function loss(v: Validation, d: Design): number {
-  if (!v.solvable || !v.signals) {
-    return 1e6;
-  }
-  const s = v.signals,
-    free = 1 - s.blockedStart;
-  // Difficulty comes from actual dependency chains and limited opening choices.
-  const deficit =
-    Math.max(0, d.minDepth - s.depth) * 4 +
-    Math.max(0, d.minBlocked - s.blockedStart) * 70 +
-    Math.max(0, free - d.maxFree) * 70;
-  const target =
-    d.tier === 'Very Hard'
-      ? 7.3
-      : d.tier === 'Hard'
-      ? 6.6
-      : d.tier === 'Medium'
-      ? 5.6
-      : 4.4;
-  return (
-    deficit +
-    Math.abs(v.difficulty - target) * 1.2 +
-    Math.max(0, s.freeAvgCount / s.n - 0.3) * 5
-  );
-}
-function refine(arrows: ArrowPath[], d: Design, seed: number): ArrowPath[] {
-  const rng = createRng(seed);
-  let current = arrows,
-    score = loss(analyse({gridSize: d.grid, arrows}), d),
-    best = current,
-    bestScore = score;
-  for (let i = 0; i < 2200; i++) {
-    const ix = rng.int(current.length),
-      a = current[ix];
-    const cells = [...a.cells].reverse();
-    const direction =
-      cells.length > 1
-        ? directionFromCells(cells)!
-        : rng.pick(['U', 'D', 'L', 'R'] as const);
-    const next = current.slice();
-    next[ix] = {...a, cells, direction};
-    const v = analyse({gridSize: d.grid, arrows: next});
-    if (!v.solvable) {
-      continue;
+const steps: GridPoint[] = [
+  {x: 1, y: 0},
+  {x: 0, y: 1},
+  {x: -1, y: 0},
+  {x: 0, y: -1},
+];
+const key = (p: GridPoint, n: number) => p.y * n + p.x;
+function turns(cells: GridPoint[]): number {
+  let count = 0;
+  for (let i = 2; i < cells.length; i++) {
+    const a = cells[i - 2],
+      b = cells[i - 1],
+      c = cells[i];
+    if (b.x - a.x !== c.x - b.x || b.y - a.y !== c.y - b.y) {
+      count++;
     }
-    const cost = loss(v, d),
-      temperature = 0.4 * (1 - i / 2200) + 0.01;
-    if (cost <= score || rng.next() < Math.exp((score - cost) / temperature)) {
-      current = next;
-      score = cost;
-      if (cost < bestScore) {
-        best = current;
-        bestScore = cost;
+  }
+  return count;
+}
+/** Place in reverse solve order: every new head initially has a clear exit. */
+function carve(d: Design, rng: Rng): ArrowPath[] {
+  const n = d.grid,
+    used = new Uint8Array(n * n),
+    arrows: ArrowPath[] = [];
+  const inside = (x: number, y: number) => x >= 0 && y >= 0 && x < n && y < n;
+  const empty = (x: number, y: number) => inside(x, y) && !used[y * n + x];
+  const degree = (p: GridPoint) =>
+    steps.filter(s => empty(p.x + s.x, p.y + s.y)).length;
+  for (let round = 0; round < (n * n) / d.minLength; round++) {
+    const starts: {p: GridPoint; s: GridPoint}[] = [];
+    for (let y = 0; y < n; y++) {
+      for (let x = 0; x < n; x++) {
+        if (empty(x, y)) {
+          for (const s of steps) {
+            if (!empty(x - s.x, y - s.y)) {
+              continue;
+            }
+            let clear = true;
+            for (
+              let xx = x + s.x, yy = y + s.y;
+              inside(xx, yy);
+              xx += s.x, yy += s.y
+            ) {
+              if (used[yy * n + xx]) {
+                clear = false;
+                break;
+              }
+            }
+            if (clear) {
+              starts.push({p: {x, y}, s});
+            }
+          }
+        }
       }
     }
+    if (!starts.length) {
+      break;
+    }
+    let best: GridPoint[] = [];
+    let bestScore = -Infinity;
+    for (let trial = 0; trial < Math.min(starts.length, 90); trial++) {
+      const {p, s} = rng.pick(starts),
+        path = [p, {x: p.x - s.x, y: p.y - s.y}];
+      for (const q of path) {
+        used[key(q, n)] = 1;
+      }
+      let prev = {x: -s.x, y: -s.y},
+        run = 1;
+      const target = 10 + rng.int(20);
+      while (path.length < target) {
+        const head = path[path.length - 1];
+        const options = steps
+          .filter(v => empty(head.x + v.x, head.y + v.y))
+          .map(v => {
+            const p2 = {x: head.x + v.x, y: head.y + v.y},
+              straight = v.x === prev.x && v.y === prev.y;
+            const weight =
+              (straight ? (run < 5 ? 5 : 1.8) : run < 2 ? 0.15 : 1.3) /
+              (1 + degree(p2));
+            return {v, p: p2, weight};
+          });
+        if (!options.length) {
+          break;
+        }
+        let roll = rng.next() * options.reduce((sum, o) => sum + o.weight, 0),
+          chosen = options[0];
+        for (const o of options) {
+          roll -= o.weight;
+          if (roll <= 0) {
+            chosen = o;
+            break;
+          }
+        }
+        run = chosen.v.x === prev.x && chosen.v.y === prev.y ? run + 1 : 1;
+        prev = chosen.v;
+        path.push(chosen.p);
+        used[key(chosen.p, n)] = 1;
+      }
+      const value =
+        path.length + Math.min(5, turns(path)) * 1.5 + rng.next() * 7;
+      for (const q of path) {
+        used[key(q, n)] = 0;
+      }
+      if (path.length >= d.minLength && value > bestScore) {
+        best = path;
+        bestScore = value;
+      }
+    }
+    if (!best.length) {
+      break;
+    }
+    best.reverse();
+    for (const p of best) {
+      used[key(p, n)] = 1;
+    }
+    arrows.push({
+      id: `a${arrows.length}`,
+      color: 'white',
+      cells: best,
+      direction: directionFromCells(best)!,
+    });
   }
-  return best;
+  return arrows;
 }
-function meets(v: Validation, d: Design): boolean {
-  return (
-    !!v.signals &&
-    v.solvable &&
-    !v.errors.length &&
-    v.signals.depth >= d.minDepth &&
-    v.signals.blockedStart + 1e-9 >= d.minBlocked &&
-    1 - v.signals.blockedStart <= d.maxFree + 1e-9
-  );
-}
-function main(): void {
-  mkdirSync(join(root, 'mock/data'), {recursive: true});
-  mkdirSync(join(root, 'src/game/levels/packs'), {recursive: true});
-  const levels: Level[] = [];
-  const report = [];
-  for (const d of REVIEW_PLAN) {
-    let arrows: ArrowPath[] = d.id <= 2 ? tutorial(d.id) : [];
-    let bestLoss = Infinity;
-    if (d.id > 2) {
-      for (let attempt = 0; attempt < 16; attempt++) {
-        const plan: MockPlan = {
-          id: d.id + 1000 + attempt * 20,
-          title: d.title,
-          grid: d.grid,
-          tier: d.tier === 'Tutorial' ? 'Easy' : (d.tier as MockPlan['tier']),
-          symmetry: 'none',
-          pattern: d.pattern,
-        };
-        const built = buildOne(plan, 3);
-        if (!built) {
-          continue;
+/** Fill empty lanes by extending existing bodies, never by adding tiny arrows. */
+function fillLanes(input: ArrowPath[], d: Design, rng: Rng): ArrowPath[] {
+  let arrows = input;
+  const n = d.grid;
+  for (let pass = 0; pass < 4; pass++) {
+    const used = new Uint8Array(n * n);
+    arrows.forEach(a => a.cells.forEach(p => (used[key(p, n)] = 1)));
+    const empty = (p: GridPoint) =>
+      p.x >= 0 && p.y >= 0 && p.x < n && p.y < n && !used[key(p, n)];
+    let changes = 0;
+    for (const ix of rng.shuffle(arrows.map((_, i) => i))) {
+      for (let j = 0; j < arrows[ix].cells.length - 1; j++) {
+        const a = arrows[ix],
+          first = a.cells[j],
+          second = a.cells[j + 1],
+          dx = second.x - first.x,
+          dy = second.y - first.y;
+        for (const side of rng.shuffle([-1, 1])) {
+          const px = -dy * side,
+            py = dx * side;
+          for (let length = 5; length >= 1; length--) {
+            if (a.cells.length + length * 2 > d.maxLength) {
+              continue;
+            }
+            const extra: GridPoint[] = [];
+            for (let k = 1; k <= length; k++) {
+              extra.push({x: first.x + px * k, y: first.y + py * k});
+            }
+            for (let k = length; k >= 1; k--) {
+              extra.push({x: second.x + px * k, y: second.y + py * k});
+            }
+            if (!extra.every(empty)) {
+              continue;
+            }
+            const cells = [
+                ...a.cells.slice(0, j + 1),
+                ...extra,
+                ...a.cells.slice(j + 1),
+              ],
+              next = arrows.slice();
+            next[ix] = {...a, cells, direction: directionFromCells(cells)!};
+            if (analyse({gridSize: n, arrows: next}).solvable) {
+              arrows = next;
+              extra.forEach(p => (used[key(p, n)] = 1));
+              changes++;
+              j += extra.length;
+              break;
+            }
+          }
+          if (arrows[ix] !== a) {
+            break;
+          }
         }
-        const candidate = refine(
-          built.arrows,
-          d,
-          hashSeed(`review-v1:${d.id}:${attempt}`),
-        );
-        const v = validate({gridSize: d.grid, arrows: candidate}),
-          cost = loss(v, d);
-        if (cost < bestLoss) {
-          arrows = candidate;
-          bestLoss = cost;
+      }
+      for (let k = 0; k < 12 && arrows[ix].cells.length < d.maxLength; k++) {
+        const a = arrows[ix],
+          tail = a.cells[0],
+          options = rng
+            .shuffle(steps.map(v => ({x: tail.x + v.x, y: tail.y + v.y})))
+            .filter(empty);
+        let changed = false;
+        for (const p of options) {
+          const next = arrows.slice();
+          next[ix] = {...a, cells: [p, ...a.cells]};
+          if (analyse({gridSize: n, arrows: next}).solvable) {
+            arrows = next;
+            used[key(p, n)] = 1;
+            changes++;
+            changed = true;
+            break;
+          }
         }
-        if (meets(v, d)) {
+        if (!changed) {
           break;
         }
       }
     }
-    const v = validate({gridSize: d.grid, arrows});
-    if (!arrows.length || !meets(v, d)) {
-      throw Error(
-        `Level ${d.id} fails review gate: ${JSON.stringify(v.signals)}`,
-      );
+    if (!changes) {
+      break;
+    }
+  }
+  return arrows;
+}
+function score(arrows: ArrowPath[], d: Design): number {
+  const v = analyse({gridSize: d.grid, arrows});
+  if (!v.solvable || !v.signals) {
+    return -1e6;
+  }
+  const s = v.signals,
+    mean = arrows.reduce((sum, a) => sum + a.cells.length, 0) / arrows.length;
+  return (
+    s.occupancy * 180 +
+    Math.min(s.depth, d.minDepth + 5) * 2 +
+    s.blockedStart * 20 -
+    Math.max(0, d.minDepth - s.depth) * 100 -
+    Math.max(0, d.minBlocked - s.blockedStart) * 500 -
+    Math.max(0, d.meanLength - mean) * 3
+  );
+}
+function refine(arrows: ArrowPath[], d: Design, rng: Rng): ArrowPath[] {
+  let best = arrows,
+    bestScore = score(arrows, d);
+  for (let i = 0; i < 1000; i++) {
+    const ix = rng.int(best.length),
+      cells = [...best[ix].cells].reverse(),
+      next = best.slice();
+    next[ix] = {...next[ix], cells, direction: directionFromCells(cells)!};
+    const s = score(next, d);
+    if (s >= bestScore) {
+      best = next;
+      bestScore = s;
+    }
+  }
+  return best;
+}
+export function main(): void {
+  mkdirSync(join(root, 'mock/data'), {recursive: true});
+  mkdirSync(join(root, 'src/game/levels/packs'), {recursive: true});
+  const levels: Level[] = [],
+    report = [];
+  const only = Number(process.env.DESIGN_LEVEL || 0);
+  for (const d of REVIEW_PLAN) {
+    if (only && d.id !== only) {
+      continue;
+    }
+    let arrows: ArrowPath[] = [],
+      bestScore = -Infinity;
+    for (let attempt = 0; attempt < 32; attempt++) {
+      const rng = createRng(hashSeed(`long-weave-v2:${d.id}:${attempt}`)),
+        candidate = refine(fillLanes(carve(d, rng), d, rng), d, rng),
+        value = score(candidate, d);
+      if (value > bestScore) {
+        arrows = candidate;
+        bestScore = value;
+      }
+    }
+    const v = validate({gridSize: d.grid, arrows}),
+      s = v.signals!,
+      lengths = arrows.map(a => a.cells.length),
+      mean = lengths.reduce((a, b) => a + b, 0) / lengths.length;
+    const stats = {
+      arrows: arrows.length,
+      depth: s?.depth,
+      freeAtStart: v.freeCounts[0],
+      blockedStart: Math.round(s?.blockedStart * 100),
+      fill: Math.round(s?.occupancy * 100),
+      minLength: Math.min(...lengths),
+      meanLength: Math.round(mean * 10) / 10,
+      longest: Math.max(...lengths),
+      turns: Math.round(s?.turns * 10) / 10,
+      D: v.difficulty,
+    };
+    console.log(`${d.id} ${d.title} ${JSON.stringify(stats)}`);
+    if (
+      v.errors.length ||
+      !v.solvable ||
+      s.depth < d.minDepth ||
+      s.blockedStart + 1e-9 < d.minBlocked ||
+      s.occupancy < d.minFill ||
+      mean < d.meanLength ||
+      Math.min(...lengths) < d.minLength
+    ) {
+      throw Error('Design gate failed: ' + JSON.stringify(stats));
     }
     const level: Level = {
       id: d.id,
@@ -347,13 +359,6 @@ function main(): void {
       arrows,
     };
     levels.push(level);
-    const stats = {
-      arrows: arrows.length,
-      depth: v.signals!.depth,
-      freeAtStart: v.freeCounts[0],
-      blockedStart: Math.round(v.signals!.blockedStart * 100),
-      D: v.difficulty,
-    };
     report.push({
       id: d.id,
       title: d.title,
@@ -380,17 +385,18 @@ function main(): void {
         2,
       ) + '\n',
     );
-    console.log(`${d.id} ${d.title} ${d.tier} ${JSON.stringify(stats)}`);
   }
-  writeFileSync(
-    join(root, 'src/game/levels/packs/pack_001_020.json'),
-    JSON.stringify({v: 1, from: 1, to: 20, levels: levels.map(packLevel)}) +
-      '\n',
-  );
-  writeFileSync(
-    join(root, 'mock/review-first-20.json'),
-    JSON.stringify(report, null, 2) + '\n',
-  );
+  if (!only) {
+    writeFileSync(
+      join(root, 'src/game/levels/packs/pack_001_020.json'),
+      JSON.stringify({v: 1, from: 1, to: 20, levels: levels.map(packLevel)}) +
+        '\n',
+    );
+    writeFileSync(
+      join(root, 'mock/review-first-20.json'),
+      JSON.stringify(report, null, 2) + '\n',
+    );
+  }
 }
 if (
   process.argv[1] &&

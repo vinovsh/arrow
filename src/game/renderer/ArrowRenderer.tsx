@@ -39,6 +39,7 @@ interface Props {
   tier: RenderTier;
   highlighted: boolean;
   pulsing: boolean;
+  guided?: boolean;
 }
 
 /** §9.1 — 0.15Hz breathing, ±6% opacity. */
@@ -59,6 +60,7 @@ function ArrowRendererBase({
   tier,
   highlighted,
   pulsing,
+  guided,
 }: Props): React.JSX.Element {
   const geometry = useMemo(
     () => buildArrowGeometry(arrow, cellSize),
@@ -103,6 +105,7 @@ function ArrowRendererBase({
         arrow={arrow}
         geometry={geometry}
         tier={tier}
+        guided={guided}
         highlighted={highlighted}
         pulsing={pulsing}
       />
@@ -121,5 +124,6 @@ export const ArrowRenderer = React.memo(
     a.cellSize === b.cellSize &&
     a.highlighted === b.highlighted &&
     a.pulsing === b.pulsing &&
+    a.guided === b.guided &&
     a.tier === b.tier,
 );

@@ -16,7 +16,6 @@ import {GameHeader, GAME_HEADER_HEIGHT} from '../components/GameHeader';
 import {HintPill} from '../components/HintPill';
 import {FitButton} from '../components/FitButton';
 import {CoachMark} from '../components/CoachMark';
-import type {CoachSpotlight} from '../components/CoachMark';
 import {DevOverlay} from '../components/DevOverlay';
 import {HintModal} from '../components/HintModal';
 import {PauseOverlay} from '../components/PauseOverlay';
@@ -59,6 +58,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Game'>;
 /** §5.4 — 56dp header, 72dp footer, and the board takes what is left. */
 const HEADER_HEIGHT = GAME_HEADER_HEIGHT;
 const FOOTER_HEIGHT = 72;
+const COACH_HEIGHT = 56;
 /** §9.3 — the blocker outline holds for 300ms. */
 const BLOCKER_HIGHLIGHT_MS = 300;
 /** §3.3 — the silent assist pulses one valid arrow for 1.2s at 60% strength. */
@@ -150,7 +150,12 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
   const firstBlockSeen = useRef(false);
 
   const availableHeight =
-    height - insets.top - insets.bottom - HEADER_HEIGHT - FOOTER_HEIGHT;
+    height -
+    insets.top -
+    insets.bottom -
+    HEADER_HEIGHT -
+    FOOTER_HEIGHT -
+    COACH_HEIGHT;
   const metrics = useMemo(
     () => computeBoardMetrics(width, availableHeight, level?.gridSize ?? 8),
     [width, availableHeight, level?.gridSize],
@@ -576,6 +581,17 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
         onDeveloper={__DEV__ ? () => setDevOpen(true) : undefined}
       />
 
+      <View style={styles.coachSlot}>
+        {coachMark && (
+          <CoachMark
+            mark={coachMark}
+            onDismiss={() => {
+              tutorialRef.current?.dismiss();
+              setCoachMark(null);
+            }}
+          />
+        )}
+      </View>
       <View style={styles.boardArea}>
         <FitButton
           visible={zoomed}
@@ -596,6 +612,9 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
           <View style={styles.boardStack}>
             <Board
               level={level}
+              guidedArrow={
+                coachMark?.step.gesture === 'tap' ? coachMark.arrowIndex : -1
+              }
               cellSize={metrics.cellSize}
               arrowStates={visuals}
               renderScale={renderScale}
@@ -662,37 +681,6 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
           <Text style={styles.restartGlyph}>↻</Text>
         </ClickPressable>
       </View>
-
-      {coachMark && (
-        <CoachMark
-          mark={coachMark}
-          spotlight={spotlightFor(
-            coachMark,
-            engine,
-            metrics,
-            insets.top + HEADER_HEIGHT,
-          )}
-          targetInTopHalf={
-            coachMark.arrowIndex >= 0
-              ? level.arrows[coachMark.arrowIndex].cells[0].y <
-                level.gridSize / 2
-              : true
-          }
-          onDismiss={() => {
-            tutorialRef.current?.dismiss();
-            setCoachMark(null);
-          }}
-          onSkip={
-            tutorialRef.current?.canSkip
-              ? () => {
-                  tutorialRef.current?.skip();
-                  setCoachMark(null);
-                  navigation.replace('Game', {levelId: 11});
-                }
-              : undefined
-          }
-        />
-      )}
 
       <HintModal
         visible={hintModal}
@@ -820,50 +808,6 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
   );
 }
 
-/** Where the coach-mark spotlight sits, in screen dp. */
-function spotlightFor(
-  mark: ActiveCoachMark,
-  engine: GameEngine,
-  metrics: {size: number; cellSize: number; originX: number; originY: number},
-  boardTop: number,
-): CoachSpotlight | null {
-  if (mark.step.target.kind === 'hearts') {
-    return {
-      x: 46,
-      y: boardTop - 28,
-      radius: 44,
-      cellSize: metrics.cellSize,
-      bounds: {left: 2, top: boardTop - 72, right: 90, bottom: boardTop + 16},
-    };
-  }
-  if (mark.arrowIndex < 0) {
-    return null;
-  }
-  const geometry = buildArrowGeometry(
-    engine.level.arrows[mark.arrowIndex],
-    metrics.cellSize,
-  );
-  // The whole arrow, not just its head: the hand points at the middle of the path and
-  // the caption hangs off the far end of it, and on a tutorial board an arrow is six
-  // cells long, so the difference between the two is most of the board. `bounds` is
-  // in cells, so the box is the outer edge of the first and last cell it touches.
-  return {
-    x: metrics.originX + geometry.headCentre.x,
-    y: boardTop + metrics.originY + geometry.headCentre.y,
-    radius: Math.max(38, metrics.cellSize * 1.4),
-    cellSize: metrics.cellSize,
-    bounds: {
-      left: metrics.originX + geometry.bounds.minX * metrics.cellSize,
-      top: boardTop + metrics.originY + geometry.bounds.minY * metrics.cellSize,
-      right: metrics.originX + (geometry.bounds.maxX + 1) * metrics.cellSize,
-      bottom:
-        boardTop +
-        metrics.originY +
-        (geometry.bounds.maxY + 1) * metrics.cellSize,
-    },
-  };
-}
-
 /**
  * §10.2 — the game screen is the one light surface in the app.
  *
@@ -875,6 +819,7 @@ function spotlightFor(
  */
 const styles = StyleSheet.create({
   root: {flex: 1, backgroundColor: theme.bg.base},
+  coachSlot: {height: COACH_HEIGHT, backgroundColor: theme.board.bg},
   boardArea: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   // Sized by the board, but never clipping it: the exit animation lives here.
   boardStack: {

@@ -1,5 +1,10 @@
 # Arrow Escape — Product & Technical Requirements
 
+> Level-design revision: 2026-10-12. The current 20-level long-arrow campaign
+> replaces the previous short-arrow, silhouette and 500-level rules. See README.md
+> and tools/designFirst20.ts for the current measured design gates. Other sections
+> retain historical product context and are subject to the current implementation.
+
 **Version:** 3.0 (supersedes v2.0)
 **Platform:** Android, portrait — React Native CLI + TypeScript. **Not Expo.**
 **Inputs:** written brief, 10-screen storyboard, confirmed difficulty/grid/arrow table
@@ -7,30 +12,20 @@
 
 ---
 
-## 0. What changed in v3
+## 0. Current design authority
 
-| Area | v3 decision |
-|---|---|
-| Arrow counts | **Your table adopted exactly**, 3–4 arrows at level 1 up to 70–90 at level 500 (§4.1). |
-| Path lengths | Minimum path length drops to **1 cell**. Per-band length distributions specified so density is deliberate (§4.2). |
-| Board interaction | **Pinch-to-zoom, pan and double-tap added** (§5.5). This is now a core interaction, not a nicety. |
-| Touch targets | v2's device grid caps **removed** — zoom plus proximity hit-testing solves it (§4.4). |
-| Difficulty formula | **Recalibrated.** v2 measured freedom as a *fraction*, which mislabels a 90-arrow board with 15 free moves as brutal. Now uses absolute counts with saturation (§7.2). |
-| Stars | **Scale with arrow count.** "≤2 mistakes" is fair on a 9-arrow board and absurd on a 90-arrow one (§11). |
-| Lives | Life-loss threshold now scales with arrow count (§3.2). |
-| Rendering | **Tiered by arrow count** (§13). 90 arrows × 3 layers is ~360 SVG nodes; the naive approach will not hold 60fps. |
-
----
+The October 2026 user redesign replaces previous level-pattern rules. Sections 3.1,
+4, 6, 8 and 20 below describe the current campaign. Legacy generator code is removed.
 
 ## 1. Product definition
 
-**Arrow Escape** is an offline, single-player, score-based tap puzzle. Coloured arrow paths are packed onto a dotted grid so they collectively form a recognisable picture — a cat, an apple, a rocket. Tapping an arrow slides its entire path off the board in the direction its head points, but only if nothing blocks the way. Clear the board to finish the level.
+**Arrow Escape** is an offline, single-player, score-based tap puzzle. Long arrow paths interlock into a dense maze. Tapping an arrow slides its entire path off the board in the direction its head points, but only if nothing blocks the way. Clear the board to finish the level.
 
 **Pillars, in priority order:**
 1. **Understood in one second.** No reading required.
 2. **Never punishing.** No timers, no dead ends, no real fail state, no paywalls.
 3. **Physically satisfying.** Every successful tap pays out in motion, glow, sound, haptics.
-4. **Beautiful boards.** The picture is the reason to open level 340.
+4. **Readable mazes.** Long winding paths create the visual design and the challenge.
 
 **Session shape:** 30 seconds (level 4) to 3 minutes (level 480) per level, 3–8 levels per sitting.
 
@@ -41,9 +36,9 @@
 ### 2.1 Definitions
 
 - **Grid** — `gridSize × gridSize` cells, drawn as faint dots at cell centres.
-- **Arrow** — an ordered list of 1–8 orthogonally adjacent cells. `cells[0]` = tail, `cells[n-1]` = head.
+- **Arrow** — an ordered list of 8–64 orthogonally adjacent cells in the shipped campaign. `cells[0]` = tail, `cells[n-1]` = head.
   - For paths of 2+ cells, direction = vector from `cells[n-2]` to `cells[n-1]`.
-  - For **1-cell arrows**, direction is stored explicitly on the arrow. These render as a single arrowhead in a cell and are common from level 11 onward.
+  - Head-only arrows are not permitted in any shipped level.
 - **Corridor** — every cell from the head, stepping in `direction`, out to the board edge.
 - **Free** — no corridor cell is occupied by any active arrow.
 
@@ -85,26 +80,19 @@ Consequences this document depends on:
 
 ## 3. Anti-frustration system
 
-### 3.1 Difficulty ceiling and rhythm
+### 3.1 Challenge
 
-Difficulty is a solver-computed score `D ∈ [1,10]` (§7.2), measured independently of board size.
+Require real blocking dependencies from level 1. No fixed difficulty ceiling, easy
+showcase cadence or requirement that every early arrow be free remains. Challenge
+comes from reading long paths, tracing exit lanes and finding unlocking sequences.
+The current measurable gates and achieved values are in tools/designFirst20.ts and
+mock/review-first-20.json. Human playtesting decides final difficulty.
 
-- **Hard ceiling `D ≤ 7.0` for every level, including level 500.**
-- Within every block of 10: at least 3 levels at `blockAvg − 1.5` or lower; at most 2 at `blockAvg + 1.0`; **never two consecutive levels above `blockAvg + 1.0`**.
-- Every 10th level is a **showcase** — a large, beautiful, deliberately easy board that reads as a reward.
-- Every 25th level is a **milestone** — `blockAvg + 1.0`, distinct frame, bigger completion flourish.
+### 3.2 Lives
 
-The average rises from 2.2 to 5.5 across 500 levels. The *floor* never rises. There are level-30-difficulty puzzles sitting at level 470 on purpose.
-
-Note that arrow count and difficulty are separate axes here. A 90-arrow board is *long*, not necessarily *hard* — with 20 free moves available at any moment it is a pleasant, low-stress clear-out. That separation is what lets your count curve and the anti-frustration goal coexist.
-
-### 3.2 Lives are soft, and scale with board size
-
-- Hearts (3, red, top-left) deplete every `max(4, round(n * 0.12))` blocked taps, where `n` is the level's arrow count. A 9-arrow level loses a heart every 4 mistakes; a 90-arrow level every 11.
-- Lives are **disabled entirely for levels 1–25**. `FEATURES.livesFromLevel = 26`.
-- Zero hearts shows the Out of Lives screen. It costs nothing: `RETRY LEVEL` is instant, restores all hearts, loses no progress, no stars, no score.
-- `WATCH VIDEO +1 LIFE` calls `AdService`. With no ad SDK in v1 it grants the life immediately and reads `CONTINUE +1 LIFE`.
-- No wait timer, no regeneration clock, no life purchase.
+Three hearts; every blocked tap costs one, from level 1. At zero hearts the player
+can restart immediately or use the existing rewarded-life option. Restarting never
+requires an ad. No wait timer, regeneration clock or life purchase.
 
 ### 3.3 Struggle detection (silent assist)
 
@@ -127,88 +115,37 @@ Once per attempt, when any of these fire — 4 blocked taps in a row, 25s with n
 
 ---
 
-## 4. Progression: 500 levels
+## 4. Current progression: 20 original long-arrow mazes
 
-### 4.1 Level table — confirmed as specified
+### 4.1 Boards
 
-| Levels | Grid | Arrows | Band | Target avg D |
-|---|---|---|---|---|
-| 1 | 5×5 | 3–4 | Tutorial | 1.0 |
-| 2 | 5×5 | 4–5 | Tutorial | 1.0 |
-| 3 | 6×6 | 5–7 | Tutorial | 1.2 |
-| 4–10 | 7×7 | 8–12 | Easy | 1.8 |
-| 11–25 | 8×8 | 16–22 | Easy | 2.3 |
-| 26–50 | 9×9 | 20–28 | Medium | 2.9 |
-| 51–100 | 10×10 | 26–36 | Medium+ | 3.4 |
-| 101–150 | 11×11 | 32–42 | Hard | 3.9 |
-| 151–200 | 11×11 | 36–48 | Hard+ | 4.2 |
-| 201–250 | 12×12 | 42–54 | Very Hard | 4.5 |
-| 251–300 | 12×12 | 46–60 | Expert | 4.8 |
-| 301–350 | 13×13 | 52–66 | Expert+ | 5.0 |
-| 351–400 | 13×13 | 58–72 | Master | 5.2 |
-| 401–450 | 14×14 | 64–80 | Extreme | 5.4 |
-| 451–500 | 14×14 | 70–90 | Insane | 5.5 |
+Exactly 20 levels with grids from 16×16 to 40×40. Each is an original, dense maze;
+no copied competitor geometry, picture masks or recycled old boards. No level 21+
+is designed until this batch is approved.
 
-Band names describe **board scale and visual ambition**. Solver difficulty is governed separately by §3.1 and never exceeds 7.0.
+### 4.2 Paths
 
-### 4.2 Path length distribution (derived from §4.1)
+Every shipped arrow has 8–64 cells. Board-average length is at least 16 cells,
+coverage at least 94%. Never produce head-only arrows or short fragments to repair
+a deadlock. Keep arrow bodies clearly separated, directional and bend-rich.
 
-Arrow counts against mask size give the required average path length per band:
+### 4.3 Dependencies
 
-| Levels | Grid | Arrows | Mask cells | Required avg path |
-|---|---|---|---|---|
-| 1–3 | 5×5–6×6 | 3–7 | 15–22 | 3.0 – 5.0 |
-| 4–10 | 7×7 | 8–12 | 30 | 2.5 – 3.8 |
-| 11–25 | 8×8 | 16–22 | 40 | 1.8 – 2.5 |
-| 26–100 | 9×9–10×10 | 20–36 | 53–70 | 1.9 – 2.7 |
-| 101–200 | 11×11 | 32–48 | 87–91 | 1.9 – 2.7 |
-| 201–300 | 12×12 | 42–60 | 109–115 | 1.9 – 2.6 |
-| 301–400 | 13×13 | 52–72 | 135–139 | 1.9 – 2.6 |
-| 401–500 | 14×14 | 64–90 | 161–167 | 1.9 – 2.5 |
+Level 1 has a dependency chain of at least 3 and at least 55% initially blocked
+arrows. Level 2 requires 5 and 65%; levels 3–9 require 8 and 75%; levels 10–20
+require 12 and 80%. These are minimum structural gates, not claims about a player's
+solve time. Every possible sequence of legal removals must remain solvable.
 
-So from level 11 onward the game is built from **short arrows**: mostly 1, 2 and 3 cells, with longer snaking paths as accents. The generator targets these mixes:
+### 4.4 Touch and zoom
 
-| Band | len 1 | len 2 | len 3 | len 4 | len 5–8 | mean |
-|---|---|---|---|---|---|---|
-| Tutorial (1–3) | 0% | 10% | 35% | 35% | 20% | 3.7 |
-| Easy (4–10) | 5% | 25% | 35% | 25% | 10% | 3.1 |
-| 11–100 | 28% | 36% | 22% | 10% | 4% | 2.3 |
-| 101–300 | 30% | 36% | 22% | 9% | 3% | 2.2 |
-| 301–500 | 32% | 37% | 21% | 8% | 2% | 2.1 |
+Pinch, pan, fit and nearest-path hit testing remain essential. Dense boards can be
+magnified for precise taps. Use the shared runtime geometry for preview images.
 
-**Visual consequence, stated deliberately:** early levels are *outline drawings* (the cat in the storyboard), late levels are *dense filled silhouettes* built from short stubs. This is a real style shift across the game. To keep it feeling intentional rather than degraded:
+### 4.5 Appearance
 
-- Every band must retain at least 3 arrows of length ≥ 4 with at least one turn — these are "feature paths" and should be placed along the silhouette's most characteristic contour (a tail, a stem, a wing).
-- The **decor layer** (face, details) becomes more important at high density and should be used on every shape from level 100 onward, since the silhouette alone carries less character when solid.
-- Colour distribution must be balanced across the board (no more than 25% of arrows sharing one colour on boards of 40+) so the picture doesn't read as noise.
-- Human review of one render per shape per grid size remains mandatory (§8.6).
-
-### 4.3 Difficulty is not driven by arrow count
-
-In the §7.2 formula, `n` carries a weight of 0.5 out of 10.1. A 90-arrow board with 20 free moves at every step scores around `D = 4.5`. That is intended: it is a long, relaxing, satisfying clear-out, not a brain-teaser. Difficulty is carried by dependency depth and by how few options exist at the tightest moment.
-
-### 4.4 Touch targets, hit-testing and zoom
-
-Cell sizes at fit-to-screen:
-
-| Screen width | 10×10 | 12×12 | 13×13 | 14×14 |
-|---|---|---|---|---|
-| 320dp | 28.8dp | 24.0dp | 22.2dp | 20.6dp |
-| 360dp | 32.8dp | 27.3dp | 25.2dp | 23.4dp |
-| 412dp | 38.0dp | 31.7dp | 29.2dp | 27.1dp |
-
-All below the 44dp guideline, so two mechanisms are **mandatory**, not optional:
-
-1. **Pinch-to-zoom** (§5.5). The player can magnify any region to comfortable size. This is why the v2 device grid caps are removed.
-2. **Proximity hit-testing.** On tap, select the nearest arrow whose path passes within `22dp / currentScale` of the touch point in board space. Arrows never overlap, so this is unambiguous. Zooming in therefore tightens precision automatically, which is exactly the behaviour a player expects.
-
-Additionally: arrow stroke width `0.46 × cellSize`, minimum 8dp. On 1-cell arrows the arrowhead is drawn at `0.7 × cellSize` so single-cell arrows stay clearly visible and clearly directional.
-
-### 4.5 Shape library
-
-Minimum 140 original silhouettes across fruits, animals, objects, nature, symbols, food, vehicles, weather. Each authored at 3–4 grid sizes with 2–4 decompositions → well over 500 unique boards. **All geometry original.** No character IP, no logos, no traced third-party artwork, no other game's level designs.
-
----
+Long maze paths carry the design. No decorative overlay, tutorial veil, translucent
+arrow underlay or mandatory silhouette layer. Current arrow colors and widths live
+in the renderer and theme. A temporary solid blue arrow identifies a tutorial or hint target.
 
 ## 5. Screens
 
@@ -226,13 +163,13 @@ Settings gear top-left. Wordmark centred. Three 56dp buttons, full width minus 3
 
 ### 5.3 Level Selection
 
-Back arrow, `LEVELS` title. Paginated pager, **25 levels per page in a 5×5 grid**, page dots at the bottom, per the storyboard. 500 levels = 20 pages.
+Back arrow, `LEVELS` title. Paginated pager, **25 levels per page in a 5×5 grid**, page dots at the bottom, per the storyboard. The current batch uses one partial page.
 
 - Completed: number + 1–3 gold stars beneath.
 - Current: bright yellow neon outline with a slow pulse.
 - Locked: dimmed card with a padlock, no number.
 - Band name shown as a subtitle under the title, updating per page.
-- Dot indicator shows a 5-dot window plus a `3 / 20` label.
+- Dot indicator shows a 5-dot window plus the current page count.
 - Opens on the page containing the current level; horizontal swipe between pages.
 
 ### 5.4 Gameplay
@@ -251,7 +188,7 @@ Back arrow, `LEVELS` title. Paginated pager, **25 levels per page in a 5×5 grid
 
 - **No score, no move counter, no timer, no ad.**
 - Board fit size = `min(screenWidth − 32, availableHeight)`; `cellSize = floor(fitSize / gridSize)` for a crisp dot grid at scale 1.
-- Hearts fade in only after the first blocked tap on levels 1–25.
+- Hearts are visible from level 1.
 
 ### 5.5 Board zoom and pan
 
@@ -322,39 +259,13 @@ Translucent dark overlay, board visible behind. Hearts + `LEVEL 13` + gear remai
 
 ---
 
-## 6. Onboarding — how to play
+## 6. Onboarding
 
-Your table reserves levels 1–3 for Tutorial. That covers the core rule but not direction, ordering or zoom, so the scripted layer runs to level 10 with a progressively lighter touch. Rules: **one idea per level, no timer, no stars shown, no failure possible, no caption longer than 6 words, every coach mark dismissible by tapping anywhere.**
-
-| Lvl | Grid | Arrows | Teaches | Coach mark |
-|---|---|---|---|---|
-| 1 | 5×5 | 3–4, all free | Tap an arrow → it flies out | Ghost hand taps it. **"Tap to send it out"** |
-| 2 | 5×5 | 4–5, all free | You choose the order | **"Any order works"** |
-| 3 | 6×6 | 5–7, one blocked | Blocked = something's in the way | Caption appears only *after* the shake: **"Clear its path first"** |
-| 4 | 7×7 | 8, includes an L-path | The **head** sets direction, not the body | Arrowhead pulses once. **"It follows the arrowhead"** |
-| 5 | 7×7 | 9, one 3-deep chain | Order matters in sequence | No caption; struggle assist tuned to 12s |
-| 6 | 7×7 | 10, first real silhouette | The board is a picture | On win the shape redraws in outline. **"Nice — it was a heart!"** |
-| 7 | 7×7 | 11 | HINT exists | HINT pill pulses at start. **"Stuck? Use a hint"** |
-| 8 | 7×7 | 12, first star rating | Stars and score | Level Complete explains stars once |
-| 11 | 8×8 | 16+ | **Pinch to zoom** — fires on the first 8×8 board | Two-finger ghost gesture. **"Pinch to zoom in"** |
-| 26 | 9×9 | 20+ | Hearts appear for the first time | **"Careful — mistakes cost hearts"** |
-
-Levels 9, 10 and 12–25 run clean. Lives stay off until level 26 regardless.
-
-**Presentation.** 55% dim with a soft radial spotlight over the target. Ghost-hand loop at 900ms, fading after 3 loops. Caption in a rounded pill, 18sp semibold, on the opposite half of the board from the target. The overlay never blocks the target's touch area. A small `SKIP` appears from level 2; skipping sets `tutorialCompleted = true` and jumps to level 11 (the zoom and hearts marks still fire, since they teach mechanics the player cannot infer).
-
-**First launch:** `Splash → Home → Level 1 auto-opens if tutorialCompleted === false`.
-
-**How to Play** (Home and Settings) — a 5-card pager, each with a small looping animated board:
-1. Tap an arrow to send it out of the board.
-2. It follows the arrowhead, even around corners.
-3. If something blocks it, it shakes — clear the blocker first.
-4. Pinch to zoom in on busy boards.
-5. Empty the board to finish. Fewer mistakes = more stars.
-
-Under 25 seconds to read.
-
----
+Short inline tips above the board: tap the blue free arrow on level 1, explain
+blocking after a failed move on level 2, zoom on level 3, hints on level 4. An
+original tap-target icon replaces the cartoon hand. The puzzle stays fully visible
+and touchable. Tips can be dismissed; skipping tips does not skip levels. The
+How To Play cards remain reachable from Home and Settings.
 
 ## 7. Difficulty model
 
@@ -397,96 +308,19 @@ Weights are an initial calibration. After the first playtest, refit against medi
 
 ---
 
-## 8. Level pipeline (build-time Node + TypeScript)
+## 8. Level pipeline
 
-Levels are generated and validated offline, then committed as data. The app never generates levels at runtime.
+`tools/designFirst20.ts` is the only generator. Place long arrows in reverse solve
+order, extend existing paths to fill empty lanes, then refine orientations while
+retaining solvability. Never split paths into short pieces. Validate with the
+runtime engine and fail if any design gate is missed. The generator is deterministic.
 
-### 8.1 Stage 1 — Shape mask
+`tools/validateFirst20.ts` checks all 20 boards, no duplicates, runtime solvability,
+long-path and density gates, dependency constraints and 600 random playthroughs.
+The pack contains exactly the same cells and directions as the review JSON files.
 
-Hand-authored binary masks per shape per grid size, stored as reviewable strings:
-
-```ts
-export const cat: ShapeMask = {
-  name: 'cat', category: 'animal',
-  grids: {
-    11: [
-      '.#.......#.', '##.......##', '###########',
-      '#.#.....#.#', '###########', '.#########.',
-      '.#########.', '.###.....##', '.###......#',
-      '.#####...##', '..#####.##.',
-    ],
-  },
-};
-```
-
-Mask cell count must land within ±8% of `targetArrows × targetMeanPathLength` for the band (§4.2), or the generator rejects the mask for that grid size.
-
-### 8.2 Stage 2 — Path decomposition
-
-Seeded randomised DFS with backtracking carves the mask into simple paths:
-- Length 1–8 cells, drawn to match the band's target distribution (§4.2) within ±3 percentage points per bucket.
-- No path self-touches or revisits; ≤ 3 turns.
-- Every mask cell consumed; orphan cells force a backtrack.
-- At least 3 paths of length ≥ 4 with ≥ 1 turn ("feature paths"), placed on the silhouette's most characteristic contour.
-- Colour assignment balanced: no colour on more than 25% of arrows for `n ≥ 40`, and no two adjacent arrows share a colour.
-- Reproducible from `(shape, gridSize, seed)`.
-
-### 8.3 Stage 3 — Orientation search
-
-A 1-cell arrow has 4 possible directions; a longer path has 2. Search space is therefore up to `4^k · 2^(n−k)` — too large for brute force at `n = 90`, so use simulated annealing over orientation assignments with the objective:
-
-1. **Solvable** (§8.4) — hard requirement.
-2. `D` within ±0.4 of the slot's target.
-3. `freeMinCount ≥ 3` for any level with `D < 5`. Chains with fewer than 3 free options allowed only at `D ≥ 5`, and only for up to 3 consecutive moves.
-4. **More than one valid solve order** for all non-milestone levels; near-unique reserved for every-25th milestones.
-
-Failure after `N` restarts → re-run stage 2 with a new seed.
-
-### 8.4 Stage 4 — Validation (exact, from §2.3)
-
-```ts
-function validate(level: Level): Validation {
-  let active = [...level.arrows];
-  const order: string[] = [];
-  const freeCounts: number[] = [];
-  while (active.length) {
-    const free = active.filter(a => isFree(a, active));
-    if (free.length === 0) return { solvable: false };      // reject
-    freeCounts.push(free.length);
-    const pick = canonicalPick(free);                        // deterministic
-    order.push(pick.id);
-    active = active.filter(a => a.id !== pick.id);
-  }
-  return { solvable: true, order, freeCounts, depth: dependencyDepth(level) };
-}
-```
-
-Monotonicity makes this greedy pass a **proof**, not a heuristic. `canonicalPick` also produces the hint order.
-
-CI runs `validateAll()` across all 500 levels and fails the build on: any unsolvable level, any `D` more than ±0.6 outside its slot window, any duplicate board, any arrow count outside its band, overlapping cells, a path-length distribution more than 3 points off target, or a colour-balance violation.
-
-### 8.5 Stage 5 — Packing
-
-Chunked JSON, 25 levels per pack (aligned to the level-select pager):
-
-```json
-{ "v":1, "from":26, "to":50, "levels":[
-  { "id":26, "g":9, "t":"apple", "d":2.9, "p":112,
-    "a":[ ["c","2,2 2,3 2,4 3,4","D"], ["p","5,1","R"], ["y","7,3 7,4","U"] ] }
-]}
-```
-
-`a[i] = [colorKey, "cells", direction]`. Direction is stored explicitly — required for 1-cell arrows, redundant validation for the rest. At 90 arrows a level is roughly 3KB; 500 levels ≈ 1.4MB total. Current pack plus two neighbours held in memory; the rest lazily required.
-
-### 8.6 Human review gate
-
-Automated validation cannot judge whether a board still looks like a cat. Before a pack ships, one PNG render per shape per grid size is generated by `tools/renderContactSheet.ts` and reviewed by a human at 320dp scale. Rejections go back to stage 2 with a new seed or a revised mask.
-
-### 8.7 Developer mode
-
-Behind 7 taps on the version string in About, plus `__DEV__`. Level jump, reload, full solution reveal, re-validate, computed `D`, free-count trace, dependency-graph overlay, FPS meter, and a zoom-state readout. Never reachable by a normal user in release.
-
----
+Review exact-geometry PNG/SVG boards and the playable preview before designing more.
+A single partial 25-slot pack currently contains levels 1–20.
 
 ## 9. Animation & feedback
 
@@ -572,14 +406,13 @@ export const theme = {
 
 ### 10.2 Rules
 
-- **Background:** near-black navy, subtle vertical gradient, radial vignette. Panels are rounded cards (`radius.panel`) with a 1px 8%-white border and a soft outer shadow.
-- **Dotted grid** at 10% opacity.
-- **Arrows:** rounded caps and joins, stroke `0.46 × cellSize` (min 8dp). Arrowhead is a filled triangle aligned to `direction`; on 1-cell arrows it is drawn at `0.7 × cellSize`.
-- **Decor layer** (the cat's eyes, nose, mouth) drawn in `text.primary` at 70% opacity as a non-interactive overlay, keyed per shape. Cosmetic only; occupies no grid cells. Required on every shape from level 100 onward (§4.2).
-- **Glow is selective.** Board arrows, the wordmark and primary CTAs glow. Headers, list rows, toggles and level cards do not. On boards of 60+ arrows, per-arrow glow opacity drops to 60% of standard to prevent the board turning into a haze.
-- **Buttons:** 56dp, `radius.lg`, gradient fill, left icon, scale to 0.96 on press over 90ms with a `selection` haptic.
-- **Transitions:** 220ms fade-through; game entry adds a slight board scale-in.
-- Colour is never the sole signal for state.
+- The board uses a white surface and crisp navy arrow paths.
+- Arrow geometry and stroke/head proportions are shared by app and preview renderer.
+- No translucent decorative layer, arrow halo or tutorial veil is drawn.
+- A solid blue path identifies a hint, departing arrow or first tutorial target.
+- Original tap-target icon and short inline text sit above the board.
+- Dense boards retain pinch-to-zoom and precise path hit testing.
+- Headers, controls and other screens use the existing application theme.
 
 ---
 
@@ -624,19 +457,19 @@ export interface GridPoint { x: number; y: number }
 export interface ArrowPath {
   id: string;
   color: ArrowColor;
-  cells: GridPoint[];        // 1..8 cells, tail → head
-  direction: Direction;      // explicit; required for 1-cell arrows
+  cells: GridPoint[];        // shipped paths: 8..64 cells, tail → head
+  direction: Direction;      // validated against the final segment
 }
 
 export interface Level {
   id: number;
-  gridSize: number;          // 5..14
+  gridSize: number;          // current batch: 16..40
   theme: string;
   band: Band;
-  difficulty: number;        // computed D, 1..10, never > 7
+  difficulty: number;        // computed signal, 1..10
   parTime: number;
-  arrows: ArrowPath[];       // 3..90
-  decor?: DecorPath[];       // cosmetic overlay
+  arrows: ArrowPath[];       // no more than 254 (occupancy capacity)
+  decor?: DecorPath[];       // legacy wire format only; not rendered
 }
 
 export interface RuntimeState {          // never in React state
@@ -793,91 +626,27 @@ __tests__/      engine.test.ts  validator.test.ts  score.test.ts
 
 ---
 
-## 19. Build phases
+## 19. Current delivery scope
 
-| Phase | Deliverable | Exit criterion |
-|---|---|---|
-| 1 | RN CLI TS project, Android build green | `assembleDebug` succeeds, app launches |
-| 2 | Navigation, all screen shells, theme tokens | Every storyboard screen reachable |
-| 3 | Board renderer (dot grid, arrows incl. 1-cell, decor layer) | Renders at 5×5 and 14×14 on 3 screen sizes, 60fps idle |
-| 4 | **Viewport: pinch, pan, double-tap, fit, clamping** | 60fps zoom on a synthetic 90-arrow board |
-| 5 | Arrow model, occupancy, engine, proximity hit-test | `isFree` and hit-test unit tests pass, incl. under zoom |
-| 6 | Tap resolution, blocked shake, blocker highlight + off-screen chevron | Hand-authored level fully playable |
-| 7 | Escape animation, glow, particles, render tiers | JS thread ≥ 55fps at 90 arrows |
-| 8 | Win detection, completion sequence, ribbon, stars | §9.4 timing verified |
-| 9 | Scoring, stars, Score Summary | §11 formulas unit-tested at n=12 and n=90 |
-| 10 | Persistence | Progress survives force-close and reboot |
-| 11 | Hint modal, hint service, auto-pan-to-target, struggle assist | Hint always names a valid move and brings it on-screen |
-| 12 | Audio, haptics, settings wiring, voice capping | All three toggles verified effective |
-| 13 | Hearts, Out of Lives, Pause | Soft-fail per §3.2 verified |
-| 14 | **Tutorial levels 1–8 + zoom/hearts marks + How to Play** | 3 of 3 new testers finish level 5 unprompted and discover zoom by level 12 |
-| 15 | Level pipeline, contact-sheet review, first 100 levels | `validateAll()` green; curve report matches §4; shapes legible |
-| 16 | Levels 101–500 | 500 levels validated; `D ≤ 7.0` across the set |
-| 17 | Performance pass + release build | Release AAB, cold start < 1.8s, 60fps at 14×14 / 90 arrows |
-
-Phase 4 sits early on purpose: zoom touches hit-testing, rendering and hints, and retrofitting it after the engine exists is expensive.
-
----
+Replace the first 20 levels, remove obsolete pattern rules and tooling, refresh the
+tutorial, validate the source and produce review images. Native packaging and
+publishing are separate requests. Player approval is required before later levels.
 
 ## 20. Acceptance criteria
 
-**Build & runtime**
-- [ ] Release AAB builds; launches clean with no crash
-- [ ] Zero `expo-*` packages in `package.json` or lockfile
-- [ ] Fully playable in airplane mode from first launch
-
-**Gameplay**
-- [ ] All 500 levels load and validate as solvable
-- [ ] Arrow counts and grid sizes match the §4.1 table exactly
-- [ ] Path-length distributions within 3 points of the §4.2 targets
-- [ ] No level exceeds `D = 7.0`; every 10-block satisfies §3.1
-- [ ] Free arrows always escape; blocked arrows always shake and never vanish
-- [ ] Win fires exactly at `activeArrowCount === 0`
-- [ ] Property test: 100 sampled levels, random play, no reachable state ever unsolvable
-
-**Board interaction**
-- [ ] Pinch, pan, double-tap and fit all work per §5.5
-- [ ] Tap vs pan disambiguation correct — no accidental arrow taps while panning
-- [ ] Pan clamped; board edges never enter the viewport
-- [ ] Zoom resets to fit on level change
-- [ ] Board is crisp at 3.5× after the settle re-render
-- [ ] Hint brings its target on-screen on 40+ arrow boards
-- [ ] Blocked-arrow chevron appears when the blocker is off-screen
-
-**Legibility**
-- [ ] Every shape reviewed and legible at 320dp fit scale
-- [ ] 1-cell arrows clearly visible and clearly directional at 14×14
-
-**Onboarding**
-- [ ] Levels 1–8 fire coach marks once each on a fresh install
-- [ ] Zoom mark fires at level 11; hearts mark at level 26
-- [ ] Tutorial skippable from level 2
-- [ ] How to Play reachable from Home and Settings
-
-**Anti-frustration**
-- [ ] No timer or countdown during gameplay
-- [ ] Lives disabled below level 26; Out of Lives never costs progress
-- [ ] Star thresholds scale with arrow count per §11
-- [ ] Restart always available and instant
-
-**Brief compliance**
-- [ ] No score displayed during gameplay
-- [ ] No store, coins, currency, shop, inventory, spin wheel, XP, energy, undo, bottom navigation, or banner ad anywhere
-- [ ] Board occupies ≥ 62% of screen height on a 16:9 device
-
-**Persistence & settings**
-- [ ] Progress, stars, scores and settings survive force-close and reboot
-- [ ] All three toggles take effect immediately
-
-**Performance**
-- [ ] 60fps idle, zooming, and during escapes on a 14×14 / 90-arrow board
-- [ ] Cold start to Home < 1.8s
-
-**Legal**
-- [ ] All shapes, artwork and audio original or commercially licensed
-- [ ] No third-party game names, logos, characters or level designs
-
----
+- Exactly 20 new levels; every board solvable and unique.
+- No shipped arrow shorter than 8 cells or longer than 64.
+- At least 94% coverage and at least 16 cells per arrow on average.
+- Current dependency and blocked-start gates pass for every board.
+- 30 random legal playthroughs per board finish without deadlocks.
+- Preview JSON and shipped pack agree exactly.
+- First level presents an actual blocking puzzle and one indicated free move.
+- Tutorial icon and text sit above the board; no veil, hand or translucent underlay.
+- Existing saves start the new campaign at level 1 without losing settings or lifetime score.
+- New campaign progress survives reloads; dismissing tips never skips a puzzle.
+- Pinch, pan, fit and head/body taps remain accurate; check on a phone before release.
+- Source checks and JavaScript bundling pass. Native build and deployment require a request.
+- No copied competitor assets or level geometry.
 
 ## 21. Non-goals
 

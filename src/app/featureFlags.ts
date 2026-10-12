@@ -6,9 +6,9 @@ export const FEATURES = {
   /** Each blocked arrow costs one heart, starting with the first level. */
   livesFromLevel: 1,
   /** §6 — scripted coach marks run to level 10, plus the zoom and hearts marks. */
-  tutorialLastScriptedLevel: 10,
-  zoomCoachMarkLevel: 11,
-  heartsCoachMarkLevel: 26,
+  tutorialLastScriptedLevel: 4,
+  zoomCoachMarkLevel: 3,
+  heartsCoachMarkLevel: 2,
   /** Google rewarded ads are offered only from the out-of-lives popup. */
   adsEnabled: true,
   /** §8.7 — 7 taps on the version string, and only in a debug build. */

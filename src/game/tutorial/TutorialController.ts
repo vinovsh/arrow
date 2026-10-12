@@ -9,14 +9,7 @@ export interface ActiveCoachMark {
   arrowIndex: number;
 }
 
-/**
- * §6 — decides which coach mark is showing, and when.
- *
- * Every mark fires at most once per install: `tutorialStepsSeen` is keyed by level, so
- * a replay of level 3 does not re-explain blocking. Skipping sets tutorialCompleted and
- * jumps to level 11, but the zoom and hearts marks still fire, because pinch-to-zoom
- * and the heart economy are the two things a player cannot infer from the board.
- */
+/** Shows each inline tip once; skipping tips never skips levels. */
 export class TutorialController {
   private readonly engine: GameEngine;
   private active: ActiveCoachMark | null = null;
@@ -33,7 +26,7 @@ export class TutorialController {
   get canSkip(): boolean {
     return (
       this.engine.level.id >= SKIP_FROM_LEVEL &&
-      this.engine.level.id <= 10 &&
+      this.engine.level.id <= 4 &&
       !SaveStore.data.tutorialCompleted
     );
   }

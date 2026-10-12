@@ -6,9 +6,11 @@
 
 export const SAVE_KEY = 'arrow-escape/save/v1';
 export const CURRENT_SCHEMA_VERSION = 1;
+export const CAMPAIGN_VERSION = 2;
 
 export interface SaveData {
   schemaVersion: 1;
+  campaignVersion: number;
   currentLevel: number;
   completedLevels: number[];
   levelStars: Record<number, 1 | 2 | 3>;
@@ -26,6 +28,7 @@ export interface SaveData {
 export function defaultSave(): SaveData {
   return {
     schemaVersion: CURRENT_SCHEMA_VERSION,
+    campaignVersion: CAMPAIGN_VERSION,
     currentLevel: 1,
     completedLevels: [],
     levelStars: {},
@@ -106,8 +109,9 @@ export function migrate(raw: unknown): SaveData {
     0,
   );
 
-  return {
+  const result: SaveData = {
     schemaVersion: CURRENT_SCHEMA_VERSION,
+    campaignVersion: CAMPAIGN_VERSION,
     currentLevel:
       typeof raw.currentLevel === 'number' && raw.currentLevel >= 1
         ? Math.floor(raw.currentLevel)
@@ -127,4 +131,14 @@ export function migrate(raw: unknown): SaveData {
     tutorialCompleted: bool(raw.tutorialCompleted, base.tutorialCompleted),
     tutorialStepsSeen: numberArray(raw.tutorialStepsSeen),
   };
+  if (raw.campaignVersion !== CAMPAIGN_VERSION) {
+    return {
+      ...base,
+      bestScore: result.bestScore,
+      soundEnabled: result.soundEnabled,
+      musicEnabled: result.musicEnabled,
+      vibrationEnabled: result.vibrationEnabled,
+    };
+  }
+  return result;
 }

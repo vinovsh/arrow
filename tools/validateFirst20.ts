@@ -39,6 +39,16 @@ for (const [i, packed] of pack.levels.entries()) {
   if (level.difficulty !== result.difficulty) {
     throw Error(`Stale difficulty: ${level.id}`);
   }
+  const lengths = level.arrows.map(a => a.cells.length);
+  if (
+    Math.min(...lengths) < design.minLength ||
+    Math.max(...lengths) > design.maxLength ||
+    lengths.reduce((a, b) => a + b, 0) / lengths.length < design.meanLength ||
+    s.occupancy < design.minFill ||
+    level.decor?.length
+  ) {
+    throw Error(`Level ${level.id} fails long-path visual gate`);
+  }
   if (level.arrows.length > 254) {
     throw Error('Engine capacity exceeded');
   }
