@@ -26,9 +26,14 @@
     role="img"
     aria-label="Playable arrow level preview"></svg>
   <div id="arrow-status" aria-live="polite"></div>
+  <div id="arrow-reaction" hidden aria-live="polite">
+    <span id="arrow-reaction-emoji" aria-hidden="true"></span
+    ><span id="arrow-reaction-caption"></span>
+  </div>
 </div>
 <style>
   #arrow-review-20 {
+    position: relative;
     font-family: system-ui, sans-serif;
     color: #17273b;
     background: #fff;
@@ -37,6 +42,63 @@
     margin: auto;
     padding: 16px;
     box-sizing: border-box;
+  }
+  #arrow-review-20 #arrow-reaction {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    z-index: 5;
+  }
+  #arrow-review-20 #arrow-reaction[hidden] {
+    display: none;
+  }
+  #arrow-review-20 #arrow-reaction-emoji {
+    font-size: 76px;
+    line-height: 1.2;
+  }
+  #arrow-review-20 #arrow-reaction-caption {
+    white-space: nowrap;
+    color: #008ca8;
+    background: #fff;
+    border-radius: 18px;
+    padding: 12px 22px;
+    box-shadow: 0 4px 18px #17273b18;
+    font-size: 20px;
+  }
+  #arrow-review-20 #arrow-reaction.react-pop {
+    animation: arrow-react-pop 1.6s both;
+  }
+  @keyframes arrow-react-pop {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.2) rotate(-12deg);
+    }
+    20% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.18) rotate(-8deg);
+    }
+    35% {
+      transform: translate(-50%, -50%) scale(0.94) rotate(7deg);
+    }
+    50%,
+    85% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1) rotate(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.8);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #arrow-review-20 #arrow-reaction.react-pop {
+      animation: none;
+    }
   }
   #arrow-review-20 .review-chrome {
     display: flex;
@@ -124,7 +186,53 @@
       removed = new Set(),
       moving = new Set(),
       epoch = 0,
-      sound = false;
+      sound = false,
+      halfwayShown = false,
+      finishShown = false,
+      reactionTimer,
+      blockedTaps = 0,
+      hintsUsed = 0;
+    function showReaction(kind) {
+      const target = root.querySelector('#arrow-reaction');
+      const halfway = kind === 'halfway';
+      const options = [
+        ['😎', 'Nice moves!'],
+        ['🤩', 'Halfway there!'],
+        ['😁', 'Keep it going!'],
+      ];
+      let [emoji, caption] = options[(level.id - 1) % options.length];
+      if (!halfway) {
+        if (level.tier === 'Tutorial') {
+          emoji = '😄';
+          caption = 'You got it!';
+        } else if (
+          ['Hard', 'Very Hard'].includes(level.tier) &&
+          !blockedTaps &&
+          !hintsUsed
+        ) {
+          emoji = '🤩';
+          caption = 'Genius!';
+        } else {
+          emoji = '🥳';
+          caption = level.tier === 'Very Hard' ? 'Impressive!' : 'Great job!';
+        }
+      }
+      clearTimeout(reactionTimer);
+      target.classList.remove('react-pop');
+      target.hidden = false;
+      target.dataset.kind = kind;
+      root.querySelector('#arrow-reaction-emoji').textContent = emoji;
+      root.querySelector('#arrow-reaction-caption').textContent = caption;
+      target.style.top = halfway ? '30%' : '50%';
+      void target.offsetWidth;
+      target.classList.add('react-pop');
+      reactionTimer = setTimeout(
+        () => {
+          target.hidden = true;
+        },
+        halfway ? 1350 : 1650,
+      );
+    }
     levels.forEach(l => {
       const o = document.createElement('option');
       o.value = l.id;
@@ -293,6 +401,7 @@
     function move(i, g, body, head) {
       if (removed.has(i) || moving.has(i)) return;
       if (!free(i)) {
+        blockedTaps++;
         g.setAttribute('color', '#c2414b');
         status.textContent = 'Blocked — clear the arrow in front first';
         setTimeout(() => g.setAttribute('color', '#17273b'), 400);
@@ -301,6 +410,14 @@
       root.querySelector('#arrow-guide').hidden = true;
       root.querySelector('#arrow-play-hint').hidden = true;
       removed.add(i);
+      if (
+        !halfwayShown &&
+        removed.size >= Math.ceil(level.arrows.length / 2) &&
+        removed.size < level.arrows.length
+      ) {
+        halfwayShown = true;
+        showReaction('halfway');
+      }
       moving.add(i);
       g.setAttribute('color', '#008ca8');
       whoosh();
@@ -320,11 +437,25 @@
         else {
           g.remove();
           moving.delete(i);
+          if (
+            !finishShown &&
+            removed.size === level.arrows.length &&
+            moving.size === 0
+          ) {
+            finishShown = true;
+            showReaction('complete');
+          }
         }
       }
       requestAnimationFrame(frame);
     }
     function load() {
+      clearTimeout(reactionTimer);
+      root.querySelector('#arrow-reaction').hidden = true;
+      halfwayShown = false;
+      finishShown = false;
+      blockedTaps = 0;
+      hintsUsed = 0;
       epoch++;
       level = levels.find(l => l.id === Number(select.value)) || levels[0];
       removed = new Set();
@@ -434,6 +565,7 @@
     select.addEventListener('change', load);
     root.querySelector('#arrow-reset').addEventListener('click', load);
     root.querySelector('#arrow-hint').addEventListener('click', () => {
+      hintsUsed++;
       const i = level.arrows.findIndex((a, j) => !removed.has(j) && free(j));
       if (i >= 0) {
         const g = svg.querySelector('[data-arrow="' + i + '"]');

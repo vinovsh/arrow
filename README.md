@@ -66,6 +66,12 @@ previews does not build an APK or deploy anything.
 
 ## Arrow movement
 
+Every attempt shows one short emoji reaction after half the arrows are removed.
+It bounces and wiggles without blocking taps. Once the final arrow finishes exiting,
+a completion emoji celebrates before the existing reward screen. Captions vary by
+level and result: “You got it!”, “Great job!”, “Impressive!” or “Genius!”.
+Restart resets the halfway milestone. Reduced-motion settings show a static reaction.
+
 Successful moves use the existing original soft whoosh. Reanimated drives rope-like
 exit paths on the UI thread, preserving bends while the tail follows the head.
 Hint and blocked states use solid color changes, with no translucent underlays.

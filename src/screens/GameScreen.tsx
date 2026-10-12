@@ -16,6 +16,9 @@ import {GameHeader, GAME_HEADER_HEIGHT} from '../components/GameHeader';
 import {HintPill} from '../components/HintPill';
 import {FitButton} from '../components/FitButton';
 import {CoachMark} from '../components/CoachMark';
+import {EmojiReaction} from '../components/EmojiReaction';
+import {ReactionMilestones, reactionFor} from '../game/celebration/reactions';
+import type {Reaction} from '../game/celebration/reactions';
 import {TutorialTapGuide} from '../components/TutorialTapGuide';
 import {DevOverlay} from '../components/DevOverlay';
 import {HintModal} from '../components/HintModal';
@@ -124,6 +127,8 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
   } | null>(null);
   const [climb, setClimb] = useState<Climb | null>(null);
   const [coachMark, setCoachMark] = useState<ActiveCoachMark | null>(null);
+  const [reaction, setReaction] = useState<Reaction | null>(null);
+  const reactionMilestones = useRef(new ReactionMilestones());
   const [hintPillPulsing, setHintPillPulsing] = useState(false);
   const [offscreenBlocker, setOffscreenBlocker] = useState<{
     x: number;
@@ -207,6 +212,8 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
     preloadAround(level.id);
     setVisuals(level.arrows.map(freshVisual));
     inFlight.current = 0;
+    reactionMilestones.current.reset();
+    setReaction(null);
     setHearts(engine.hearts);
 
     setHintsRemaining(hintsRef.current.remaining);
@@ -297,6 +304,14 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
       isNew: previousTime !== null && breakdown.elapsedSeconds < previousTime,
     });
     setComplete(breakdown);
+    setReaction(
+      reactionFor(
+        engine.level,
+        'complete',
+        engine.blockedTaps,
+        engine.hintsUsed,
+      ),
+    );
     setCoachMark(tutorialRef.current?.onWin() ?? null);
 
     // §9.4 — the viewport springs back to fit as the final arrow exits.
@@ -353,6 +368,14 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
       trace('resolveTap done');
 
       if (outcome.kind === 'escaped') {
+        if (
+          reactionMilestones.current.reachedHalfway(
+            engine.level.arrows.length - engine.activeCount,
+            engine.level.arrows.length,
+          )
+        ) {
+          setReaction(reactionFor(engine.level, 'halfway'));
+        }
         if (engine.level.id === 1) {
           setCoachMark(tutorialRef.current?.onArrowRemoved() ?? null);
         }
@@ -493,6 +516,8 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
       return;
     }
     engine.restart();
+    reactionMilestones.current.reset();
+    setReaction(null);
     hintsRef.current.reset();
     setVisuals(level.arrows.map(freshVisual));
     inFlight.current = 0;
@@ -670,6 +695,14 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
           </View>
         </BoardViewport>
 
+        {reaction && (
+          <EmojiReaction
+            key={`${level.id}-${reaction.kind}`}
+            reaction={reaction}
+            onFinish={() => setReaction(null)}
+          />
+        )}
+
         {offscreenBlocker && (
           <View style={styles.chevron} pointerEvents="none">
             <Text style={styles.chevronGlyph}>›</Text>
@@ -765,7 +798,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
         onRetry={restart}
       />
 
-      {complete && (
+      {complete && reaction?.kind !== 'complete' && (
         <LevelCompleteOverlay
           visible={complete !== null && !showLeaderboard}
           breakdown={complete}
