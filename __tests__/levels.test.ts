@@ -12,6 +12,7 @@ import {
   randomPlayStaysSolvable,
 } from '../src/game/engine/LevelValidator';
 import type {Level} from '../src/game/models/types';
+import {DIR_VECTORS} from '../src/game/models/types';
 import {createRng} from '../src/utils/rng';
 
 describe('first 20 replacement levels', () => {
@@ -69,6 +70,22 @@ describe('first 20 replacement levels', () => {
         id === 1 ? 0.55 : id === 2 ? 0.65 : id < 10 ? 0.75 : 0.8,
       );
       expect(level.decor ?? []).toEqual([]);
+    }
+  });
+  it('keeps each complete forward exit lane clear of that arrow’s own body', () => {
+    for (let id = 1; id <= 20; id++) {
+      const level = getLevel(id) as Level;
+      for (const arrow of level.arrows) {
+        const head = arrow.cells[arrow.cells.length - 1];
+        const step = DIR_VECTORS[arrow.direction];
+        for (
+          let x = head.x + step.x, y = head.y + step.y;
+          x >= 0 && y >= 0 && x < level.gridSize && y < level.gridSize;
+          x += step.x, y += step.y
+        ) {
+          expect(arrow.cells.some(p => p.x === x && p.y === y)).toBe(false);
+        }
+      }
     }
   });
 });

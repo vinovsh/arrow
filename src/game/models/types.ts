@@ -87,6 +87,24 @@ export const DIR_VECTORS: Record<Direction, GridPoint> = {
 
 export const ALL_DIRECTIONS: readonly Direction[] = ['U', 'D', 'L', 'R'];
 
+/** A head must never aim at any part of its own body along its exit lane. */
+export function headFacesOwnBody(
+  arrow: Pick<ArrowPath, 'cells' | 'direction'>,
+): boolean {
+  const head = arrow.cells[arrow.cells.length - 1];
+  if (!head) {
+    return false;
+  }
+  const step = DIR_VECTORS[arrow.direction];
+  return arrow.cells
+    .slice(0, -1)
+    .some(p =>
+      step.x !== 0
+        ? p.y === head.y && (p.x - head.x) * step.x > 0
+        : p.x === head.x && (p.y - head.y) * step.y > 0,
+    );
+}
+
 /** Perpendicular unit vector, used by the blocked-shake animation (§9.3). */
 export function perpendicular(d: Direction): GridPoint {
   return d === 'U' || d === 'D' ? {x: 1, y: 0} : {x: 0, y: 1};

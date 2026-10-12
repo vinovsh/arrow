@@ -7,7 +7,10 @@ import type {
   GridPoint,
   Level,
 } from '../src/game/models/types.ts';
-import {directionFromCells} from '../src/game/models/types.ts';
+import {
+  directionFromCells,
+  headFacesOwnBody,
+} from '../src/game/models/types.ts';
 import {analyse, validate} from '../src/game/engine/LevelValidator.ts';
 import {packLevel} from '../src/game/levels/codec.ts';
 import {createRng, hashSeed} from '../src/utils/rng.ts';
@@ -134,6 +137,13 @@ function carve(d: Design, rng: Rng): ArrowPath[] {
         const head = path[path.length - 1];
         const options = steps
           .filter(v => empty(head.x + v.x, head.y + v.y))
+          .filter(v => {
+            const x = head.x + v.x,
+              y = head.y + v.y;
+            return !(s.x !== 0
+              ? y === p.y && (x - p.x) * s.x > 0
+              : x === p.x && (y - p.y) * s.y > 0);
+          })
           .map(v => {
             const p2 = {x: head.x + v.x, y: head.y + v.y},
               straight = v.x === prev.x && v.y === prev.y;
@@ -226,7 +236,10 @@ function fillLanes(input: ArrowPath[], d: Design, rng: Rng): ArrowPath[] {
               ],
               next = arrows.slice();
             next[ix] = {...a, cells, direction: directionFromCells(cells)!};
-            if (analyse({gridSize: n, arrows: next}).solvable) {
+            if (
+              !headFacesOwnBody(next[ix]) &&
+              analyse({gridSize: n, arrows: next}).solvable
+            ) {
               arrows = next;
               extra.forEach(p => (used[key(p, n)] = 1));
               changes++;
@@ -249,7 +262,10 @@ function fillLanes(input: ArrowPath[], d: Design, rng: Rng): ArrowPath[] {
         for (const p of options) {
           const next = arrows.slice();
           next[ix] = {...a, cells: [p, ...a.cells]};
-          if (analyse({gridSize: n, arrows: next}).solvable) {
+          if (
+            !headFacesOwnBody(next[ix]) &&
+            analyse({gridSize: n, arrows: next}).solvable
+          ) {
             arrows = next;
             used[key(p, n)] = 1;
             changes++;
@@ -269,6 +285,9 @@ function fillLanes(input: ArrowPath[], d: Design, rng: Rng): ArrowPath[] {
   return arrows;
 }
 function score(arrows: ArrowPath[], d: Design): number {
+  if (arrows.some(headFacesOwnBody)) {
+    return -1e6;
+  }
   const v = analyse({gridSize: d.grid, arrows});
   if (!v.solvable || !v.signals) {
     return -1e6;
@@ -279,8 +298,9 @@ function score(arrows: ArrowPath[], d: Design): number {
     s.occupancy * 180 +
     Math.min(s.depth, d.minDepth + 5) * 2 +
     s.blockedStart * 20 -
-    Math.max(0, d.minDepth - s.depth) * 100 -
-    Math.max(0, d.minBlocked - s.blockedStart) * 500 -
+    Math.max(0, d.minFill - s.occupancy) * 10000 -
+    Math.max(0, d.minDepth - s.depth) * 2000 -
+    Math.max(0, d.minBlocked - s.blockedStart) * 5000 -
     Math.max(0, d.meanLength - mean) * 3
   );
 }
@@ -292,6 +312,9 @@ function refine(arrows: ArrowPath[], d: Design, rng: Rng): ArrowPath[] {
       cells = [...best[ix].cells].reverse(),
       next = best.slice();
     next[ix] = {...next[ix], cells, direction: directionFromCells(cells)!};
+    if (headFacesOwnBody(next[ix])) {
+      continue;
+    }
     const s = score(next, d);
     if (s >= bestScore) {
       best = next;
@@ -312,13 +335,22 @@ export function main(): void {
     }
     let arrows: ArrowPath[] = [],
       bestScore = -Infinity;
-    for (let attempt = 0; attempt < 32; attempt++) {
-      const rng = createRng(hashSeed(`long-weave-v2:${d.id}:${attempt}`)),
-        candidate = refine(fillLanes(carve(d, rng), d, rng), d, rng),
-        value = score(candidate, d);
+    for (let attempt = 0; attempt < 1024; attempt++) {
+      const rng = createRng(hashSeed(`clear-exits-v3:${d.id}:${attempt}`)),
+        candidate = refine(fillLanes(carve(d, rng), d, rng), d, rng);
+      const signals = analyse({gridSize: d.grid, arrows: candidate}).signals;
+      const eligible =
+        signals &&
+        signals.depth >= d.minDepth &&
+        signals.blockedStart + 1e-9 >= d.minBlocked &&
+        signals.occupancy >= d.minFill;
+      const value = score(candidate, d) + (eligible ? 1e6 : 0);
       if (value > bestScore) {
         arrows = candidate;
         bestScore = value;
+      }
+      if (attempt >= 31 && bestScore > 1e5) {
+        break;
       }
     }
     const v = validate({gridSize: d.grid, arrows}),
@@ -340,6 +372,7 @@ export function main(): void {
     console.log(`${d.id} ${d.title} ${JSON.stringify(stats)}`);
     if (
       v.errors.length ||
+      arrows.some(headFacesOwnBody) ||
       !v.solvable ||
       s.depth < d.minDepth ||
       s.blockedStart + 1e-9 < d.minBlocked ||

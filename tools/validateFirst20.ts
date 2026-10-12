@@ -9,6 +9,7 @@ import {
 } from '../src/game/engine/LevelValidator.ts';
 import {createRng} from '../src/utils/rng.ts';
 import {REVIEW_PLAN} from './designFirst20.ts';
+import {headFacesOwnBody} from '../src/game/models/types.ts';
 const root = join(import.meta.dirname, '..');
 const pack = JSON.parse(
   readFileSync(join(root, 'src/game/levels/packs/pack_001_020.json'), 'utf8'),
@@ -40,6 +41,9 @@ for (const [i, packed] of pack.levels.entries()) {
     throw Error(`Stale difficulty: ${level.id}`);
   }
   const lengths = level.arrows.map(a => a.cells.length);
+  if (level.arrows.some(headFacesOwnBody)) {
+    throw Error(`Level ${level.id}: head points into its own body`);
+  }
   if (
     Math.min(...lengths) < design.minLength ||
     Math.max(...lengths) > design.maxLength ||

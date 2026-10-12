@@ -6,7 +6,7 @@ import {
   validate,
 } from '../src/game/engine/LevelValidator';
 import type {ArrowPath, Level} from '../src/game/models/types';
-import {MAX_PATH_CELLS} from '../src/game/models/types';
+import {MAX_PATH_CELLS, headFacesOwnBody} from '../src/game/models/types';
 import {createRng} from '../src/utils/rng';
 
 const arrow = (
@@ -21,6 +21,49 @@ const arrow = (
 });
 
 describe('structural validation (§8.4)', () => {
+  it.each(['U', 'D', 'L', 'R'] as const)(
+    'detects distant own-body cells facing %s',
+    direction => {
+      const vectors = {U: [0, -1], D: [0, 1], L: [-1, 0], R: [1, 0]};
+      const [dx, dy] = vectors[direction];
+      expect(
+        headFacesOwnBody(
+          arrow(
+            'a',
+            [
+              [5 + 3 * dx, 5 + 3 * dy],
+              [5, 5],
+            ],
+            direction,
+          ),
+        ),
+      ).toBe(true);
+      expect(
+        headFacesOwnBody(
+          arrow(
+            'a',
+            [
+              [5 - 3 * dx, 5 - 3 * dy],
+              [5, 5],
+            ],
+            direction,
+          ),
+        ),
+      ).toBe(false);
+      expect(
+        headFacesOwnBody(
+          arrow(
+            'a',
+            [
+              [5 + 3 * dx + dy, 5 + 3 * dy + dx],
+              [5, 5],
+            ],
+            direction,
+          ),
+        ),
+      ).toBe(false);
+    },
+  );
   it('accepts a well-formed level', () => {
     expect(
       structuralErrors(5, [
@@ -98,18 +141,16 @@ describe('structural validation (§8.4)', () => {
     const errors = structuralErrors(MAX_PATH_CELLS + 3, [
       arrow('a', tooLong, 'R'),
     ]);
-    expect(
-      errors.some(e => e.includes(`outside 1..${MAX_PATH_CELLS}`)),
-    ).toBe(true);
+    expect(errors.some(e => e.includes(`outside 1..${MAX_PATH_CELLS}`))).toBe(
+      true,
+    );
 
     // ...and accepts one exactly at the limit, so the boundary is pinned both ways.
     const atLimit: [number, number][] = Array.from(
       {length: MAX_PATH_CELLS},
       (_, i) => [i, 0],
     );
-    const ok = structuralErrors(MAX_PATH_CELLS + 3, [
-      arrow('a', atLimit, 'R'),
-    ]);
+    const ok = structuralErrors(MAX_PATH_CELLS + 3, [arrow('a', atLimit, 'R')]);
     expect(ok.some(e => e.includes('outside'))).toBe(false);
   });
 });

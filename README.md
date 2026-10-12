@@ -17,6 +17,7 @@ their bodies into empty lanes, and checks every orientation change for solvabili
 It never repairs a puzzle by breaking arrows into tiny pieces.
 
 - Exactly 20 unique mazes, from 16×16 to 40×40.
+- No arrowhead points toward its own body anywhere along its forward exit lane.
 - Every arrow has 8–64 cells; board averages are about 28–42 cells per arrow.
 - At least 94% board coverage, with many turns, nested lanes and interlocking exits.
 - Minimum dependency depths: 3 on level 1, 5 on level 2, 8 on levels 3–9,
