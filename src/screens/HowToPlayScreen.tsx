@@ -12,6 +12,7 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Svg, {G, Path} from 'react-native-svg';
 import type {RootStackParamList} from '../navigation/types';
+import {MenuBackdrop} from '../components/MenuBackdrop';
 import {menuTheme as theme} from '../theme/menuTheme';
 import {type as typography} from '../theme/menuTypography';
 import {Button} from '../components/Button';
@@ -114,7 +115,19 @@ export function HowToPlayScreen({navigation}: Props): React.JSX.Element {
       <ScrollView contentContainerStyle={styles.lessonScroll}>
         <Panel style={styles.card}>
           <Text style={styles.step}>{item.key + 1} / 5</Text>
-          <View style={styles.illustration}>
+          <View
+            style={[
+              styles.illustration,
+              {
+                backgroundColor: [
+                  theme.pastel.sky,
+                  theme.pastel.lavender,
+                  theme.pastel.peach,
+                  theme.pastel.mint,
+                  theme.pastel.yellow,
+                ][item.key],
+              },
+            ]}>
             <MiniBoard arrows={item.board} size={Math.min(width - 96, 220)} />
             {item.key === 0 && (
               <View style={styles.tapCue}>
@@ -131,6 +144,7 @@ export function HowToPlayScreen({navigation}: Props): React.JSX.Element {
 
   return (
     <SafeAreaView style={styles.root}>
+      <MenuBackdrop />
       <MenuHeader title="How to play" onBack={() => navigation.goBack()} />
 
       <FlatList
@@ -241,7 +255,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     elevation: 0,
     shadowOpacity: 0,
-    backgroundColor: theme.bg.base,
+    backgroundColor: theme.bg.panel,
     alignItems: 'center',
     gap: theme.space.lg,
   },

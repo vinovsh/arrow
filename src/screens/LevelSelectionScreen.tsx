@@ -9,6 +9,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {RootStackParamList} from '../navigation/types';
+import {MenuBackdrop} from '../components/MenuBackdrop';
 import {menuTheme as theme} from '../theme/menuTheme';
 import {type as typography} from '../theme/menuTypography';
 import {MenuHeader} from '../components/MenuHeader';
@@ -26,6 +27,7 @@ export function LevelSelectionScreen({navigation}: Props): React.JSX.Element {
   const next = Math.min(save.currentLevel, TOTAL_LEVELS);
   return (
     <SafeAreaView style={styles.root}>
+      <MenuBackdrop />
       <MenuHeader
         title="Levels"
         subtitle="Your next challenge"
@@ -52,6 +54,15 @@ export function LevelSelectionScreen({navigation}: Props): React.JSX.Element {
               style={[
                 styles.tile,
                 {width: tile, minHeight: Math.max(76, tile + 8)},
+                unlocked &&
+                  !current && {
+                    backgroundColor: [
+                      theme.pastel.sky,
+                      theme.pastel.lavender,
+                      theme.pastel.mint,
+                      theme.pastel.peach,
+                    ][(item.id - 1) % 4],
+                  },
                 !unlocked && styles.locked,
                 current && styles.current,
               ]}>
@@ -68,7 +79,11 @@ export function LevelSelectionScreen({navigation}: Props): React.JSX.Element {
               ) : (
                 <Text style={styles.lock}>🔒</Text>
               )}
-              {item.id === 1 && <Text style={styles.tutorial}>Tutorial</Text>}
+              {item.id === 1 && (
+                <Text style={[styles.tutorial, current && styles.white]}>
+                  Tutorial
+                </Text>
+              )}
             </ClickPressable>
           );
         }}

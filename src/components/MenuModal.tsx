@@ -1,6 +1,7 @@
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {MenuBackdrop} from './MenuBackdrop';
 import {menuTheme as theme} from '../theme/menuTheme';
 /** Opaque menu surface, safe areas and vertical scrolling for short displays. */
 export function MenuModal({
@@ -10,6 +11,7 @@ export function MenuModal({
 }): React.JSX.Element {
   return (
     <View style={styles.overlay}>
+      <MenuBackdrop />
       <SafeAreaView style={styles.safe}>
         <ScrollView
           contentContainerStyle={styles.scroll}

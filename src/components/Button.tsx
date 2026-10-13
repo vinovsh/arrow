@@ -26,6 +26,7 @@ interface Props {
   onPress: () => void;
   variant?: ButtonVariant;
   icon?: React.ReactNode;
+  trailingIcon?: React.ReactNode;
   disabled?: boolean;
   /** §10.2 — only primary CTAs glow. Headers and list rows never do. */
   glow?: boolean;
@@ -42,6 +43,7 @@ export function Button({
   onPress,
   variant = 'primary',
   icon,
+  trailingIcon,
   disabled = false,
   glow = true,
   style,
@@ -93,6 +95,7 @@ export function Button({
             glow && variant !== 'neutral' && styles.glow,
             disabled && styles.disabled,
           ]}>
+          {filled && <View pointerEvents="none" style={styles.sheen} />}
           {typeof icon === 'string' ? (
             <Text style={[styles.icon, filled && styles.playText]}>{icon}</Text>
           ) : icon ? (
@@ -109,7 +112,9 @@ export function Button({
           </Text>
           {/* A gradient alone is a colour signal; the icon and the pressed scale make
               the control legible without relying on colour (§10.2). */}
-          <View style={styles.spacer} />
+          {trailingIcon && (
+            <View style={styles.trailingIcon}>{trailingIcon}</View>
+          )}
         </LinearGradient>
       </Pressable>
     </Animated.View>
@@ -126,6 +131,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: theme.space.lg,
+  },
+  sheen: {
+    position: 'absolute',
+    top: 3,
+    left: 8,
+    right: 8,
+    height: 18,
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    opacity: 0.12,
   },
   compact: {
     minHeight: 48,
@@ -145,5 +160,5 @@ const styles = StyleSheet.create({
   label: {...typography.ui(17), color: theme.text.primary, flexShrink: 1},
   playText: {color: theme.bg.panel},
   vectorIcon: {marginRight: theme.space.sm},
-  spacer: {width: 0},
+  trailingIcon: {marginLeft: theme.space.sm},
 });

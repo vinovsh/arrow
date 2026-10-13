@@ -3,6 +3,7 @@ import {StatusBar, StyleSheet, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {RootStackParamList} from '../navigation/types';
+import {MenuBackdrop} from '../components/MenuBackdrop';
 import {menuTheme as theme} from '../theme/menuTheme';
 import {type as typography} from '../theme/menuTypography';
 import {ArrowEmblem} from '../components/MenuArt';
@@ -45,7 +46,8 @@ export function SplashScreen({navigation}: Props): React.JSX.Element {
   }, [navigation]);
   return (
     <SafeAreaView style={styles.root}>
-      <StatusBar barStyle="dark-content" backgroundColor={theme.bg.panel} />
+      <MenuBackdrop />
+      <StatusBar barStyle="dark-content" backgroundColor={theme.bg.base} />
       <View style={styles.brand}>
         <ArrowEmblem size={190} />
         <Text style={styles.title}>Arrow Escape</Text>
@@ -61,7 +63,7 @@ export function SplashScreen({navigation}: Props): React.JSX.Element {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: theme.bg.panel,
+    backgroundColor: theme.bg.base,
     justifyContent: 'center',
     alignItems: 'center',
   },

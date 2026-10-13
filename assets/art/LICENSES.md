@@ -20,3 +20,10 @@ provenance and licence are the owner's to record here before release.
 The folded blue arrow emblem, confetti accents, pause bars and menu line icons
 are original code-generated SVGs in `MenuArt.tsx` and `AppIcon.tsx`. Emoji use the
 device system font. No competitor assets or extracted storyboard bitmap crops.
+
+## Profile portraits (2026-10-13)
+
+`assets/art/avatars/*.png` are AI-generated 3D portraits created with built-in
+ImageGen for this project from the user-approved leaderboard design. Prompts and
+usage are recorded in `avatars/README.md`. Original PNG transparency is preserved.
+The cloud and sparkle backdrop is original SVG artwork in `MenuBackdrop.tsx`.

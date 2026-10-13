@@ -12,6 +12,7 @@ import {ClickPressable} from '../components/ClickPressable';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import type {RootStackParamList} from '../navigation/types';
+import {MenuBackdrop} from '../components/MenuBackdrop';
 import {menuTheme as theme} from '../theme/menuTheme';
 import {type as typography} from '../theme/menuTypography';
 import {Panel} from '../components/Panel';
@@ -38,11 +39,12 @@ export function SettingsScreen({navigation}: Props): React.JSX.Element {
 
   return (
     <SafeAreaView style={styles.root}>
+      <MenuBackdrop />
       <MenuHeader title="Settings" onBack={() => navigation.goBack()} />
 
       <ScrollView contentContainerStyle={styles.body}>
         <Text style={styles.sectionLabel}>Preferences</Text>
-        <Panel>
+        <Panel style={{backgroundColor: theme.pastel.mint}}>
           <Toggle
             icon={<AppIcon name="sound" color={theme.brand.tagline} />}
             label="Sound"
@@ -224,7 +226,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   body: {padding: theme.space.md, gap: theme.space.md},
-  group: {marginTop: theme.space.xs},
+  group: {backgroundColor: theme.pastel.lavender, marginTop: theme.space.xs},
   sectionLabel: {
     ...typography.ui(11),
     color: theme.brand.tagline,

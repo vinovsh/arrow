@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import {ClickPressable} from './ClickPressable';
+import {MenuBackdrop} from './MenuBackdrop';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated, {
   cancelAnimation,
@@ -241,6 +242,7 @@ export function LevelCompleteOverlay({
         style={StyleSheet.absoluteFill}
       />
       <Hills />
+      <MenuBackdrop />
       <Confetti startDelayMs={350} />
 
       <ScrollView
@@ -759,7 +761,7 @@ const styles = StyleSheet.create({
   card: {
     maxWidth: 380,
     width: '100%',
-    backgroundColor: theme.reward.card,
+    backgroundColor: theme.pastel.mint,
     borderColor: theme.reward.cardBorder,
     borderWidth: 1,
     borderRadius: theme.radius.lg,

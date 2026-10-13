@@ -9,6 +9,7 @@ import Svg, {
   Circle,
   Rect,
 } from 'react-native-svg';
+import {ProfileAvatar} from './ProfileAvatar';
 import {menuTheme as theme} from '../theme/menuTheme';
 
 /** Original folded arrow emblem, rendered sharply at every size. */
@@ -85,7 +86,9 @@ export function MenuHero({
           <Circle cx={104} cy={105} r={3} fill="#27A8FB" />
         </Svg>
       )}
-      {kind === 'pause' ? (
+      {kind === 'happy' ? (
+        <ProfileAvatar kind="player" size={size} />
+      ) : kind === 'pause' ? (
         <Svg width={size * 0.7} height={size * 0.7} viewBox="0 0 100 100">
           <Rect
             x={25}
@@ -114,5 +117,5 @@ export function MenuHero({
 }
 const styles = StyleSheet.create({
   hero: {alignItems: 'center', justifyContent: 'center'},
-  halo: {position: 'absolute', backgroundColor: theme.bg.panelAlt},
+  halo: {position: 'absolute', backgroundColor: theme.pastel.yellow},
 });

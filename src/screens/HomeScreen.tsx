@@ -3,6 +3,7 @@ import {ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {RootStackParamList} from '../navigation/types';
+import {MenuBackdrop} from '../components/MenuBackdrop';
 import {menuTheme as theme} from '../theme/menuTheme';
 import {type as typography} from '../theme/menuTypography';
 import {Button} from '../components/Button';
@@ -35,6 +36,7 @@ export function HomeScreen({navigation}: Props): React.JSX.Element {
   }, [level]);
   return (
     <SafeAreaView style={styles.root}>
+      <MenuBackdrop />
       <StatusBar barStyle="dark-content" backgroundColor={theme.bg.base} />
       <ScrollView
         contentContainerStyle={styles.scroll}
@@ -160,7 +162,12 @@ const styles = StyleSheet.create({
   full: {alignSelf: 'stretch'},
   menuRow: {flexDirection: 'row', gap: 12, alignSelf: 'stretch'},
   half: {flex: 1},
-  progressCard: {alignSelf: 'stretch', padding: 18, gap: 12},
+  progressCard: {
+    backgroundColor: theme.pastel.mint,
+    alignSelf: 'stretch',
+    padding: 18,
+    gap: 12,
+  },
   progressText: {...typography.body(14)},
   track: {
     height: 8,
@@ -177,7 +184,16 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   score: {...typography.ui(17)},
-  league: {flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 44},
+  league: {
+    backgroundColor: theme.pastel.lavender,
+    borderRadius: 18,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    minHeight: 44,
+  },
   leagueText: {...typography.body(13)},
   help: {flexDirection: 'row', gap: 7, alignItems: 'center', minHeight: 44},
   helpText: {...typography.ui(14), color: theme.brand.tagline},

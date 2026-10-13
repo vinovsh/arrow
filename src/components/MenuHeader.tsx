@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ClickPressable} from './ClickPressable';
+import {ProfileAvatar} from './ProfileAvatar';
 import {menuTheme as theme} from '../theme/menuTheme';
 import {type as typography} from '../theme/menuTypography';
 export function MenuHeader({
@@ -27,7 +28,7 @@ export function MenuHeader({
         </Text>
         {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
       </View>
-      <View style={styles.back} />
+      <ProfileAvatar kind="player" size={44} />
     </View>
   );
 }
@@ -38,7 +39,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     minHeight: 76,
   },
-  back: {width: 44, height: 44, alignItems: 'center', justifyContent: 'center'},
+  back: {
+    backgroundColor: theme.bg.panel,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: theme.bg.border,
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   glyph: {fontSize: 36, color: theme.text.primary, lineHeight: 40},
   titles: {flex: 1, alignItems: 'center'},
   title: {...typography.ui(23)},
