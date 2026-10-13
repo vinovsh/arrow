@@ -1,17 +1,24 @@
 import React from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {ClickPressable} from './ClickPressable';
-import {theme} from '../theme/theme';
+import {menuTheme as theme} from '../theme/menuTheme';
+import {type as typography} from '../theme/menuTypography';
+import {AppIcon} from './AppIcon';
 import {Haptics} from '../haptics/HapticService';
 
 interface Props {
   onPress: () => void;
-  /** §5.4 / §5.5 — visible only while scale > 1.01. */
+  /** Persistent footer control; modal owners can hide or disable it. */
   visible: boolean;
+  disabled?: boolean;
 }
 
 /** Springs the board back to fit and re-centres it (§5.5). */
-export function FitButton({onPress, visible}: Props): React.JSX.Element | null {
+export function FitButton({
+  onPress,
+  visible,
+  disabled = false,
+}: Props): React.JSX.Element | null {
   if (!visible) {
     return null;
   }
@@ -19,28 +26,31 @@ export function FitButton({onPress, visible}: Props): React.JSX.Element | null {
     <ClickPressable
       accessibilityRole="button"
       accessibilityLabel="Fit board to screen"
-      style={styles.button}
+      disabled={disabled}
+      style={[styles.button, disabled && styles.disabled]}
       onPress={() => {
         Haptics.selection();
         onPress();
       }}>
-      <Text style={styles.glyph}>⛶</Text>
+      <AppIcon name="fit" size={28} color={theme.brand.tagline} />
+      <Text style={styles.label}>Fit</Text>
     </ClickPressable>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    position: 'absolute',
-    right: theme.space.md,
-    top: theme.space.sm,
-    width: 40,
-    height: 40,
-    borderRadius: theme.radius.md,
-    backgroundColor: theme.board.chip,
+    minHeight: 56,
+    paddingHorizontal: 22,
+    borderRadius: 20,
+    backgroundColor: theme.bg.panel,
+    borderWidth: 1,
+    borderColor: theme.bg.border,
+    flexDirection: 'row',
+    gap: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 5,
   },
-  glyph: {fontSize: 18, color: theme.board.chipText},
+  label: {...typography.ui(15)},
+  disabled: {opacity: 0.4},
 });

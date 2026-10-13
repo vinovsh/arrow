@@ -11,6 +11,9 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import type {RootStackParamList} from '../navigation/types';
 import {theme} from '../theme/theme';
+import {menuTheme} from '../theme/menuTheme';
+import {MenuBackdrop} from '../components/MenuBackdrop';
+import {LevelProgress} from '../components/LevelProgress';
 import {type as typography} from '../theme/typography';
 import {GameHeader, GAME_HEADER_HEIGHT} from '../components/GameHeader';
 import {HintPill} from '../components/HintPill';
@@ -59,9 +62,9 @@ import {trace} from '../utils/tapTrace';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Game'>;
 
-/** §5.4 — 56dp header, 72dp footer, and the board takes what is left. */
+/** Reserve space for controls and progress; the gesture viewport takes the rest. */
 const HEADER_HEIGHT = GAME_HEADER_HEIGHT;
-const FOOTER_HEIGHT = 72;
+const FOOTER_HEIGHT = 104;
 const COACH_HEIGHT = 56;
 /** §9.3 — the blocker outline holds for 300ms. */
 const BLOCKER_HIGHLIGHT_MS = 300;
@@ -111,7 +114,6 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
     hintsRef.current.remaining,
   );
   const [renderScale, setRenderScale] = useState(1);
-  const [zoomed, setZoomed] = useState(false);
 
   const [paused, setPaused] = useState(false);
   const [hintModal, setHintModal] = useState(false);
@@ -588,14 +590,14 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
         styles.root,
         {paddingTop: insets.top, paddingBottom: insets.bottom},
       ]}>
-      {/* The app's bar is light-on-dark; this screen is the one white page in it, so
-          it re-declares the bar for as long as it is mounted. */}
+      {/* Match Android system chrome to the pastel gameplay surface. */}
       <StatusBar
         barStyle="dark-content"
-        backgroundColor={theme.board.bg}
+        backgroundColor={menuTheme.bg.base}
         translucent={false}
       />
 
+      <MenuBackdrop />
       <GameHeader
         key={level.id}
         levelId={level.id}
@@ -611,6 +613,14 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
       />
 
       <View style={styles.coachSlot}>
+        {(!coachMark || level.id === 1) && (
+          <LevelProgress
+            cleared={
+              visuals.filter(visual => visual.state === 'escaped').length
+            }
+            total={level.arrows.length}
+          />
+        )}
         {coachMark && level.id !== 1 && (
           <CoachMark
             mark={coachMark}
@@ -622,10 +632,7 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
         )}
       </View>
       <View style={styles.boardArea}>
-        <FitButton
-          visible={zoomed}
-          onPress={() => viewportRef.current?.reset()}
-        />
+        <View pointerEvents="none" style={styles.boardCard} />
         <BoardViewport
           ref={viewportRef}
           boardSize={metrics.size}
@@ -635,7 +642,6 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
           locked={modalOpen}
           onScaleSettled={scale => {
             setRenderScale(scale);
-            setZoomed(scale > 1.01);
             setLiveScale(scale);
           }}>
           <View style={styles.boardStack}>
@@ -711,19 +717,20 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
       </View>
 
       <View style={styles.footer}>
-        <HintPill
-          remaining={hintsRemaining}
-          pulsing={hintPillPulsing}
-          disabled={modalOpen}
-          onPress={() => setHintModal(true)}
-        />
-        <ClickPressable
-          onPress={restart}
-          accessibilityRole="button"
-          accessibilityLabel="Restart level"
-          style={styles.restart}>
-          <Text style={styles.restartGlyph}>↻</Text>
-        </ClickPressable>
+        <View style={styles.footerActions}>
+          <HintPill
+            remaining={hintsRemaining}
+            pulsing={hintPillPulsing}
+            disabled={modalOpen}
+            onPress={() => setHintModal(true)}
+          />
+          <FitButton
+            visible
+            disabled={modalOpen}
+            onPress={() => viewportRef.current?.reset()}
+          />
+        </View>
+        <Text style={styles.footerTip}>Tap an arrow to let it glide away</Text>
       </View>
 
       <HintModal
@@ -852,19 +859,26 @@ export function GameScreen({route, navigation}: Props): React.JSX.Element {
   );
 }
 
-/**
- * §10.2 — the game screen is the one light surface in the app.
- *
- * The board is a drawing on a page, so the page has to be a page: a dense maze of
- * navy lines on `bg.base` is a photographic negative of itself, and the white gap
- * between two neighbouring paths — the only thing separating them now that the casing
- * is gone — cannot exist on a dark ground. Home, Level Select and Settings are
- * unchanged and still dark; this screen owns `theme.board` and nothing else does.
- */
+/** Pastel controls surround an opaque white play surface; gestures keep their viewport coordinates. */
 const styles = StyleSheet.create({
-  root: {flex: 1, backgroundColor: theme.bg.base},
-  coachSlot: {height: COACH_HEIGHT, backgroundColor: theme.board.bg},
+  root: {flex: 1, backgroundColor: menuTheme.bg.base},
+  coachSlot: {
+    height: COACH_HEIGHT,
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+  },
   boardArea: {flex: 1, alignItems: 'center', justifyContent: 'center'},
+  boardCard: {
+    position: 'absolute',
+    top: 4,
+    bottom: 4,
+    left: 12,
+    right: 12,
+    borderRadius: 28,
+    backgroundColor: theme.board.bg,
+    borderWidth: 1,
+    borderColor: menuTheme.bg.border,
+  },
   // Sized by the board, but never clipping it: the exit animation lives here.
   boardStack: {
     overflow: 'visible',
@@ -873,20 +887,18 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: FOOTER_HEIGHT,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+  },
+  footerActions: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: theme.space.xl,
+    gap: 24,
   },
-  restart: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: theme.board.chip,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  restartGlyph: {fontSize: 20, color: theme.board.chipText},
+  footerTip: {...typography.body(12), color: menuTheme.text.dim},
   chevron: {
     position: 'absolute',
     right: 4,

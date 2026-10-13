@@ -10,8 +10,8 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import {theme} from '../theme/theme';
-import {type as typography} from '../theme/typography';
+import {menuTheme as theme} from '../theme/menuTheme';
+import {type as typography} from '../theme/menuTypography';
 import {Haptics} from '../haptics/HapticService';
 
 interface Props {
@@ -59,7 +59,7 @@ export function HintPill({
           onPress();
         }}>
         <LinearGradient
-          colors={[...theme.button.hint]}
+          colors={[theme.bg.panel, theme.bg.panel]}
           start={{x: 0, y: 0}}
           end={{x: 0, y: 1}}
           style={[
@@ -67,7 +67,7 @@ export function HintPill({
             (disabled || remaining === 0) && styles.disabled,
           ]}>
           <Text style={styles.icon}>💡</Text>
-          <Text style={styles.label}>HINT</Text>
+          <Text style={styles.label}>Hint</Text>
           <View style={styles.badge}>
             <Text style={styles.badgeText}>{remaining}</Text>
           </View>
@@ -79,24 +79,31 @@ export function HintPill({
 
 const styles = StyleSheet.create({
   pill: {
-    height: 48,
+    minHeight: 56,
     paddingHorizontal: theme.space.lg,
-    borderRadius: theme.radius.pill,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: theme.bg.border,
     flexDirection: 'row',
     alignItems: 'center',
     gap: theme.space.sm,
   },
   disabled: {opacity: 0.4},
-  icon: {fontSize: 16},
-  label: {...typography.ui(15), color: '#2A1B00', letterSpacing: 1},
+  icon: {fontSize: 27},
+  label: {...typography.ui(15), color: theme.text.primary},
   badge: {
-    minWidth: 22,
-    height: 22,
+    position: 'absolute',
+    right: -6,
+    top: -8,
+    borderWidth: 2,
+    borderColor: theme.bg.panel,
+    minWidth: 28,
+    height: 28,
     paddingHorizontal: 5,
-    borderRadius: 11,
+    borderRadius: 14,
     backgroundColor: theme.state.badge,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  badgeText: {...typography.ui(13), color: '#04240F'},
+  badgeText: {...typography.ui(13), color: theme.bg.panel},
 });

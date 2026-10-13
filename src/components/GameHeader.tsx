@@ -1,4 +1,4 @@
-﻿import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Animated, {
   cancelAnimation,
@@ -9,13 +9,13 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import Svg, {Path} from 'react-native-svg';
-import {theme} from '../theme/theme';
-import {type as typography} from '../theme/typography';
+import {menuTheme as theme} from '../theme/menuTheme';
+import {type as typography} from '../theme/menuTypography';
 import {Hearts} from './Hearts';
 import {AppIcon} from './AppIcon';
 import {ClickPressable} from './ClickPressable';
 
-export const GAME_HEADER_HEIGHT = 96;
+export const GAME_HEADER_HEIGHT = 108;
 interface Props {
   levelId: number;
   band: string;
@@ -80,7 +80,7 @@ export function GameHeader({
             <Path
               d="M15 5L8 12L15 19"
               fill="none"
-              stroke={theme.board.chrome}
+              stroke={theme.brand.tagline}
               strokeWidth={2.2}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -96,7 +96,7 @@ export function GameHeader({
           style={styles.control}
           accessibilityRole="button"
           accessibilityLabel="Pause">
-          <AppIcon name="settings" color={theme.board.chrome} size={23} />
+          <AppIcon name="pause" color={theme.brand.tagline} size={23} />
         </ClickPressable>
       </Animated.View>
       <View style={styles.statusRow}>
@@ -108,15 +108,17 @@ export function GameHeader({
             <Svg width={15} height={15} viewBox="0 0 24 24" accessible={false}>
               <Path
                 d="M4 16L13 7H7V3H21V17H17V11L8 20Z"
-                fill={theme.board.chipText}
+                fill={theme.text.secondary}
               />
             </Svg>
-            <Text style={styles.count}>{remaining}</Text>
+            <Text style={styles.count} numberOfLines={1}>
+              {remaining} left
+            </Text>
           </Animated.View>
         </Animated.View>
         <Hearts hearts={hearts} visible />
         <Animated.View style={[styles.side, styles.right, statusStyle]}>
-          <View style={styles.chip}>
+          <View style={[styles.chip, styles.difficulty]}>
             <Text style={styles.band} numberOfLines={1}>
               {band}
             </Text>
@@ -128,21 +130,25 @@ export function GameHeader({
 }
 const styles = StyleSheet.create({
   root: {height: GAME_HEADER_HEIGHT, paddingHorizontal: theme.space.md},
-  titleRow: {height: 50, flexDirection: 'row', alignItems: 'center'},
+  titleRow: {height: 58, flexDirection: 'row', alignItems: 'center'},
   control: {
     width: 44,
     height: 44,
+    borderRadius: 16,
+    backgroundColor: theme.bg.panel,
+    borderWidth: 1,
+    borderColor: theme.bg.border,
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
-    ...typography.ui(16),
+    ...typography.ui(23),
     flex: 1,
     textAlign: 'center',
-    color: theme.board.title,
+    color: theme.text.primary,
   },
   statusRow: {
-    height: 40,
+    height: 46,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -155,14 +161,16 @@ const styles = StyleSheet.create({
     gap: 5,
     paddingHorizontal: 9,
     paddingVertical: 5,
-    borderRadius: 10,
-    backgroundColor: theme.board.chip,
+    borderRadius: 16,
+    backgroundColor: theme.pastel.sky,
     maxWidth: '100%',
   },
+  difficulty: {backgroundColor: theme.pastel.lavender},
   count: {
     ...typography.ui(12),
-    color: theme.board.chipText,
+    flexShrink: 1,
+    color: theme.text.secondary,
     fontVariant: ['tabular-nums'],
   },
-  band: {...typography.ui(11), color: theme.board.chipText, flexShrink: 1},
+  band: {...typography.ui(11), color: theme.text.secondary, flexShrink: 1},
 });

@@ -1,4 +1,4 @@
-﻿import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {StyleSheet} from 'react-native';
 import Animated, {
   cancelAnimation,
@@ -8,7 +8,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import Svg, {Path} from 'react-native-svg';
+import Svg, {Defs, LinearGradient, Stop, Path} from 'react-native-svg';
 import {theme} from '../theme/theme';
 import {MAX_HEARTS} from '../game/engine/GameEngine';
 
@@ -79,10 +79,17 @@ function Heart({
   }));
   return (
     <Animated.View style={animated}>
-      <Svg width={24} height={24} viewBox="0 0 24 24" accessible={false}>
+      <Svg width={28} height={28} viewBox="0 0 24 24" accessible={false}>
+        <Defs>
+          <LinearGradient id="heartFill" x1="0" y1="0" x2="0" y2="1">
+            <Stop offset="0" stopColor="#FF94B4" />
+            <Stop offset="0.5" stopColor="#FF587F" />
+            <Stop offset="1" stopColor="#EB3265" />
+          </LinearGradient>
+        </Defs>
         <Path
           d="M12 21S2 15 2 8.5C2 3.2 9 2 12 7C15 2 22 3.2 22 8.5C22 15 12 21 12 21Z"
-          fill={full ? theme.state.heart : theme.state.heartEmpty}
+          fill={full ? 'url(#heartFill)' : theme.state.heartEmpty}
         />
         {full && (
           <Path

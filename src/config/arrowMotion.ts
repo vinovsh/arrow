@@ -16,7 +16,7 @@ export const ARROW_MOTION = {
   /**
    * The exit flight, §9.2.
    *
-   * A quick pull with enough time to read the unwinding body, matching the video.
+   * A slower glide so the player can follow the unwinding body.
    */
   escape: {
     /** Shortest flight: an arrow one hop from the edge. Lower = faster. */
@@ -31,7 +31,7 @@ export const ARROW_MOTION = {
      * short and long flights intact, which the two bounds above do not if you move
      * only one of them.
      */
-    speedMultiplier: 1,
+    speedMultiplier: 0.65,
   },
 
   /** The blocked-tap bump, §9.3 — the arrow that cannot move shakes in place. */

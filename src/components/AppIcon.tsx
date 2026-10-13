@@ -3,6 +3,8 @@ import Svg, {Circle, Path, Rect} from 'react-native-svg';
 import {theme} from '../theme/theme';
 
 type IconName =
+  | 'pause'
+  | 'fit'
   | 'play'
   | 'levels'
   | 'settings'
@@ -39,6 +41,15 @@ export function AppIcon({
       strokeLinecap="round"
       strokeLinejoin="round"
       accessible={false}>
+      {name === 'pause' && (
+        <>
+          <Rect x={6} y={4} width={4} height={16} rx={2} fill={color} />
+          <Rect x={14} y={4} width={4} height={16} rx={2} fill={color} />
+        </>
+      )}
+      {name === 'fit' && (
+        <Path d="M9 4H5Q4 4 4 5V9 M15 4H19Q20 4 20 5V9 M4 15V19Q4 20 5 20H9 M20 15V19Q20 20 19 20H15" />
+      )}
       {name === 'play' && (
         <Path
           d="M8 5.5Q6 4.5 6 7V17Q6 19.5 8 18.5L18 13Q20 12 18 11Z"

@@ -81,11 +81,11 @@ export const theme = {
     blocked: '#FF3B2D',
     /** §9.3 — the arrow standing in its way, muted so the two read as a pair. */
     blocker: '#A8342B',
-    dot: '#DED4EA',
+    dot: '#DDEFFA',
     title: '#382650',
-    chip: '#EEE5FA',
-    chipText: '#756286',
-    chrome: '#8961CB',
+    chip: '#DDF5FF',
+    chipText: '#516A90',
+    chrome: '#0785F5',
   },
 
   /**
@@ -122,7 +122,7 @@ export const theme = {
     card: 'rgba(255,255,255,0.92)',
     cardBorder: '#E4D9F2',
     divider: '#E4D9F2',
-    title: '#382650',
+    title: '#102451',
     subtitle: '#756286',
     label: '#756286',
     gold: '#FFC53D',
