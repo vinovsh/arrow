@@ -304,12 +304,21 @@ export function LevelCompleteOverlay({
           </Animated.View>
 
           <View style={styles.buttons}>
-            <NextButton onPress={onNext} disabled={!ready} />
+            <NextButton
+              onPress={() => {
+                finish();
+                onNext();
+              }}
+              disabled={false}
+            />
             <ClickPressable
-              onPress={ready ? onHome : finish}
+              onPress={() => {
+                finish();
+                onHome();
+              }}
               accessibilityRole="button"
               accessibilityLabel="Home"
-              style={[styles.home, !ready && styles.dimmed]}>
+              style={styles.home}>
               <HomeIcon />
               <Text style={styles.homeLabel}>Home</Text>
             </ClickPressable>
@@ -540,7 +549,7 @@ function NextButton({
     <Animated.View style={[styles.nextWrap, style]}>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="Next Level"
+        accessibilityLabel="Continue"
         accessibilityState={{disabled}}
         disabled={disabled}
         onPressIn={() => {

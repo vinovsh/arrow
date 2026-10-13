@@ -110,3 +110,12 @@ separate menu palette preserves gameplay colors and geometry. Menus use opaque
 surfaces, navy text, blue main buttons and numbered level tiles. Home shows actual
 progress and best score. Help has five working Next steps. Dialogs scroll on short
 screens; reward and ranking animations, ad behavior and saved progress are retained.
+
+## Minimal leaderboard and immediate navigation (2026-10-13)
+
+Leaderboard shows rank, final points and five nearby players, including You.
+Results scroll while Next Level and Home stay outside the scrolling area. The
+large artwork, seasonal banners and timed ranking reveal have been removed.
+Next Level is enabled immediately and guarded against double taps. Reward-screen
+Continue also advances on its first tap while finishing its animation. Score and
+ranking calculations are unchanged.
