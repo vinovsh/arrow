@@ -1,5 +1,9 @@
 # Arrow Escape — Product & Technical Requirements
 
+> Arrow-out sound approval (2026-10-13): use option 4, Glassy glide, a 260ms
+> original sound reproduced exactly from the approved audition master. This
+> supersedes the older movement-sound descriptions below.
+
 > Approved UI revision (2026-10-12): menus and reward screens use the white-and-blue
 > storyboard implemented in `src/theme/menuTheme.ts`. Gameplay screen, its palette
 > and level geometry stay unchanged. Launch uses the folded blue arrow emblem;

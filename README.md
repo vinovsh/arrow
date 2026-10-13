@@ -72,8 +72,8 @@ a completion emoji celebrates before the existing reward screen. Captions vary b
 level and result: “You got it!”, “Great job!”, “Impressive!” or “Genius!”.
 Restart resets the halfway milestone. Reduced-motion settings show a static reaction.
 
-Successful moves use a new original 235ms silky glide: rounded onset, airy zip and
-warm falling tone. Pitch varies subtly across short, medium and long arrows. Reanimated drives rope-like
+Successful moves use the approved option 4, a 260ms glassy glide: bright, smooth
+falling tones with soft edges. Pitch varies subtly across short, medium and long arrows. Reanimated drives rope-like
 exit paths on the UI thread, preserving bends while the tail follows the head.
 Hint and blocked states use solid color changes, with no translucent underlays.
 Pinch-to-zoom, pan and fit remain available for precise taps on dense boards.
@@ -119,3 +119,10 @@ large artwork, seasonal banners and timed ranking reveal have been removed.
 Next Level is enabled immediately and guarded against double taps. Reward-screen
 Continue also advances on its first tap while finishing its animation. Score and
 ranking calculations are unchanged.
+
+## Approved arrow-out sound (2026-10-13)
+
+The user selected Glassy glide (option 4). The movement resource is generated from
+the exact audition master, encoded as mono 44.1kHz AAC. The browser review embeds
+the same resource. Existing sound settings, subtle pitch variation and voice limits
+remain in effect.
