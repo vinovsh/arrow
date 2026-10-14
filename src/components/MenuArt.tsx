@@ -1,49 +1,19 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import Svg, {
-  Defs,
-  LinearGradient,
-  Path,
-  Stop,
-  G,
-  Circle,
-  Rect,
-} from 'react-native-svg';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import Svg, {Path, G, Circle, Rect} from 'react-native-svg';
 import {ProfileAvatar} from './ProfileAvatar';
 import {menuTheme as theme} from '../theme/menuTheme';
 
-/** Original folded arrow emblem, rendered sharply at every size. */
+/** Approved Happy Arrow logo shared with the Android launcher. */
 export function ArrowEmblem({size = 120}: {size?: number}): React.JSX.Element {
   return (
-    <Svg width={size} height={size} viewBox="0 0 160 160" accessible={false}>
-      <Defs>
-        <LinearGradient id="emblemFront" x1="0" y1="0" x2="1" y2="1">
-          <Stop offset="0" stopColor="#61DDFF" />
-          <Stop offset="0.5" stopColor="#13A5FC" />
-          <Stop offset="1" stopColor="#0665CE" />
-        </LinearGradient>
-        <LinearGradient id="emblemFold" x1="0" y1="0" x2="1" y2="1">
-          <Stop offset="0" stopColor="#03498D" />
-          <Stop offset="1" stopColor="#22BDFF" />
-        </LinearGradient>
-      </Defs>
-      <Path
-        d="M34 145 C85 153 116 129 102 104 C91 84 49 84 47 66 C43 43 84 29 112 33 L111 12 L149 43 L111 75 L112 53 C87 52 63 64 72 76 C85 89 128 96 127 118 C127 145 87 156 34 145Z"
-        fill="url(#emblemFront)"
-      />
-      <Path
-        d="M47 66 C50 84 93 85 102 104 C109 117 102 129 82 135 C102 116 48 109 37 91 C27 76 32 61 47 51Z"
-        fill="url(#emblemFold)"
-      />
-      <Path
-        d="M40 54 C54 33 84 27 110 33 M117 25 L137 43 M48 137 C71 143 97 137 108 130"
-        fill="none"
-        stroke="#B5EFFF"
-        strokeWidth={3}
-        strokeLinecap="round"
-        opacity={0.65}
-      />
-    </Svg>
+    <Image
+      source={require('../../assets/art/happy-arrow.png')}
+      resizeMode="contain"
+      resizeMethod="resize"
+      accessible={false}
+      style={{width: size, height: size, borderRadius: size * 0.24}}
+    />
   );
 }
 

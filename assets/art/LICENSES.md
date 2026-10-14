@@ -27,3 +27,16 @@ device system font. No competitor assets or extracted storyboard bitmap crops.
 ImageGen for this project from the user-approved leaderboard design. Prompts and
 usage are recorded in `avatars/README.md`. Original PNG transparency is preserved.
 The cloud and sparkle backdrop is original SVG artwork in `MenuBackdrop.tsx`.
+
+## Happy Arrow branding
+
+`happy-arrow.png` and the identical Android `drawable-nodpi/happy_arrow_logo.png`
+are generated with built-in ImageGen from the user-approved Happy Arrow (option 1)
+storyboard. The original PNG is copied without bitmap edits. It replaces the folded
+emblem on Home/Splash and the previous Android launcher art. Adaptive icons use
+platform masking and 22% foreground inset to preserve the face and arrowhead.
+
+Prompt: faithfully recreate only Happy Arrow—cheerful glossy cyan U-curved arrow
+pointing upper-right, navy eyes, friendly smile, pink cheeks, sunny full-bleed yellow
+background; preserve character and proportions; no text, labels, border, watermark
+or other options; balanced app-icon safe padding.

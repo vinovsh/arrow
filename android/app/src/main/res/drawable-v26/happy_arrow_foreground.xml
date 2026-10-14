@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Extra safe padding keeps the smile and arrowhead inside circle and squircle masks. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android" android:inset="22%">
+    <bitmap android:src="@drawable/happy_arrow_logo" android:gravity="fill" android:filter="true" />
+</inset>
