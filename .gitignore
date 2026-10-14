@@ -72,3 +72,6 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Reproducible campaign generation checkpoints
+/tools/out/campaign-500/

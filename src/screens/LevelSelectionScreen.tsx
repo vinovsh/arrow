@@ -17,7 +17,13 @@ import {Button} from '../components/Button';
 import {ClickPressable} from '../components/ClickPressable';
 import {StarRow} from '../components/StarRow';
 import {SaveStore} from '../storage/SaveStore';
-import {getPageSummaries, TOTAL_LEVELS} from '../game/levels';
+import {
+  getPageSummaries,
+  TOTAL_LEVELS,
+  TOTAL_PACKS,
+  PACK_SIZE,
+  packIndexForLevel,
+} from '../game/levels';
 type Props = NativeStackScreenProps<RootStackParamList, 'LevelSelection'>;
 export function LevelSelectionScreen({navigation}: Props): React.JSX.Element {
   const [save, setSave] = useState(SaveStore.data);
@@ -25,16 +31,21 @@ export function LevelSelectionScreen({navigation}: Props): React.JSX.Element {
   const {width} = useWindowDimensions();
   const tile = (Math.min(width, 480) - 48 - 36) / 4;
   const next = Math.min(save.currentLevel, TOTAL_LEVELS);
+  const [page, setPage] = useState(() => packIndexForLevel(next));
+  useEffect(() => setPage(packIndexForLevel(next)), [next]);
+  const first = page * PACK_SIZE + 1;
+  const last = Math.min(TOTAL_LEVELS, first + PACK_SIZE - 1);
   return (
     <SafeAreaView style={styles.root}>
       <MenuBackdrop />
       <MenuHeader
         title="Levels"
-        subtitle="Your next challenge"
+        subtitle={`Levels ${first}–${last} · ${TOTAL_LEVELS} total`}
         onBack={() => navigation.goBack()}
       />
       <FlatList
-        data={getPageSummaries(0)}
+        key={page}
+        data={getPageSummaries(page)}
         keyExtractor={s => String(s.id)}
         numColumns={4}
         columnWrapperStyle={styles.row}
@@ -89,6 +100,29 @@ export function LevelSelectionScreen({navigation}: Props): React.JSX.Element {
         }}
       />
       <View style={styles.footer}>
+        <View style={styles.pageControls}>
+          <Button
+            compact
+            label="Previous"
+            variant="neutral"
+            glow={false}
+            disabled={page === 0}
+            onPress={() => setPage(p => Math.max(0, p - 1))}
+            style={styles.pageButton}
+          />
+          <Text style={styles.pageLabel}>
+            {page + 1} / {TOTAL_PACKS}
+          </Text>
+          <Button
+            compact
+            label="Next"
+            variant="neutral"
+            glow={false}
+            disabled={page === TOTAL_PACKS - 1}
+            onPress={() => setPage(p => Math.min(TOTAL_PACKS - 1, p + 1))}
+            style={styles.pageButton}
+          />
+        </View>
         <Button
           label={`Continue · Level ${next}`}
           variant="play"
@@ -123,5 +157,14 @@ const styles = StyleSheet.create({
   muted: {color: theme.text.dim},
   lock: {fontSize: 14, opacity: 0.6},
   tutorial: {...typography.body(10)},
-  footer: {padding: 24, width: '100%', maxWidth: 480, alignSelf: 'center'},
+  pageControls: {flexDirection: 'row', alignItems: 'center', gap: 12},
+  pageButton: {flex: 1},
+  pageLabel: {...typography.body(12)},
+  footer: {
+    gap: 12,
+    padding: 16,
+    width: '100%',
+    maxWidth: 480,
+    alignSelf: 'center',
+  },
 });

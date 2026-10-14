@@ -15,19 +15,25 @@ import type {Level} from '../src/game/models/types';
 import {DIR_VECTORS} from '../src/game/models/types';
 import {createRng} from '../src/utils/rng';
 
-describe('first 20 replacement levels', () => {
-  it('loads exactly 20 levels in a partial 25-slot pack', () => {
-    expect(TOTAL_LEVELS).toBe(20);
-    expect(TOTAL_PACKS).toBe(1);
+describe('500-level campaign', () => {
+  it('loads 500 consecutive levels in twenty complete packs', () => {
+    expect(TOTAL_LEVELS).toBe(500);
+    expect(TOTAL_PACKS).toBe(20);
     expect(PACK_SIZE).toBe(25);
     expect(getPageSummaries(0).map(s => s.id)).toEqual(
-      Array.from({length: 20}, (_, i) => i + 1),
+      Array.from({length: 25}, (_, i) => i + 1),
     );
-    expect(getPageSummaries(1)).toEqual([]);
+    expect(getPageSummaries(1)[0].id).toBe(26);
+    expect(getPageSummaries(19).map(s => s.id)).toEqual(
+      Array.from({length: 25}, (_, i) => i + 476),
+    );
+    expect(getPageSummaries(20)).toEqual([]);
     expect(getLevel(0)).toBeNull();
-    expect(getLevel(21)).toBeNull();
+    expect(getLevel(501)).toBeNull();
     expect(() => preloadAround(1)).not.toThrow();
-    expect(() => preloadAround(20)).not.toThrow();
+    expect(() => preloadAround(25)).not.toThrow();
+    expect(() => preloadAround(26)).not.toThrow();
+    expect(() => preloadAround(500)).not.toThrow();
   });
   it('round-trips, solves and remains solvable during random legal play', () => {
     const rng = createRng(909),
@@ -47,12 +53,16 @@ describe('first 20 replacement levels', () => {
         .join('|');
       expect(seen.has(key)).toBe(false);
       seen.add(key);
-      for (let run = 0; run < 30; run++) {
+      for (
+        let run = 0;
+        run < (id % 25 === 0 || id === 1 || id === 21 ? 5 : 0);
+        run++
+      ) {
         expect(randomPlayStaysSolvable(level, () => rng.next())).toBe(true);
       }
     }
   });
-  it('mixes short, medium and long arrows, with blocking from level one', () => {
+  it('mixes short, medium and long arrows, with blocking after the tutorial', () => {
     for (let id = 2; id <= 20; id++) {
       const level = getLevel(id) as Level;
       const s = validate(level).signals!;

@@ -6,7 +6,7 @@ import type {LevelPack} from '../src/game/levels/codec.ts';
 import {buildArrowGeometry} from '../src/game/renderer/arrowGeometry.ts';
 const root = join(import.meta.dirname, '..');
 const pack = JSON.parse(
-  readFileSync(join(root, 'src/game/levels/packs/pack_001_020.json'), 'utf8'),
+  readFileSync(join(root, 'tools/fixtures/approved-first-20.json'), 'utf8'),
 ) as LevelPack;
 mkdirSync(join(root, 'mock/previews'), {recursive: true});
 for (const packed of pack.levels) {

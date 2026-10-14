@@ -1,0 +1,9122 @@
+[
+  {
+    "id": 21,
+    "title": "Square weave 1",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 34,
+    "depth": 17,
+    "freeAtStart": 7,
+    "blockedStart": 0.7941176470588236,
+    "coverage": 0.9555555555555556,
+    "meanLength": 25.294117647058822,
+    "mix": {
+      "short": 7,
+      "medium": 10,
+      "long": 17
+    },
+    "attempt": 0,
+    "D": 7.63
+  },
+  {
+    "id": 22,
+    "title": "Rounded square 1",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 36,
+    "depth": 17,
+    "freeAtStart": 5,
+    "blockedStart": 0.8611111111111112,
+    "coverage": 0.9748803827751196,
+    "meanLength": 22.63888888888889,
+    "mix": {
+      "short": 8,
+      "medium": 10,
+      "long": 18
+    },
+    "attempt": 0,
+    "D": 7.72
+  },
+  {
+    "id": 23,
+    "title": "Diamond vault 1",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 30,
+    "depth": 17,
+    "freeAtStart": 5,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9616402116402116,
+    "meanLength": 24.233333333333334,
+    "mix": {
+      "short": 7,
+      "medium": 8,
+      "long": 15
+    },
+    "attempt": 1,
+    "D": 7.52
+  },
+  {
+    "id": 24,
+    "title": "Circular maze 1",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 34,
+    "depth": 17,
+    "freeAtStart": 7,
+    "blockedStart": 0.7941176470588236,
+    "coverage": 0.9539106145251397,
+    "meanLength": 20.08823529411765,
+    "mix": {
+      "short": 8,
+      "medium": 9,
+      "long": 17
+    },
+    "attempt": 0,
+    "D": 7.19
+  },
+  {
+    "id": 25,
+    "title": "Twin chambers 1",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 42,
+    "depth": 21,
+    "freeAtStart": 4,
+    "blockedStart": 0.9047619047619048,
+    "coverage": 0.9805045871559633,
+    "meanLength": 20.357142857142858,
+    "mix": {
+      "short": 10,
+      "medium": 11,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.98
+  },
+  {
+    "id": 26,
+    "title": "Four chambers 1",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 42,
+    "depth": 22,
+    "freeAtStart": 5,
+    "blockedStart": 0.8809523809523809,
+    "coverage": 0.9684579439252337,
+    "meanLength": 19.738095238095237,
+    "mix": {
+      "short": 9,
+      "medium": 12,
+      "long": 21
+    },
+    "attempt": 1,
+    "D": 7.89
+  },
+  {
+    "id": 27,
+    "title": "Crossroads 1",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 32,
+    "depth": 16,
+    "freeAtStart": 7,
+    "blockedStart": 0.78125,
+    "coverage": 0.9656084656084656,
+    "meanLength": 22.8125,
+    "mix": {
+      "short": 8,
+      "medium": 8,
+      "long": 16
+    },
+    "attempt": 1,
+    "D": 7.41
+  },
+  {
+    "id": 28,
+    "title": "Open courtyard 1",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 38,
+    "depth": 21,
+    "freeAtStart": 8,
+    "blockedStart": 0.7894736842105263,
+    "coverage": 0.9502314814814815,
+    "meanLength": 21.605263157894736,
+    "mix": {
+      "short": 8,
+      "medium": 11,
+      "long": 19
+    },
+    "attempt": 1,
+    "D": 7.54
+  },
+  {
+    "id": 29,
+    "title": "Stepped fortress 1",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 36,
+    "depth": 20,
+    "freeAtStart": 7,
+    "blockedStart": 0.8055555555555556,
+    "coverage": 0.9658536585365853,
+    "meanLength": 22,
+    "mix": {
+      "short": 8,
+      "medium": 10,
+      "long": 18
+    },
+    "attempt": 0,
+    "D": 7.49
+  },
+  {
+    "id": 30,
+    "title": "Woven ring 1",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 30,
+    "depth": 17,
+    "freeAtStart": 6,
+    "blockedStart": 0.8,
+    "coverage": 0.9088785046728972,
+    "meanLength": 25.933333333333334,
+    "mix": {
+      "short": 7,
+      "medium": 8,
+      "long": 15
+    },
+    "attempt": 0,
+    "D": 7.47
+  },
+  {
+    "id": 31,
+    "title": "Square weave 2",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 34,
+    "depth": 17,
+    "freeAtStart": 3,
+    "blockedStart": 0.9117647058823529,
+    "coverage": 0.9306640625,
+    "meanLength": 28.029411764705884,
+    "mix": {
+      "short": 7,
+      "medium": 10,
+      "long": 17
+    },
+    "attempt": 0,
+    "D": 7.95
+  },
+  {
+    "id": 32,
+    "title": "Rounded square 2",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 50,
+    "depth": 21,
+    "freeAtStart": 8,
+    "blockedStart": 0.84,
+    "coverage": 0.9697916666666667,
+    "meanLength": 18.62,
+    "mix": {
+      "short": 10,
+      "medium": 15,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.69
+  },
+  {
+    "id": 33,
+    "title": "Diamond vault 2",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 34,
+    "depth": 18,
+    "freeAtStart": 7,
+    "blockedStart": 0.7941176470588236,
+    "coverage": 0.9238636363636363,
+    "meanLength": 23.91176470588235,
+    "mix": {
+      "short": 7,
+      "medium": 10,
+      "long": 17
+    },
+    "attempt": 0,
+    "D": 7.59
+  },
+  {
+    "id": 34,
+    "title": "Circular maze 2",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 36,
+    "depth": 19,
+    "freeAtStart": 5,
+    "blockedStart": 0.8611111111111112,
+    "coverage": 0.9642857142857143,
+    "meanLength": 21.75,
+    "mix": {
+      "short": 8,
+      "medium": 10,
+      "long": 18
+    },
+    "attempt": 0,
+    "D": 7.64
+  },
+  {
+    "id": 35,
+    "title": "Twin chambers 2",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 44,
+    "depth": 20,
+    "freeAtStart": 8,
+    "blockedStart": 0.8181818181818181,
+    "coverage": 0.9758064516129032,
+    "meanLength": 22,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.69
+  },
+  {
+    "id": 36,
+    "title": "Four chambers 2",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 44,
+    "depth": 21,
+    "freeAtStart": 8,
+    "blockedStart": 0.8181818181818181,
+    "coverage": 0.9591836734693877,
+    "meanLength": 21.363636363636363,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.56
+  },
+  {
+    "id": 37,
+    "title": "Crossroads 2",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 34,
+    "depth": 20,
+    "freeAtStart": 5,
+    "blockedStart": 0.8529411764705882,
+    "coverage": 0.9409090909090909,
+    "meanLength": 24.352941176470587,
+    "mix": {
+      "short": 7,
+      "medium": 10,
+      "long": 17
+    },
+    "attempt": 0,
+    "D": 7.7
+  },
+  {
+    "id": 38,
+    "title": "Open courtyard 2",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 52,
+    "depth": 17,
+    "freeAtStart": 4,
+    "blockedStart": 0.9230769230769231,
+    "coverage": 0.9686234817813765,
+    "meanLength": 18.403846153846153,
+    "mix": {
+      "short": 11,
+      "medium": 15,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.86
+  },
+  {
+    "id": 39,
+    "title": "Stepped fortress 2",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 42,
+    "depth": 20,
+    "freeAtStart": 8,
+    "blockedStart": 0.8095238095238095,
+    "coverage": 0.9660087719298246,
+    "meanLength": 20.976190476190474,
+    "mix": {
+      "short": 9,
+      "medium": 12,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.62
+  },
+  {
+    "id": 40,
+    "title": "Woven ring 2",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 40,
+    "depth": 17,
+    "freeAtStart": 5,
+    "blockedStart": 0.875,
+    "coverage": 0.9598765432098766,
+    "meanLength": 23.325,
+    "mix": {
+      "short": 8,
+      "medium": 12,
+      "long": 20
+    },
+    "attempt": 0,
+    "D": 7.77
+  },
+  {
+    "id": 41,
+    "title": "Square weave 3",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 52,
+    "depth": 21,
+    "freeAtStart": 10,
+    "blockedStart": 0.8076923076923077,
+    "coverage": 0.9749134948096886,
+    "meanLength": 21.673076923076923,
+    "mix": {
+      "short": 11,
+      "medium": 15,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.57
+  },
+  {
+    "id": 42,
+    "title": "Rounded square 3",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 46,
+    "depth": 19,
+    "freeAtStart": 9,
+    "blockedStart": 0.8043478260869565,
+    "coverage": 0.967032967032967,
+    "meanLength": 22.956521739130434,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.54
+  },
+  {
+    "id": 43,
+    "title": "Diamond vault 3",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 42,
+    "depth": 20,
+    "freeAtStart": 9,
+    "blockedStart": 0.7857142857142857,
+    "coverage": 0.9631147540983607,
+    "meanLength": 22.38095238095238,
+    "mix": {
+      "short": 9,
+      "medium": 12,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.39
+  },
+  {
+    "id": 44,
+    "title": "Circular maze 3",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 44,
+    "depth": 21,
+    "freeAtStart": 6,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.9692982456140351,
+    "meanLength": 20.09090909090909,
+    "mix": {
+      "short": 11,
+      "medium": 11,
+      "long": 22
+    },
+    "attempt": 3,
+    "D": 7.68
+  },
+  {
+    "id": 45,
+    "title": "Twin chambers 3",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 52,
+    "depth": 23,
+    "freeAtStart": 8,
+    "blockedStart": 0.8461538461538461,
+    "coverage": 0.9457295373665481,
+    "meanLength": 20.442307692307693,
+    "mix": {
+      "short": 11,
+      "medium": 15,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.61
+  },
+  {
+    "id": 46,
+    "title": "Four chambers 3",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 42,
+    "depth": 18,
+    "freeAtStart": 7,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9293478260869565,
+    "meanLength": 24.428571428571427,
+    "mix": {
+      "short": 9,
+      "medium": 12,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.48
+  },
+  {
+    "id": 47,
+    "title": "Crossroads 3",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 38,
+    "depth": 18,
+    "freeAtStart": 8,
+    "blockedStart": 0.7894736842105263,
+    "coverage": 0.9090909090909091,
+    "meanLength": 24.210526315789473,
+    "mix": {
+      "short": 8,
+      "medium": 11,
+      "long": 19
+    },
+    "attempt": 0,
+    "D": 7.42
+  },
+  {
+    "id": 48,
+    "title": "Open courtyard 3",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 42,
+    "depth": 17,
+    "freeAtStart": 7,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9241071428571429,
+    "meanLength": 24.642857142857142,
+    "mix": {
+      "short": 9,
+      "medium": 12,
+      "long": 21
+    },
+    "attempt": 1,
+    "D": 7.61
+  },
+  {
+    "id": 49,
+    "title": "Stepped fortress 3",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 44,
+    "depth": 20,
+    "freeAtStart": 6,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.9536679536679536,
+    "meanLength": 22.454545454545453,
+    "mix": {
+      "short": 10,
+      "medium": 12,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.71
+  },
+  {
+    "id": 50,
+    "title": "Woven ring 3",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 46,
+    "depth": 19,
+    "freeAtStart": 9,
+    "blockedStart": 0.8043478260869565,
+    "coverage": 0.9655797101449275,
+    "meanLength": 23.17391304347826,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.53
+  },
+  {
+    "id": 51,
+    "title": "Square weave 4",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 36,
+    "depth": 17,
+    "freeAtStart": 5,
+    "blockedStart": 0.8611111111111112,
+    "coverage": 0.9377777777777778,
+    "meanLength": 23.444444444444443,
+    "mix": {
+      "short": 8,
+      "medium": 10,
+      "long": 18
+    },
+    "attempt": 0,
+    "D": 7.72
+  },
+  {
+    "id": 52,
+    "title": "Rounded square 4",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 36,
+    "depth": 23,
+    "freeAtStart": 3,
+    "blockedStart": 0.9166666666666666,
+    "coverage": 0.9569377990430621,
+    "meanLength": 22.22222222222222,
+    "mix": {
+      "short": 8,
+      "medium": 10,
+      "long": 18
+    },
+    "attempt": 1,
+    "D": 8.06
+  },
+  {
+    "id": 53,
+    "title": "Diamond vault 4",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 34,
+    "depth": 18,
+    "freeAtStart": 5,
+    "blockedStart": 0.8529411764705882,
+    "coverage": 0.9682539682539684,
+    "meanLength": 21.529411764705884,
+    "mix": {
+      "short": 8,
+      "medium": 9,
+      "long": 17
+    },
+    "attempt": 1,
+    "D": 7.71
+  },
+  {
+    "id": 54,
+    "title": "Circular maze 4",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 36,
+    "depth": 19,
+    "freeAtStart": 6,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9650837988826816,
+    "meanLength": 19.194444444444443,
+    "mix": {
+      "short": 8,
+      "medium": 10,
+      "long": 18
+    },
+    "attempt": 0,
+    "D": 7.7
+  },
+  {
+    "id": 55,
+    "title": "Twin chambers 4",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 38,
+    "depth": 17,
+    "freeAtStart": 5,
+    "blockedStart": 0.868421052631579,
+    "coverage": 0.9529816513761468,
+    "meanLength": 21.86842105263158,
+    "mix": {
+      "short": 8,
+      "medium": 11,
+      "long": 19
+    },
+    "attempt": 0,
+    "D": 7.75
+  },
+  {
+    "id": 56,
+    "title": "Four chambers 4",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 36,
+    "depth": 17,
+    "freeAtStart": 6,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9591121495327103,
+    "meanLength": 22.805555555555557,
+    "mix": {
+      "short": 8,
+      "medium": 10,
+      "long": 18
+    },
+    "attempt": 1,
+    "D": 7.68
+  },
+  {
+    "id": 57,
+    "title": "Crossroads 4",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 34,
+    "depth": 17,
+    "freeAtStart": 5,
+    "blockedStart": 0.8529411764705882,
+    "coverage": 0.9642857142857143,
+    "meanLength": 21.441176470588236,
+    "mix": {
+      "short": 7,
+      "medium": 10,
+      "long": 17
+    },
+    "attempt": 0,
+    "D": 7.64
+  },
+  {
+    "id": 58,
+    "title": "Open courtyard 4",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 36,
+    "depth": 17,
+    "freeAtStart": 5,
+    "blockedStart": 0.8611111111111112,
+    "coverage": 0.9363425925925926,
+    "meanLength": 22.47222222222222,
+    "mix": {
+      "short": 8,
+      "medium": 10,
+      "long": 18
+    },
+    "attempt": 0,
+    "D": 7.75
+  },
+  {
+    "id": 59,
+    "title": "Stepped fortress 4",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 34,
+    "depth": 18,
+    "freeAtStart": 5,
+    "blockedStart": 0.8529411764705882,
+    "coverage": 0.9560975609756097,
+    "meanLength": 23.058823529411764,
+    "mix": {
+      "short": 7,
+      "medium": 10,
+      "long": 17
+    },
+    "attempt": 0,
+    "D": 7.68
+  },
+  {
+    "id": 60,
+    "title": "Woven ring 4",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 40,
+    "depth": 18,
+    "freeAtStart": 5,
+    "blockedStart": 0.875,
+    "coverage": 0.9672897196261683,
+    "meanLength": 20.7,
+    "mix": {
+      "short": 9,
+      "medium": 11,
+      "long": 20
+    },
+    "attempt": 0,
+    "D": 7.75
+  },
+  {
+    "id": 61,
+    "title": "Square weave 5",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 46,
+    "depth": 17,
+    "freeAtStart": 9,
+    "blockedStart": 0.8043478260869565,
+    "coverage": 0.9716796875,
+    "meanLength": 21.630434782608695,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.22
+  },
+  {
+    "id": 62,
+    "title": "Rounded square 5",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 40,
+    "depth": 19,
+    "freeAtStart": 8,
+    "blockedStart": 0.8,
+    "coverage": 0.965625,
+    "meanLength": 23.175,
+    "mix": {
+      "short": 8,
+      "medium": 12,
+      "long": 20
+    },
+    "attempt": 0,
+    "D": 7.37
+  },
+  {
+    "id": 63,
+    "title": "Diamond vault 5",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 32,
+    "depth": 22,
+    "freeAtStart": 3,
+    "blockedStart": 0.90625,
+    "coverage": 0.9193181818181818,
+    "meanLength": 25.28125,
+    "mix": {
+      "short": 7,
+      "medium": 9,
+      "long": 16
+    },
+    "attempt": 0,
+    "D": 7.97
+  },
+  {
+    "id": 64,
+    "title": "Circular maze 5",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 30,
+    "depth": 17,
+    "freeAtStart": 6,
+    "blockedStart": 0.8,
+    "coverage": 0.9224137931034483,
+    "meanLength": 24.966666666666665,
+    "mix": {
+      "short": 6,
+      "medium": 9,
+      "long": 15
+    },
+    "attempt": 0,
+    "D": 7.59
+  },
+  {
+    "id": 65,
+    "title": "Twin chambers 5",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 42,
+    "depth": 17,
+    "freeAtStart": 9,
+    "blockedStart": 0.7857142857142857,
+    "coverage": 0.9747983870967742,
+    "meanLength": 23.023809523809526,
+    "mix": {
+      "short": 9,
+      "medium": 12,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.51
+  },
+  {
+    "id": 66,
+    "title": "Four chambers 5",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 42,
+    "depth": 18,
+    "freeAtStart": 8,
+    "blockedStart": 0.8095238095238095,
+    "coverage": 0.9704081632653061,
+    "meanLength": 22.642857142857142,
+    "mix": {
+      "short": 9,
+      "medium": 12,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.65
+  },
+  {
+    "id": 67,
+    "title": "Crossroads 5",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 34,
+    "depth": 17,
+    "freeAtStart": 7,
+    "blockedStart": 0.7941176470588236,
+    "coverage": 0.9477272727272728,
+    "meanLength": 24.529411764705884,
+    "mix": {
+      "short": 7,
+      "medium": 10,
+      "long": 17
+    },
+    "attempt": 1,
+    "D": 7.48
+  },
+  {
+    "id": 68,
+    "title": "Open courtyard 5",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 38,
+    "depth": 20,
+    "freeAtStart": 5,
+    "blockedStart": 0.868421052631579,
+    "coverage": 0.9473684210526315,
+    "meanLength": 24.63157894736842,
+    "mix": {
+      "short": 9,
+      "medium": 10,
+      "long": 19
+    },
+    "attempt": 0,
+    "D": 7.82
+  },
+  {
+    "id": 69,
+    "title": "Stepped fortress 5",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 40,
+    "depth": 25,
+    "freeAtStart": 4,
+    "blockedStart": 0.9,
+    "coverage": 0.9660087719298246,
+    "meanLength": 22.025,
+    "mix": {
+      "short": 8,
+      "medium": 12,
+      "long": 20
+    },
+    "attempt": 0,
+    "D": 8.02
+  },
+  {
+    "id": 70,
+    "title": "Woven ring 5",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 44,
+    "depth": 21,
+    "freeAtStart": 8,
+    "blockedStart": 0.8181818181818181,
+    "coverage": 0.9609053497942387,
+    "meanLength": 21.227272727272727,
+    "mix": {
+      "short": 10,
+      "medium": 12,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.49
+  },
+  {
+    "id": 71,
+    "title": "Square weave 6",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 40,
+    "depth": 17,
+    "freeAtStart": 8,
+    "blockedStart": 0.8,
+    "coverage": 0.9100346020761245,
+    "meanLength": 26.3,
+    "mix": {
+      "short": 8,
+      "medium": 12,
+      "long": 20
+    },
+    "attempt": 0,
+    "D": 7.29
+  },
+  {
+    "id": 72,
+    "title": "Rounded square 6",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 48,
+    "depth": 19,
+    "freeAtStart": 8,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9597069597069597,
+    "meanLength": 21.833333333333332,
+    "mix": {
+      "short": 10,
+      "medium": 14,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.63
+  },
+  {
+    "id": 73,
+    "title": "Diamond vault 6",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 40,
+    "depth": 18,
+    "freeAtStart": 7,
+    "blockedStart": 0.825,
+    "coverage": 0.9549180327868854,
+    "meanLength": 23.3,
+    "mix": {
+      "short": 10,
+      "medium": 10,
+      "long": 20
+    },
+    "attempt": 0,
+    "D": 7.48
+  },
+  {
+    "id": 74,
+    "title": "Circular maze 6",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 40,
+    "depth": 19,
+    "freeAtStart": 7,
+    "blockedStart": 0.825,
+    "coverage": 0.9649122807017544,
+    "meanLength": 22,
+    "mix": {
+      "short": 9,
+      "medium": 11,
+      "long": 20
+    },
+    "attempt": 0,
+    "D": 7.43
+  },
+  {
+    "id": 75,
+    "title": "Twin chambers 6",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 42,
+    "depth": 19,
+    "freeAtStart": 5,
+    "blockedStart": 0.8809523809523809,
+    "coverage": 0.9074733096085409,
+    "meanLength": 24.285714285714285,
+    "mix": {
+      "short": 10,
+      "medium": 11,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.69
+  },
+  {
+    "id": 76,
+    "title": "Four chambers 6",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 52,
+    "depth": 21,
+    "freeAtStart": 6,
+    "blockedStart": 0.8846153846153846,
+    "coverage": 0.9655797101449275,
+    "meanLength": 20.5,
+    "mix": {
+      "short": 11,
+      "medium": 15,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.78
+  },
+  {
+    "id": 77,
+    "title": "Crossroads 6",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 40,
+    "depth": 21,
+    "freeAtStart": 7,
+    "blockedStart": 0.825,
+    "coverage": 0.9683794466403162,
+    "meanLength": 24.5,
+    "mix": {
+      "short": 8,
+      "medium": 12,
+      "long": 20
+    },
+    "attempt": 0,
+    "D": 7.69
+  },
+  {
+    "id": 78,
+    "title": "Open courtyard 6",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 48,
+    "depth": 17,
+    "freeAtStart": 10,
+    "blockedStart": 0.7916666666666666,
+    "coverage": 0.9553571428571429,
+    "meanLength": 22.291666666666668,
+    "mix": {
+      "short": 10,
+      "medium": 14,
+      "long": 24
+    },
+    "attempt": 1,
+    "D": 7.39
+  },
+  {
+    "id": 79,
+    "title": "Stepped fortress 6",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 44,
+    "depth": 18,
+    "freeAtStart": 6,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.9671814671814671,
+    "meanLength": 22.772727272727273,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.7
+  },
+  {
+    "id": 80,
+    "title": "Woven ring 6",
+    "tier": "Very Hard",
+    "grid": 34,
+    "arrows": 46,
+    "depth": 22,
+    "freeAtStart": 6,
+    "blockedStart": 0.8695652173913043,
+    "coverage": 0.9610507246376812,
+    "meanLength": 23.065217391304348,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.69
+  },
+  {
+    "id": 81,
+    "title": "Square weave 7",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 44,
+    "depth": 21,
+    "freeAtStart": 6,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.9744444444444444,
+    "meanLength": 19.931818181818183,
+    "mix": {
+      "short": 11,
+      "medium": 11,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.9
+  },
+  {
+    "id": 82,
+    "title": "Rounded square 7",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 34,
+    "depth": 17,
+    "freeAtStart": 6,
+    "blockedStart": 0.8235294117647058,
+    "coverage": 0.9641148325358851,
+    "meanLength": 23.705882352941178,
+    "mix": {
+      "short": 8,
+      "medium": 9,
+      "long": 17
+    },
+    "attempt": 0,
+    "D": 7.66
+  },
+  {
+    "id": 83,
+    "title": "Diamond vault 7",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 28,
+    "depth": 17,
+    "freeAtStart": 5,
+    "blockedStart": 0.8214285714285714,
+    "coverage": 0.9563492063492064,
+    "meanLength": 25.821428571428573,
+    "mix": {
+      "short": 6,
+      "medium": 8,
+      "long": 14
+    },
+    "attempt": 0,
+    "D": 7.55
+  },
+  {
+    "id": 84,
+    "title": "Circular maze 7",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 36,
+    "depth": 21,
+    "freeAtStart": 5,
+    "blockedStart": 0.8611111111111112,
+    "coverage": 0.9720670391061452,
+    "meanLength": 19.333333333333332,
+    "mix": {
+      "short": 8,
+      "medium": 10,
+      "long": 18
+    },
+    "attempt": 1,
+    "D": 7.64
+  },
+  {
+    "id": 85,
+    "title": "Twin chambers 7",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 40,
+    "depth": 17,
+    "freeAtStart": 8,
+    "blockedStart": 0.8,
+    "coverage": 0.9759174311926605,
+    "meanLength": 21.275,
+    "mix": {
+      "short": 10,
+      "medium": 10,
+      "long": 20
+    },
+    "attempt": 0,
+    "D": 7.32
+  },
+  {
+    "id": 86,
+    "title": "Four chambers 7",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 38,
+    "depth": 18,
+    "freeAtStart": 6,
+    "blockedStart": 0.8421052631578947,
+    "coverage": 0.9742990654205608,
+    "meanLength": 21.94736842105263,
+    "mix": {
+      "short": 8,
+      "medium": 11,
+      "long": 19
+    },
+    "attempt": 3,
+    "D": 7.76
+  },
+  {
+    "id": 87,
+    "title": "Crossroads 7",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 32,
+    "depth": 17,
+    "freeAtStart": 7,
+    "blockedStart": 0.78125,
+    "coverage": 0.9695767195767195,
+    "meanLength": 22.90625,
+    "mix": {
+      "short": 7,
+      "medium": 9,
+      "long": 16
+    },
+    "attempt": 0,
+    "D": 7.52
+  },
+  {
+    "id": 88,
+    "title": "Open courtyard 7",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 44,
+    "depth": 20,
+    "freeAtStart": 9,
+    "blockedStart": 0.7954545454545454,
+    "coverage": 0.9699074074074074,
+    "meanLength": 19.045454545454547,
+    "mix": {
+      "short": 11,
+      "medium": 11,
+      "long": 22
+    },
+    "attempt": 2,
+    "D": 7.59
+  },
+  {
+    "id": 89,
+    "title": "Stepped fortress 7",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 40,
+    "depth": 18,
+    "freeAtStart": 6,
+    "blockedStart": 0.85,
+    "coverage": 0.9817073170731708,
+    "meanLength": 20.125,
+    "mix": {
+      "short": 9,
+      "medium": 11,
+      "long": 20
+    },
+    "attempt": 0,
+    "D": 7.83
+  },
+  {
+    "id": 90,
+    "title": "Woven ring 7",
+    "tier": "Very Hard",
+    "grid": 30,
+    "arrows": 42,
+    "depth": 18,
+    "freeAtStart": 4,
+    "blockedStart": 0.9047619047619048,
+    "coverage": 0.9742990654205608,
+    "meanLength": 19.857142857142858,
+    "mix": {
+      "short": 10,
+      "medium": 11,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.92
+  },
+  {
+    "id": 91,
+    "title": "Square weave 8",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 40,
+    "depth": 19,
+    "freeAtStart": 5,
+    "blockedStart": 0.875,
+    "coverage": 0.9609375,
+    "meanLength": 24.6,
+    "mix": {
+      "short": 8,
+      "medium": 12,
+      "long": 20
+    },
+    "attempt": 0,
+    "D": 7.88
+  },
+  {
+    "id": 92,
+    "title": "Rounded square 8",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 42,
+    "depth": 18,
+    "freeAtStart": 8,
+    "blockedStart": 0.8095238095238095,
+    "coverage": 0.965625,
+    "meanLength": 22.071428571428573,
+    "mix": {
+      "short": 10,
+      "medium": 11,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.6
+  },
+  {
+    "id": 93,
+    "title": "Diamond vault 8",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 42,
+    "depth": 17,
+    "freeAtStart": 7,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9625,
+    "meanLength": 20.166666666666668,
+    "mix": {
+      "short": 10,
+      "medium": 11,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.53
+  },
+  {
+    "id": 94,
+    "title": "Circular maze 8",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 34,
+    "depth": 17,
+    "freeAtStart": 6,
+    "blockedStart": 0.8235294117647058,
+    "coverage": 0.9519704433497537,
+    "meanLength": 22.735294117647058,
+    "mix": {
+      "short": 8,
+      "medium": 9,
+      "long": 17
+    },
+    "attempt": 0,
+    "D": 7.52
+  },
+  {
+    "id": 95,
+    "title": "Twin chambers 8",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 44,
+    "depth": 20,
+    "freeAtStart": 9,
+    "blockedStart": 0.7954545454545454,
+    "coverage": 0.9768145161290323,
+    "meanLength": 22.022727272727273,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.35
+  },
+  {
+    "id": 96,
+    "title": "Four chambers 8",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 44,
+    "depth": 19,
+    "freeAtStart": 5,
+    "blockedStart": 0.8863636363636364,
+    "coverage": 0.95,
+    "meanLength": 21.15909090909091,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.9
+  },
+  {
+    "id": 97,
+    "title": "Crossroads 8",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 38,
+    "depth": 21,
+    "freeAtStart": 6,
+    "blockedStart": 0.8421052631578947,
+    "coverage": 0.9556818181818182,
+    "meanLength": 22.13157894736842,
+    "mix": {
+      "short": 9,
+      "medium": 10,
+      "long": 19
+    },
+    "attempt": 0,
+    "D": 7.7
+  },
+  {
+    "id": 98,
+    "title": "Open courtyard 8",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 42,
+    "depth": 19,
+    "freeAtStart": 5,
+    "blockedStart": 0.8809523809523809,
+    "coverage": 0.9291497975708503,
+    "meanLength": 21.857142857142858,
+    "mix": {
+      "short": 9,
+      "medium": 12,
+      "long": 21
+    },
+    "attempt": 1,
+    "D": 7.86
+  },
+  {
+    "id": 99,
+    "title": "Stepped fortress 8",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 44,
+    "depth": 18,
+    "freeAtStart": 7,
+    "blockedStart": 0.8409090909090909,
+    "coverage": 0.9802631578947368,
+    "meanLength": 20.318181818181817,
+    "mix": {
+      "short": 11,
+      "medium": 11,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.6
+  },
+  {
+    "id": 100,
+    "title": "Woven ring 8",
+    "tier": "Very Hard",
+    "grid": 32,
+    "arrows": 44,
+    "depth": 21,
+    "freeAtStart": 6,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.9763374485596708,
+    "meanLength": 21.568181818181817,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.53
+  },
+  {
+    "id": 101,
+    "title": "Square weave 9",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 58,
+    "depth": 28,
+    "freeAtStart": 7,
+    "blockedStart": 0.8793103448275862,
+    "coverage": 0.970679012345679,
+    "meanLength": 21.689655172413794,
+    "mix": {
+      "short": 14,
+      "medium": 15,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.95
+  },
+  {
+    "id": 102,
+    "title": "Rounded square 9",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 46,
+    "depth": 19,
+    "freeAtStart": 8,
+    "blockedStart": 0.8260869565217391,
+    "coverage": 0.9732441471571907,
+    "meanLength": 25.304347826086957,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 1,
+    "D": 7.35
+  },
+  {
+    "id": 103,
+    "title": "Diamond vault 9",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 46,
+    "depth": 20,
+    "freeAtStart": 8,
+    "blockedStart": 0.8260869565217391,
+    "coverage": 0.9283154121863799,
+    "meanLength": 22.52173913043478,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.55
+  },
+  {
+    "id": 104,
+    "title": "Circular maze 9",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 46,
+    "depth": 19,
+    "freeAtStart": 8,
+    "blockedStart": 0.8260869565217391,
+    "coverage": 0.9647058823529413,
+    "meanLength": 21.391304347826086,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 1,
+    "D": 7.39
+  },
+  {
+    "id": 105,
+    "title": "Twin chambers 9",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 56,
+    "depth": 25,
+    "freeAtStart": 6,
+    "blockedStart": 0.8928571428571429,
+    "coverage": 0.953968253968254,
+    "meanLength": 21.464285714285715,
+    "mix": {
+      "short": 13,
+      "medium": 15,
+      "long": 28
+    },
+    "attempt": 0,
+    "D": 7.73
+  },
+  {
+    "id": 106,
+    "title": "Four chambers 9",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 48,
+    "depth": 20,
+    "freeAtStart": 3,
+    "blockedStart": 0.9375,
+    "coverage": 0.9204180064308681,
+    "meanLength": 23.854166666666668,
+    "mix": {
+      "short": 11,
+      "medium": 13,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.77
+  },
+  {
+    "id": 107,
+    "title": "Crossroads 9",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 48,
+    "depth": 20,
+    "freeAtStart": 7,
+    "blockedStart": 0.8541666666666666,
+    "coverage": 0.9445454545454546,
+    "meanLength": 21.645833333333332,
+    "mix": {
+      "short": 10,
+      "medium": 14,
+      "long": 24
+    },
+    "attempt": 1,
+    "D": 7.51
+  },
+  {
+    "id": 108,
+    "title": "Open courtyard 9",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 52,
+    "depth": 21,
+    "freeAtStart": 5,
+    "blockedStart": 0.9038461538461539,
+    "coverage": 0.9547619047619048,
+    "meanLength": 23.134615384615383,
+    "mix": {
+      "short": 11,
+      "medium": 15,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.82
+  },
+  {
+    "id": 109,
+    "title": "Stepped fortress 9",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 42,
+    "depth": 19,
+    "freeAtStart": 8,
+    "blockedStart": 0.8095238095238095,
+    "coverage": 0.9100346020761245,
+    "meanLength": 25.047619047619047,
+    "mix": {
+      "short": 10,
+      "medium": 11,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.47
+  },
+  {
+    "id": 110,
+    "title": "Woven ring 9",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 52,
+    "depth": 23,
+    "freeAtStart": 9,
+    "blockedStart": 0.8269230769230769,
+    "coverage": 0.9627831715210357,
+    "meanLength": 22.884615384615383,
+    "mix": {
+      "short": 11,
+      "medium": 15,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.24
+  },
+  {
+    "id": 111,
+    "title": "Square weave 10",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 46,
+    "depth": 20,
+    "freeAtStart": 6,
+    "blockedStart": 0.8695652173913043,
+    "coverage": 0.9697265625,
+    "meanLength": 21.58695652173913,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.83
+  },
+  {
+    "id": 112,
+    "title": "Rounded square 10",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 44,
+    "depth": 20,
+    "freeAtStart": 7,
+    "blockedStart": 0.8409090909090909,
+    "coverage": 0.9708333333333333,
+    "meanLength": 21.181818181818183,
+    "mix": {
+      "short": 10,
+      "medium": 12,
+      "long": 22
+    },
+    "attempt": 1,
+    "D": 7.71
+  },
+  {
+    "id": 113,
+    "title": "Diamond vault 10",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 38,
+    "depth": 19,
+    "freeAtStart": 7,
+    "blockedStart": 0.8157894736842105,
+    "coverage": 0.9579545454545455,
+    "meanLength": 22.18421052631579,
+    "mix": {
+      "short": 8,
+      "medium": 11,
+      "long": 19
+    },
+    "attempt": 1,
+    "D": 7.54
+  },
+  {
+    "id": 114,
+    "title": "Circular maze 10",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 38,
+    "depth": 22,
+    "freeAtStart": 7,
+    "blockedStart": 0.8157894736842105,
+    "coverage": 0.958128078817734,
+    "meanLength": 20.473684210526315,
+    "mix": {
+      "short": 8,
+      "medium": 11,
+      "long": 19
+    },
+    "attempt": 1,
+    "D": 7.64
+  },
+  {
+    "id": 115,
+    "title": "Twin chambers 10",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 40,
+    "depth": 22,
+    "freeAtStart": 6,
+    "blockedStart": 0.85,
+    "coverage": 0.9254032258064516,
+    "meanLength": 22.95,
+    "mix": {
+      "short": 9,
+      "medium": 11,
+      "long": 20
+    },
+    "attempt": 0,
+    "D": 7.92
+  },
+  {
+    "id": 116,
+    "title": "Four chambers 10",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 38,
+    "depth": 21,
+    "freeAtStart": 3,
+    "blockedStart": 0.9210526315789473,
+    "coverage": 0.9142857142857143,
+    "meanLength": 23.57894736842105,
+    "mix": {
+      "short": 9,
+      "medium": 10,
+      "long": 19
+    },
+    "attempt": 1,
+    "D": 8.08
+  },
+  {
+    "id": 117,
+    "title": "Crossroads 10",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 40,
+    "depth": 18,
+    "freeAtStart": 8,
+    "blockedStart": 0.8,
+    "coverage": 0.9704545454545455,
+    "meanLength": 21.35,
+    "mix": {
+      "short": 9,
+      "medium": 11,
+      "long": 20
+    },
+    "attempt": 1,
+    "D": 7.28
+  },
+  {
+    "id": 118,
+    "title": "Open courtyard 10",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 44,
+    "depth": 23,
+    "freeAtStart": 5,
+    "blockedStart": 0.8863636363636364,
+    "coverage": 0.9696356275303644,
+    "meanLength": 21.772727272727273,
+    "mix": {
+      "short": 11,
+      "medium": 11,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.94
+  },
+  {
+    "id": 119,
+    "title": "Stepped fortress 10",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 52,
+    "depth": 23,
+    "freeAtStart": 8,
+    "blockedStart": 0.8461538461538461,
+    "coverage": 0.9713983050847458,
+    "meanLength": 17.634615384615383,
+    "mix": {
+      "short": 12,
+      "medium": 14,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.64
+  },
+  {
+    "id": 120,
+    "title": "Woven ring 10",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 48,
+    "depth": 19,
+    "freeAtStart": 7,
+    "blockedStart": 0.8541666666666666,
+    "coverage": 0.9516460905349794,
+    "meanLength": 19.270833333333332,
+    "mix": {
+      "short": 11,
+      "medium": 13,
+      "long": 24
+    },
+    "attempt": 1,
+    "D": 7.61
+  },
+  {
+    "id": 121,
+    "title": "Square weave 11",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 52,
+    "depth": 22,
+    "freeAtStart": 10,
+    "blockedStart": 0.8076923076923077,
+    "coverage": 0.9662629757785467,
+    "meanLength": 21.48076923076923,
+    "mix": {
+      "short": 13,
+      "medium": 13,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.6
+  },
+  {
+    "id": 122,
+    "title": "Rounded square 11",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 46,
+    "depth": 19,
+    "freeAtStart": 6,
+    "blockedStart": 0.8695652173913043,
+    "coverage": 0.9761904761904762,
+    "meanLength": 23.17391304347826,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.8
+  },
+  {
+    "id": 123,
+    "title": "Diamond vault 11",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 36,
+    "depth": 19,
+    "freeAtStart": 7,
+    "blockedStart": 0.8055555555555556,
+    "coverage": 0.9477459016393442,
+    "meanLength": 25.694444444444443,
+    "mix": {
+      "short": 8,
+      "medium": 10,
+      "long": 18
+    },
+    "attempt": 0,
+    "D": 7.54
+  },
+  {
+    "id": 124,
+    "title": "Circular maze 11",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 32,
+    "depth": 19,
+    "freeAtStart": 6,
+    "blockedStart": 0.8125,
+    "coverage": 0.9133771929824561,
+    "meanLength": 26.03125,
+    "mix": {
+      "short": 7,
+      "medium": 9,
+      "long": 16
+    },
+    "attempt": 0,
+    "D": 7.54
+  },
+  {
+    "id": 125,
+    "title": "Twin chambers 11",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 50,
+    "depth": 22,
+    "freeAtStart": 10,
+    "blockedStart": 0.8,
+    "coverage": 0.9786476868327402,
+    "meanLength": 22,
+    "mix": {
+      "short": 11,
+      "medium": 14,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.57
+  },
+  {
+    "id": 126,
+    "title": "Four chambers 11",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 54,
+    "depth": 19,
+    "freeAtStart": 9,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9719202898550725,
+    "meanLength": 19.87037037037037,
+    "mix": {
+      "short": 12,
+      "medium": 15,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.6
+  },
+  {
+    "id": 127,
+    "title": "Crossroads 11",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 44,
+    "depth": 20,
+    "freeAtStart": 7,
+    "blockedStart": 0.8409090909090909,
+    "coverage": 0.974308300395257,
+    "meanLength": 22.40909090909091,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 1,
+    "D": 7.59
+  },
+  {
+    "id": 128,
+    "title": "Open courtyard 11",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 52,
+    "depth": 20,
+    "freeAtStart": 6,
+    "blockedStart": 0.8846153846153846,
+    "coverage": 0.9696428571428571,
+    "meanLength": 20.884615384615383,
+    "mix": {
+      "short": 12,
+      "medium": 14,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.68
+  },
+  {
+    "id": 129,
+    "title": "Stepped fortress 11",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 44,
+    "depth": 19,
+    "freeAtStart": 8,
+    "blockedStart": 0.8181818181818181,
+    "coverage": 0.9704724409448819,
+    "meanLength": 22.40909090909091,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.49
+  },
+  {
+    "id": 130,
+    "title": "Woven ring 11",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 48,
+    "depth": 25,
+    "freeAtStart": 9,
+    "blockedStart": 0.8125,
+    "coverage": 0.9519927536231884,
+    "meanLength": 21.895833333333332,
+    "mix": {
+      "short": 10,
+      "medium": 14,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.63
+  },
+  {
+    "id": 131,
+    "title": "Square weave 12",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 54,
+    "depth": 26,
+    "freeAtStart": 10,
+    "blockedStart": 0.8148148148148149,
+    "coverage": 0.9513888888888888,
+    "meanLength": 22.833333333333332,
+    "mix": {
+      "short": 13,
+      "medium": 14,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.7
+  },
+  {
+    "id": 132,
+    "title": "Rounded square 12",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 50,
+    "depth": 21,
+    "freeAtStart": 8,
+    "blockedStart": 0.84,
+    "coverage": 0.9448160535117057,
+    "meanLength": 22.6,
+    "mix": {
+      "short": 11,
+      "medium": 14,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.64
+  },
+  {
+    "id": 133,
+    "title": "Diamond vault 12",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 44,
+    "depth": 22,
+    "freeAtStart": 5,
+    "blockedStart": 0.8863636363636364,
+    "coverage": 0.9247311827956989,
+    "meanLength": 23.454545454545453,
+    "mix": {
+      "short": 10,
+      "medium": 12,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.87
+  },
+  {
+    "id": 134,
+    "title": "Circular maze 12",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 44,
+    "depth": 19,
+    "freeAtStart": 9,
+    "blockedStart": 0.7954545454545454,
+    "coverage": 0.9588235294117647,
+    "meanLength": 22.227272727272727,
+    "mix": {
+      "short": 10,
+      "medium": 12,
+      "long": 22
+    },
+    "attempt": 1,
+    "D": 7.32
+  },
+  {
+    "id": 135,
+    "title": "Twin chambers 12",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 54,
+    "depth": 23,
+    "freeAtStart": 10,
+    "blockedStart": 0.8148148148148149,
+    "coverage": 0.9650793650793651,
+    "meanLength": 22.51851851851852,
+    "mix": {
+      "short": 11,
+      "medium": 16,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.55
+  },
+  {
+    "id": 136,
+    "title": "Four chambers 12",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 40,
+    "depth": 19,
+    "freeAtStart": 7,
+    "blockedStart": 0.825,
+    "coverage": 0.9131832797427653,
+    "meanLength": 28.4,
+    "mix": {
+      "short": 9,
+      "medium": 11,
+      "long": 20
+    },
+    "attempt": 0,
+    "D": 7.66
+  },
+  {
+    "id": 137,
+    "title": "Crossroads 12",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 46,
+    "depth": 19,
+    "freeAtStart": 9,
+    "blockedStart": 0.8043478260869565,
+    "coverage": 0.9563636363636364,
+    "meanLength": 22.869565217391305,
+    "mix": {
+      "short": 11,
+      "medium": 12,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.5
+  },
+  {
+    "id": 138,
+    "title": "Open courtyard 12",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 50,
+    "depth": 20,
+    "freeAtStart": 7,
+    "blockedStart": 0.86,
+    "coverage": 0.9587301587301588,
+    "meanLength": 24.16,
+    "mix": {
+      "short": 10,
+      "medium": 15,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.67
+  },
+  {
+    "id": 139,
+    "title": "Stepped fortress 12",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 50,
+    "depth": 20,
+    "freeAtStart": 7,
+    "blockedStart": 0.86,
+    "coverage": 0.9576124567474048,
+    "meanLength": 22.14,
+    "mix": {
+      "short": 11,
+      "medium": 14,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.69
+  },
+  {
+    "id": 140,
+    "title": "Woven ring 12",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 48,
+    "depth": 22,
+    "freeAtStart": 7,
+    "blockedStart": 0.8541666666666666,
+    "coverage": 0.9474110032362459,
+    "meanLength": 24.395833333333332,
+    "mix": {
+      "short": 11,
+      "medium": 13,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.73
+  },
+  {
+    "id": 141,
+    "title": "Square weave 13",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 48,
+    "depth": 20,
+    "freeAtStart": 9,
+    "blockedStart": 0.8125,
+    "coverage": 0.96875,
+    "meanLength": 20.666666666666668,
+    "mix": {
+      "short": 12,
+      "medium": 12,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.7
+  },
+  {
+    "id": 142,
+    "title": "Rounded square 13",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 46,
+    "depth": 20,
+    "freeAtStart": 5,
+    "blockedStart": 0.8913043478260869,
+    "coverage": 0.9572916666666667,
+    "meanLength": 19.97826086956522,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.67
+  },
+  {
+    "id": 143,
+    "title": "Diamond vault 13",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 34,
+    "depth": 20,
+    "freeAtStart": 6,
+    "blockedStart": 0.8235294117647058,
+    "coverage": 0.9443181818181818,
+    "meanLength": 24.441176470588236,
+    "mix": {
+      "short": 7,
+      "medium": 10,
+      "long": 17
+    },
+    "attempt": 0,
+    "D": 7.64
+  },
+  {
+    "id": 144,
+    "title": "Circular maze 13",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 32,
+    "depth": 20,
+    "freeAtStart": 4,
+    "blockedStart": 0.875,
+    "coverage": 0.9396551724137931,
+    "meanLength": 23.84375,
+    "mix": {
+      "short": 7,
+      "medium": 9,
+      "long": 16
+    },
+    "attempt": 0,
+    "D": 7.71
+  },
+  {
+    "id": 145,
+    "title": "Twin chambers 13",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 44,
+    "depth": 20,
+    "freeAtStart": 7,
+    "blockedStart": 0.8409090909090909,
+    "coverage": 0.9627016129032258,
+    "meanLength": 21.704545454545453,
+    "mix": {
+      "short": 10,
+      "medium": 12,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.72
+  },
+  {
+    "id": 146,
+    "title": "Four chambers 13",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 40,
+    "depth": 20,
+    "freeAtStart": 4,
+    "blockedStart": 0.9,
+    "coverage": 0.926530612244898,
+    "meanLength": 22.7,
+    "mix": {
+      "short": 8,
+      "medium": 12,
+      "long": 20
+    },
+    "attempt": 1,
+    "D": 7.63
+  },
+  {
+    "id": 147,
+    "title": "Crossroads 13",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 32,
+    "depth": 19,
+    "freeAtStart": 6,
+    "blockedStart": 0.8125,
+    "coverage": 0.9147727272727273,
+    "meanLength": 25.15625,
+    "mix": {
+      "short": 8,
+      "medium": 8,
+      "long": 16
+    },
+    "attempt": 0,
+    "D": 7.61
+  },
+  {
+    "id": 148,
+    "title": "Open courtyard 13",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 46,
+    "depth": 23,
+    "freeAtStart": 7,
+    "blockedStart": 0.8478260869565217,
+    "coverage": 0.9615384615384616,
+    "meanLength": 20.652173913043477,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.78
+  },
+  {
+    "id": 149,
+    "title": "Stepped fortress 13",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 38,
+    "depth": 19,
+    "freeAtStart": 6,
+    "blockedStart": 0.8421052631578947,
+    "coverage": 0.9184322033898306,
+    "meanLength": 22.81578947368421,
+    "mix": {
+      "short": 8,
+      "medium": 11,
+      "long": 19
+    },
+    "attempt": 0,
+    "D": 7.68
+  },
+  {
+    "id": 150,
+    "title": "Woven ring 13",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 46,
+    "depth": 24,
+    "freeAtStart": 3,
+    "blockedStart": 0.9347826086956522,
+    "coverage": 0.9567901234567902,
+    "meanLength": 20.217391304347824,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 8.09
+  },
+  {
+    "id": 151,
+    "title": "Square weave 14",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 44,
+    "depth": 22,
+    "freeAtStart": 6,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.9662629757785467,
+    "meanLength": 25.386363636363637,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.73
+  },
+  {
+    "id": 152,
+    "title": "Rounded square 14",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 48,
+    "depth": 27,
+    "freeAtStart": 7,
+    "blockedStart": 0.8541666666666666,
+    "coverage": 0.9404761904761905,
+    "meanLength": 21.395833333333332,
+    "mix": {
+      "short": 10,
+      "medium": 14,
+      "long": 24
+    },
+    "attempt": 1,
+    "D": 7.85
+  },
+  {
+    "id": 153,
+    "title": "Diamond vault 14",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 42,
+    "depth": 21,
+    "freeAtStart": 6,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.9559426229508197,
+    "meanLength": 22.214285714285715,
+    "mix": {
+      "short": 10,
+      "medium": 11,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.68
+  },
+  {
+    "id": 154,
+    "title": "Circular maze 14",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 40,
+    "depth": 19,
+    "freeAtStart": 7,
+    "blockedStart": 0.825,
+    "coverage": 0.956140350877193,
+    "meanLength": 21.8,
+    "mix": {
+      "short": 10,
+      "medium": 10,
+      "long": 20
+    },
+    "attempt": 1,
+    "D": 7.37
+  },
+  {
+    "id": 155,
+    "title": "Twin chambers 14",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 46,
+    "depth": 19,
+    "freeAtStart": 6,
+    "blockedStart": 0.8695652173913043,
+    "coverage": 0.9546263345195729,
+    "meanLength": 23.32608695652174,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 3,
+    "D": 7.76
+  },
+  {
+    "id": 156,
+    "title": "Four chambers 14",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 50,
+    "depth": 20,
+    "freeAtStart": 8,
+    "blockedStart": 0.84,
+    "coverage": 0.9619565217391305,
+    "meanLength": 21.24,
+    "mix": {
+      "short": 12,
+      "medium": 13,
+      "long": 25
+    },
+    "attempt": 3,
+    "D": 7.5
+  },
+  {
+    "id": 157,
+    "title": "Crossroads 14",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 44,
+    "depth": 22,
+    "freeAtStart": 6,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.9644268774703556,
+    "meanLength": 22.181818181818183,
+    "mix": {
+      "short": 10,
+      "medium": 12,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.81
+  },
+  {
+    "id": 158,
+    "title": "Open courtyard 14",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 44,
+    "depth": 20,
+    "freeAtStart": 6,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.9553571428571429,
+    "meanLength": 24.318181818181817,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 1,
+    "D": 7.53
+  },
+  {
+    "id": 159,
+    "title": "Stepped fortress 14",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 40,
+    "depth": 19,
+    "freeAtStart": 5,
+    "blockedStart": 0.875,
+    "coverage": 0.9625984251968503,
+    "meanLength": 24.45,
+    "mix": {
+      "short": 9,
+      "medium": 11,
+      "long": 20
+    },
+    "attempt": 0,
+    "D": 7.66
+  },
+  {
+    "id": 160,
+    "title": "Woven ring 14",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 46,
+    "depth": 19,
+    "freeAtStart": 6,
+    "blockedStart": 0.8695652173913043,
+    "coverage": 0.9528985507246377,
+    "meanLength": 22.869565217391305,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.63
+  },
+  {
+    "id": 161,
+    "title": "Square weave 15",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 60,
+    "depth": 20,
+    "freeAtStart": 8,
+    "blockedStart": 0.8666666666666667,
+    "coverage": 0.9637345679012346,
+    "meanLength": 20.816666666666666,
+    "mix": {
+      "short": 12,
+      "medium": 18,
+      "long": 30
+    },
+    "attempt": 1,
+    "D": 7.78
+  },
+  {
+    "id": 162,
+    "title": "Rounded square 15",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 38,
+    "depth": 19,
+    "freeAtStart": 7,
+    "blockedStart": 0.8157894736842105,
+    "coverage": 0.9163879598662207,
+    "meanLength": 28.842105263157894,
+    "mix": {
+      "short": 8,
+      "medium": 11,
+      "long": 19
+    },
+    "attempt": 0,
+    "D": 7.68
+  },
+  {
+    "id": 163,
+    "title": "Diamond vault 15",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 44,
+    "depth": 20,
+    "freeAtStart": 8,
+    "blockedStart": 0.8181818181818181,
+    "coverage": 0.900537634408602,
+    "meanLength": 22.84090909090909,
+    "mix": {
+      "short": 10,
+      "medium": 12,
+      "long": 22
+    },
+    "attempt": 1,
+    "D": 7.53
+  },
+  {
+    "id": 164,
+    "title": "Circular maze 15",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 42,
+    "depth": 19,
+    "freeAtStart": 8,
+    "blockedStart": 0.8095238095238095,
+    "coverage": 0.9539215686274509,
+    "meanLength": 23.166666666666668,
+    "mix": {
+      "short": 9,
+      "medium": 12,
+      "long": 21
+    },
+    "attempt": 1,
+    "D": 7.44
+  },
+  {
+    "id": 165,
+    "title": "Twin chambers 15",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 48,
+    "depth": 19,
+    "freeAtStart": 8,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.942063492063492,
+    "meanLength": 24.729166666666668,
+    "mix": {
+      "short": 10,
+      "medium": 14,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.38
+  },
+  {
+    "id": 166,
+    "title": "Four chambers 15",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 48,
+    "depth": 21,
+    "freeAtStart": 9,
+    "blockedStart": 0.8125,
+    "coverage": 0.942926045016077,
+    "meanLength": 24.4375,
+    "mix": {
+      "short": 10,
+      "medium": 14,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.6
+  },
+  {
+    "id": 167,
+    "title": "Crossroads 15",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 50,
+    "depth": 20,
+    "freeAtStart": 7,
+    "blockedStart": 0.86,
+    "coverage": 0.9581818181818181,
+    "meanLength": 21.08,
+    "mix": {
+      "short": 11,
+      "medium": 14,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.61
+  },
+  {
+    "id": 168,
+    "title": "Open courtyard 15",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 50,
+    "depth": 23,
+    "freeAtStart": 6,
+    "blockedStart": 0.88,
+    "coverage": 0.942063492063492,
+    "meanLength": 23.74,
+    "mix": {
+      "short": 10,
+      "medium": 15,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.73
+  },
+  {
+    "id": 169,
+    "title": "Stepped fortress 15",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 48,
+    "depth": 24,
+    "freeAtStart": 5,
+    "blockedStart": 0.8958333333333334,
+    "coverage": 0.9480968858131488,
+    "meanLength": 22.833333333333332,
+    "mix": {
+      "short": 11,
+      "medium": 13,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.95
+  },
+  {
+    "id": 170,
+    "title": "Woven ring 15",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 54,
+    "depth": 21,
+    "freeAtStart": 8,
+    "blockedStart": 0.8518518518518519,
+    "coverage": 0.9724919093851133,
+    "meanLength": 22.25925925925926,
+    "mix": {
+      "short": 11,
+      "medium": 16,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.53
+  },
+  {
+    "id": 171,
+    "title": "Square weave 16",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 48,
+    "depth": 23,
+    "freeAtStart": 7,
+    "blockedStart": 0.8541666666666666,
+    "coverage": 0.9638671875,
+    "meanLength": 20.5625,
+    "mix": {
+      "short": 11,
+      "medium": 13,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.74
+  },
+  {
+    "id": 172,
+    "title": "Rounded square 16",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 40,
+    "depth": 19,
+    "freeAtStart": 7,
+    "blockedStart": 0.825,
+    "coverage": 0.9677083333333333,
+    "meanLength": 23.225,
+    "mix": {
+      "short": 8,
+      "medium": 12,
+      "long": 20
+    },
+    "attempt": 0,
+    "D": 7.73
+  },
+  {
+    "id": 173,
+    "title": "Diamond vault 16",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 36,
+    "depth": 19,
+    "freeAtStart": 6,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9534090909090909,
+    "meanLength": 23.305555555555557,
+    "mix": {
+      "short": 8,
+      "medium": 10,
+      "long": 18
+    },
+    "attempt": 0,
+    "D": 7.78
+  },
+  {
+    "id": 174,
+    "title": "Circular maze 16",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 38,
+    "depth": 22,
+    "freeAtStart": 5,
+    "blockedStart": 0.868421052631579,
+    "coverage": 0.958128078817734,
+    "meanLength": 20.473684210526315,
+    "mix": {
+      "short": 8,
+      "medium": 11,
+      "long": 19
+    },
+    "attempt": 0,
+    "D": 7.71
+  },
+  {
+    "id": 175,
+    "title": "Twin chambers 16",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 46,
+    "depth": 22,
+    "freeAtStart": 8,
+    "blockedStart": 0.8260869565217391,
+    "coverage": 0.9737903225806451,
+    "meanLength": 21,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.63
+  },
+  {
+    "id": 176,
+    "title": "Four chambers 16",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 46,
+    "depth": 20,
+    "freeAtStart": 9,
+    "blockedStart": 0.8043478260869565,
+    "coverage": 0.9653061224489796,
+    "meanLength": 20.565217391304348,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.48
+  },
+  {
+    "id": 177,
+    "title": "Crossroads 16",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 38,
+    "depth": 19,
+    "freeAtStart": 5,
+    "blockedStart": 0.868421052631579,
+    "coverage": 0.9704545454545455,
+    "meanLength": 22.473684210526315,
+    "mix": {
+      "short": 9,
+      "medium": 10,
+      "long": 19
+    },
+    "attempt": 0,
+    "D": 7.75
+  },
+  {
+    "id": 178,
+    "title": "Open courtyard 16",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 44,
+    "depth": 20,
+    "freeAtStart": 5,
+    "blockedStart": 0.8863636363636364,
+    "coverage": 0.9564777327935222,
+    "meanLength": 21.477272727272727,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.91
+  },
+  {
+    "id": 179,
+    "title": "Stepped fortress 16",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 34,
+    "depth": 19,
+    "freeAtStart": 6,
+    "blockedStart": 0.8235294117647058,
+    "coverage": 0.9661016949152542,
+    "meanLength": 26.823529411764707,
+    "mix": {
+      "short": 7,
+      "medium": 10,
+      "long": 17
+    },
+    "attempt": 0,
+    "D": 7.55
+  },
+  {
+    "id": 180,
+    "title": "Woven ring 16",
+    "tier": "Expert",
+    "grid": 32,
+    "arrows": 44,
+    "depth": 21,
+    "freeAtStart": 8,
+    "blockedStart": 0.8181818181818181,
+    "coverage": 0.9670781893004116,
+    "meanLength": 21.363636363636363,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.71
+  },
+  {
+    "id": 181,
+    "title": "Square weave 17",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 52,
+    "depth": 22,
+    "freeAtStart": 6,
+    "blockedStart": 0.8846153846153846,
+    "coverage": 0.9351851851851853,
+    "meanLength": 23.307692307692307,
+    "mix": {
+      "short": 12,
+      "medium": 14,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.9
+  },
+  {
+    "id": 182,
+    "title": "Rounded square 17",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 52,
+    "depth": 24,
+    "freeAtStart": 3,
+    "blockedStart": 0.9423076923076923,
+    "coverage": 0.9749163879598662,
+    "meanLength": 22.423076923076923,
+    "mix": {
+      "short": 11,
+      "medium": 15,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.99
+  },
+  {
+    "id": 183,
+    "title": "Diamond vault 17",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 42,
+    "depth": 21,
+    "freeAtStart": 8,
+    "blockedStart": 0.8095238095238095,
+    "coverage": 0.942652329749104,
+    "meanLength": 25.047619047619047,
+    "mix": {
+      "short": 9,
+      "medium": 12,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.52
+  },
+  {
+    "id": 184,
+    "title": "Circular maze 17",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 44,
+    "depth": 21,
+    "freeAtStart": 8,
+    "blockedStart": 0.8181818181818181,
+    "coverage": 0.9627450980392157,
+    "meanLength": 22.318181818181817,
+    "mix": {
+      "short": 10,
+      "medium": 12,
+      "long": 22
+    },
+    "attempt": 1,
+    "D": 7.49
+  },
+  {
+    "id": 185,
+    "title": "Twin chambers 17",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 54,
+    "depth": 26,
+    "freeAtStart": 8,
+    "blockedStart": 0.8518518518518519,
+    "coverage": 0.9642857142857143,
+    "meanLength": 22.5,
+    "mix": {
+      "short": 11,
+      "medium": 16,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.63
+  },
+  {
+    "id": 186,
+    "title": "Four chambers 17",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 56,
+    "depth": 27,
+    "freeAtStart": 8,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.9565916398713826,
+    "meanLength": 21.25,
+    "mix": {
+      "short": 13,
+      "medium": 15,
+      "long": 28
+    },
+    "attempt": 0,
+    "D": 7.72
+  },
+  {
+    "id": 187,
+    "title": "Crossroads 17",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 50,
+    "depth": 24,
+    "freeAtStart": 8,
+    "blockedStart": 0.84,
+    "coverage": 0.97,
+    "meanLength": 21.34,
+    "mix": {
+      "short": 10,
+      "medium": 15,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.66
+  },
+  {
+    "id": 188,
+    "title": "Open courtyard 17",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 54,
+    "depth": 26,
+    "freeAtStart": 7,
+    "blockedStart": 0.8703703703703703,
+    "coverage": 0.9523809523809523,
+    "meanLength": 22.22222222222222,
+    "mix": {
+      "short": 12,
+      "medium": 15,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.8
+  },
+  {
+    "id": 189,
+    "title": "Stepped fortress 17",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 44,
+    "depth": 22,
+    "freeAtStart": 5,
+    "blockedStart": 0.8863636363636364,
+    "coverage": 0.9075704225352113,
+    "meanLength": 23.431818181818183,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.92
+  },
+  {
+    "id": 190,
+    "title": "Woven ring 17",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 58,
+    "depth": 21,
+    "freeAtStart": 8,
+    "blockedStart": 0.8620689655172413,
+    "coverage": 0.9692556634304207,
+    "meanLength": 20.655172413793103,
+    "mix": {
+      "short": 13,
+      "medium": 16,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.67
+  },
+  {
+    "id": 191,
+    "title": "Square weave 18",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 66,
+    "depth": 21,
+    "freeAtStart": 6,
+    "blockedStart": 0.9090909090909091,
+    "coverage": 0.9632963988919666,
+    "meanLength": 21.075757575757574,
+    "mix": {
+      "short": 15,
+      "medium": 18,
+      "long": 33
+    },
+    "attempt": 0,
+    "D": 7.91
+  },
+  {
+    "id": 192,
+    "title": "Rounded square 18",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 60,
+    "depth": 22,
+    "freeAtStart": 10,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9337797619047619,
+    "meanLength": 20.916666666666668,
+    "mix": {
+      "short": 12,
+      "medium": 18,
+      "long": 30
+    },
+    "attempt": 0,
+    "D": 7.53
+  },
+  {
+    "id": 193,
+    "title": "Diamond vault 18",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 50,
+    "depth": 21,
+    "freeAtStart": 7,
+    "blockedStart": 0.86,
+    "coverage": 0.9542483660130721,
+    "meanLength": 23.36,
+    "mix": {
+      "short": 11,
+      "medium": 14,
+      "long": 25
+    },
+    "attempt": 2,
+    "D": 7.59
+  },
+  {
+    "id": 194,
+    "title": "Circular maze 18",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 44,
+    "depth": 21,
+    "freeAtStart": 6,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.943950177935943,
+    "meanLength": 24.113636363636363,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 3,
+    "D": 7.62
+  },
+  {
+    "id": 195,
+    "title": "Twin chambers 18",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 62,
+    "depth": 25,
+    "freeAtStart": 8,
+    "blockedStart": 0.8709677419354839,
+    "coverage": 0.9651988636363636,
+    "meanLength": 21.919354838709676,
+    "mix": {
+      "short": 14,
+      "medium": 17,
+      "long": 31
+    },
+    "attempt": 0,
+    "D": 7.73
+  },
+  {
+    "id": 196,
+    "title": "Four chambers 18",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 58,
+    "depth": 22,
+    "freeAtStart": 9,
+    "blockedStart": 0.8448275862068966,
+    "coverage": 0.9356936416184971,
+    "meanLength": 22.32758620689655,
+    "mix": {
+      "short": 13,
+      "medium": 16,
+      "long": 29
+    },
+    "attempt": 1,
+    "D": 7.71
+  },
+  {
+    "id": 197,
+    "title": "Crossroads 18",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 52,
+    "depth": 23,
+    "freeAtStart": 8,
+    "blockedStart": 0.8461538461538461,
+    "coverage": 0.9591346153846154,
+    "meanLength": 23.01923076923077,
+    "mix": {
+      "short": 11,
+      "medium": 15,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.37
+  },
+  {
+    "id": 198,
+    "title": "Open courtyard 18",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 64,
+    "depth": 25,
+    "freeAtStart": 7,
+    "blockedStart": 0.890625,
+    "coverage": 0.9595170454545454,
+    "meanLength": 21.109375,
+    "mix": {
+      "short": 14,
+      "medium": 18,
+      "long": 32
+    },
+    "attempt": 0,
+    "D": 7.88
+  },
+  {
+    "id": 199,
+    "title": "Stepped fortress 18",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 46,
+    "depth": 21,
+    "freeAtStart": 6,
+    "blockedStart": 0.8695652173913043,
+    "coverage": 0.9026073619631901,
+    "meanLength": 25.58695652173913,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.85
+  },
+  {
+    "id": 200,
+    "title": "Woven ring 18",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 56,
+    "depth": 27,
+    "freeAtStart": 6,
+    "blockedStart": 0.8928571428571429,
+    "coverage": 0.9491279069767443,
+    "meanLength": 23.321428571428573,
+    "mix": {
+      "short": 13,
+      "medium": 15,
+      "long": 28
+    },
+    "attempt": 0,
+    "D": 7.94
+  },
+  {
+    "id": 201,
+    "title": "Square weave 19",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 56,
+    "depth": 21,
+    "freeAtStart": 5,
+    "blockedStart": 0.9107142857142857,
+    "coverage": 0.9653979238754328,
+    "meanLength": 19.928571428571427,
+    "mix": {
+      "short": 13,
+      "medium": 15,
+      "long": 28
+    },
+    "attempt": 1,
+    "D": 7.89
+  },
+  {
+    "id": 202,
+    "title": "Rounded square 19",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 50,
+    "depth": 23,
+    "freeAtStart": 6,
+    "blockedStart": 0.88,
+    "coverage": 0.967948717948718,
+    "meanLength": 21.14,
+    "mix": {
+      "short": 10,
+      "medium": 15,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.83
+  },
+  {
+    "id": 203,
+    "title": "Diamond vault 19",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 42,
+    "depth": 21,
+    "freeAtStart": 7,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9385245901639344,
+    "meanLength": 21.80952380952381,
+    "mix": {
+      "short": 9,
+      "medium": 12,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.55
+  },
+  {
+    "id": 204,
+    "title": "Circular maze 19",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 46,
+    "depth": 21,
+    "freeAtStart": 7,
+    "blockedStart": 0.8478260869565217,
+    "coverage": 0.9627192982456141,
+    "meanLength": 19.08695652173913,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 1,
+    "D": 7.37
+  },
+  {
+    "id": 205,
+    "title": "Twin chambers 19",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 46,
+    "depth": 21,
+    "freeAtStart": 6,
+    "blockedStart": 0.8695652173913043,
+    "coverage": 0.9208185053380783,
+    "meanLength": 22.5,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.81
+  },
+  {
+    "id": 206,
+    "title": "Four chambers 19",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 46,
+    "depth": 22,
+    "freeAtStart": 7,
+    "blockedStart": 0.8478260869565217,
+    "coverage": 0.9510869565217391,
+    "meanLength": 22.82608695652174,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.52
+  },
+  {
+    "id": 207,
+    "title": "Crossroads 19",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 42,
+    "depth": 22,
+    "freeAtStart": 6,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.9545454545454547,
+    "meanLength": 23,
+    "mix": {
+      "short": 10,
+      "medium": 11,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.66
+  },
+  {
+    "id": 208,
+    "title": "Open courtyard 19",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 48,
+    "depth": 22,
+    "freeAtStart": 8,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9642857142857143,
+    "meanLength": 22.5,
+    "mix": {
+      "short": 12,
+      "medium": 12,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.77
+  },
+  {
+    "id": 209,
+    "title": "Stepped fortress 19",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 42,
+    "depth": 21,
+    "freeAtStart": 6,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.9545454545454546,
+    "meanLength": 24,
+    "mix": {
+      "short": 9,
+      "medium": 12,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.64
+  },
+  {
+    "id": 210,
+    "title": "Woven ring 19",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 52,
+    "depth": 21,
+    "freeAtStart": 5,
+    "blockedStart": 0.9038461538461539,
+    "coverage": 0.9692028985507246,
+    "meanLength": 20.576923076923077,
+    "mix": {
+      "short": 12,
+      "medium": 14,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.84
+  },
+  {
+    "id": 211,
+    "title": "Square weave 20",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 54,
+    "depth": 21,
+    "freeAtStart": 7,
+    "blockedStart": 0.8703703703703703,
+    "coverage": 0.9660493827160493,
+    "meanLength": 23.185185185185187,
+    "mix": {
+      "short": 12,
+      "medium": 15,
+      "long": 27
+    },
+    "attempt": 1,
+    "D": 7.79
+  },
+  {
+    "id": 212,
+    "title": "Rounded square 20",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 50,
+    "depth": 23,
+    "freeAtStart": 8,
+    "blockedStart": 0.84,
+    "coverage": 0.959866220735786,
+    "meanLength": 22.96,
+    "mix": {
+      "short": 12,
+      "medium": 13,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.69
+  },
+  {
+    "id": 213,
+    "title": "Diamond vault 20",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 46,
+    "depth": 24,
+    "freeAtStart": 6,
+    "blockedStart": 0.8695652173913043,
+    "coverage": 0.931899641577061,
+    "meanLength": 22.608695652173914,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.76
+  },
+  {
+    "id": 214,
+    "title": "Circular maze 20",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 42,
+    "depth": 21,
+    "freeAtStart": 8,
+    "blockedStart": 0.8095238095238095,
+    "coverage": 0.9627450980392157,
+    "meanLength": 23.38095238095238,
+    "mix": {
+      "short": 9,
+      "medium": 12,
+      "long": 21
+    },
+    "attempt": 0,
+    "D": 7.4
+  },
+  {
+    "id": 215,
+    "title": "Twin chambers 20",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 52,
+    "depth": 26,
+    "freeAtStart": 7,
+    "blockedStart": 0.8653846153846154,
+    "coverage": 0.9309523809523808,
+    "meanLength": 22.557692307692307,
+    "mix": {
+      "short": 12,
+      "medium": 14,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.8
+  },
+  {
+    "id": 216,
+    "title": "Four chambers 20",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 50,
+    "depth": 23,
+    "freeAtStart": 7,
+    "blockedStart": 0.86,
+    "coverage": 0.9598070739549839,
+    "meanLength": 23.88,
+    "mix": {
+      "short": 11,
+      "medium": 14,
+      "long": 25
+    },
+    "attempt": 1,
+    "D": 7.73
+  },
+  {
+    "id": 217,
+    "title": "Crossroads 20",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 50,
+    "depth": 21,
+    "freeAtStart": 7,
+    "blockedStart": 0.86,
+    "coverage": 0.9481818181818182,
+    "meanLength": 20.86,
+    "mix": {
+      "short": 12,
+      "medium": 13,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.68
+  },
+  {
+    "id": 218,
+    "title": "Open courtyard 20",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 50,
+    "depth": 22,
+    "freeAtStart": 6,
+    "blockedStart": 0.88,
+    "coverage": 0.9230158730158731,
+    "meanLength": 23.26,
+    "mix": {
+      "short": 10,
+      "medium": 15,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.75
+  },
+  {
+    "id": 219,
+    "title": "Stepped fortress 20",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 46,
+    "depth": 25,
+    "freeAtStart": 8,
+    "blockedStart": 0.8260869565217391,
+    "coverage": 0.9595070422535211,
+    "meanLength": 23.695652173913043,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 2,
+    "D": 7.71
+  },
+  {
+    "id": 220,
+    "title": "Woven ring 20",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 58,
+    "depth": 25,
+    "freeAtStart": 7,
+    "blockedStart": 0.8793103448275862,
+    "coverage": 0.9668284789644013,
+    "meanLength": 20.603448275862068,
+    "mix": {
+      "short": 13,
+      "medium": 16,
+      "long": 29
+    },
+    "attempt": 1,
+    "D": 7.8
+  },
+  {
+    "id": 221,
+    "title": "Square weave 21",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 62,
+    "depth": 28,
+    "freeAtStart": 10,
+    "blockedStart": 0.8387096774193549,
+    "coverage": 0.9681440443213296,
+    "meanLength": 22.548387096774192,
+    "mix": {
+      "short": 14,
+      "medium": 17,
+      "long": 31
+    },
+    "attempt": 0,
+    "D": 7.68
+  },
+  {
+    "id": 222,
+    "title": "Rounded square 21",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 54,
+    "depth": 22,
+    "freeAtStart": 8,
+    "blockedStart": 0.8518518518518519,
+    "coverage": 0.9464285714285714,
+    "meanLength": 23.555555555555557,
+    "mix": {
+      "short": 13,
+      "medium": 14,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.61
+  },
+  {
+    "id": 223,
+    "title": "Diamond vault 21",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 54,
+    "depth": 21,
+    "freeAtStart": 10,
+    "blockedStart": 0.8148148148148149,
+    "coverage": 0.9379084967320261,
+    "meanLength": 21.25925925925926,
+    "mix": {
+      "short": 13,
+      "medium": 14,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.48
+  },
+  {
+    "id": 224,
+    "title": "Circular maze 21",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 50,
+    "depth": 22,
+    "freeAtStart": 9,
+    "blockedStart": 0.8200000000000001,
+    "coverage": 0.9403914590747331,
+    "meanLength": 21.14,
+    "mix": {
+      "short": 11,
+      "medium": 14,
+      "long": 25
+    },
+    "attempt": 2,
+    "D": 7.36
+  },
+  {
+    "id": 225,
+    "title": "Twin chambers 21",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 66,
+    "depth": 24,
+    "freeAtStart": 9,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.9588068181818182,
+    "meanLength": 20.454545454545453,
+    "mix": {
+      "short": 15,
+      "medium": 18,
+      "long": 33
+    },
+    "attempt": 1,
+    "D": 7.53
+  },
+  {
+    "id": 226,
+    "title": "Four chambers 21",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 56,
+    "depth": 21,
+    "freeAtStart": 8,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.9414739884393064,
+    "meanLength": 23.267857142857142,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 0,
+    "D": 7.59
+  },
+  {
+    "id": 227,
+    "title": "Crossroads 21",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 58,
+    "depth": 22,
+    "freeAtStart": 9,
+    "blockedStart": 0.8448275862068966,
+    "coverage": 0.9631410256410257,
+    "meanLength": 20.724137931034484,
+    "mix": {
+      "short": 13,
+      "medium": 16,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.43
+  },
+  {
+    "id": 228,
+    "title": "Open courtyard 21",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 62,
+    "depth": 25,
+    "freeAtStart": 10,
+    "blockedStart": 0.8387096774193549,
+    "coverage": 0.9403409090909091,
+    "meanLength": 21.35483870967742,
+    "mix": {
+      "short": 14,
+      "medium": 17,
+      "long": 31
+    },
+    "attempt": 0,
+    "D": 7.65
+  },
+  {
+    "id": 229,
+    "title": "Stepped fortress 21",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 56,
+    "depth": 22,
+    "freeAtStart": 8,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.9593558282208589,
+    "meanLength": 22.339285714285715,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 0,
+    "D": 7.66
+  },
+  {
+    "id": 230,
+    "title": "Woven ring 21",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 58,
+    "depth": 21,
+    "freeAtStart": 10,
+    "blockedStart": 0.8275862068965517,
+    "coverage": 0.9614825581395349,
+    "meanLength": 22.810344827586206,
+    "mix": {
+      "short": 12,
+      "medium": 17,
+      "long": 29
+    },
+    "attempt": 1,
+    "D": 7.57
+  },
+  {
+    "id": 231,
+    "title": "Square weave 22",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 50,
+    "depth": 27,
+    "freeAtStart": 5,
+    "blockedStart": 0.9,
+    "coverage": 0.9749134948096886,
+    "meanLength": 22.54,
+    "mix": {
+      "short": 11,
+      "medium": 14,
+      "long": 25
+    },
+    "attempt": 3,
+    "D": 8.01
+  },
+  {
+    "id": 232,
+    "title": "Rounded square 22",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 50,
+    "depth": 24,
+    "freeAtStart": 5,
+    "blockedStart": 0.9,
+    "coverage": 0.9642857142857143,
+    "meanLength": 21.06,
+    "mix": {
+      "short": 11,
+      "medium": 14,
+      "long": 25
+    },
+    "attempt": 1,
+    "D": 7.91
+  },
+  {
+    "id": 233,
+    "title": "Diamond vault 22",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 46,
+    "depth": 21,
+    "freeAtStart": 6,
+    "blockedStart": 0.8695652173913043,
+    "coverage": 0.944672131147541,
+    "meanLength": 20.043478260869566,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 1,
+    "D": 7.58
+  },
+  {
+    "id": 234,
+    "title": "Circular maze 22",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 38,
+    "depth": 21,
+    "freeAtStart": 5,
+    "blockedStart": 0.868421052631579,
+    "coverage": 0.9649122807017544,
+    "meanLength": 23.157894736842106,
+    "mix": {
+      "short": 8,
+      "medium": 11,
+      "long": 19
+    },
+    "attempt": 0,
+    "D": 7.62
+  },
+  {
+    "id": 235,
+    "title": "Twin chambers 22",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 44,
+    "depth": 21,
+    "freeAtStart": 7,
+    "blockedStart": 0.8409090909090909,
+    "coverage": 0.9252669039145908,
+    "meanLength": 23.636363636363637,
+    "mix": {
+      "short": 11,
+      "medium": 11,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.73
+  },
+  {
+    "id": 236,
+    "title": "Four chambers 22",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 48,
+    "depth": 21,
+    "freeAtStart": 9,
+    "blockedStart": 0.8125,
+    "coverage": 0.9483695652173914,
+    "meanLength": 21.8125,
+    "mix": {
+      "short": 10,
+      "medium": 14,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.46
+  },
+  {
+    "id": 237,
+    "title": "Crossroads 22",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 48,
+    "depth": 21,
+    "freeAtStart": 8,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9673913043478262,
+    "meanLength": 20.395833333333332,
+    "mix": {
+      "short": 11,
+      "medium": 13,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.51
+  },
+  {
+    "id": 238,
+    "title": "Open courtyard 22",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 48,
+    "depth": 23,
+    "freeAtStart": 7,
+    "blockedStart": 0.8541666666666666,
+    "coverage": 0.9598214285714286,
+    "meanLength": 22.395833333333332,
+    "mix": {
+      "short": 11,
+      "medium": 13,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.79
+  },
+  {
+    "id": 239,
+    "title": "Stepped fortress 22",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 46,
+    "depth": 22,
+    "freeAtStart": 5,
+    "blockedStart": 0.8913043478260869,
+    "coverage": 0.9545454545454546,
+    "meanLength": 21.91304347826087,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.73
+  },
+  {
+    "id": 240,
+    "title": "Woven ring 22",
+    "tier": "Expert",
+    "grid": 34,
+    "arrows": 42,
+    "depth": 24,
+    "freeAtStart": 8,
+    "blockedStart": 0.8095238095238095,
+    "coverage": 0.9347826086956522,
+    "meanLength": 24.571428571428573,
+    "mix": {
+      "short": 10,
+      "medium": 11,
+      "long": 21
+    },
+    "attempt": 1,
+    "D": 7.74
+  },
+  {
+    "id": 241,
+    "title": "Square weave 23",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 54,
+    "depth": 22,
+    "freeAtStart": 7,
+    "blockedStart": 0.8703703703703703,
+    "coverage": 0.9583333333333334,
+    "meanLength": 23,
+    "mix": {
+      "short": 13,
+      "medium": 14,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.87
+  },
+  {
+    "id": 242,
+    "title": "Rounded square 23",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 50,
+    "depth": 21,
+    "freeAtStart": 8,
+    "blockedStart": 0.84,
+    "coverage": 0.9590301003344481,
+    "meanLength": 22.94,
+    "mix": {
+      "short": 12,
+      "medium": 13,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.53
+  },
+  {
+    "id": 243,
+    "title": "Diamond vault 23",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 46,
+    "depth": 22,
+    "freeAtStart": 7,
+    "blockedStart": 0.8478260869565217,
+    "coverage": 0.9587813620071685,
+    "meanLength": 23.26086956521739,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.62
+  },
+  {
+    "id": 244,
+    "title": "Circular maze 23",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 44,
+    "depth": 23,
+    "freeAtStart": 7,
+    "blockedStart": 0.8409090909090909,
+    "coverage": 0.9647058823529413,
+    "meanLength": 22.363636363636363,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 1,
+    "D": 7.64
+  },
+  {
+    "id": 245,
+    "title": "Twin chambers 23",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 50,
+    "depth": 21,
+    "freeAtStart": 7,
+    "blockedStart": 0.86,
+    "coverage": 0.9317460317460318,
+    "meanLength": 23.48,
+    "mix": {
+      "short": 11,
+      "medium": 14,
+      "long": 25
+    },
+    "attempt": 2,
+    "D": 7.68
+  },
+  {
+    "id": 246,
+    "title": "Four chambers 23",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 50,
+    "depth": 21,
+    "freeAtStart": 8,
+    "blockedStart": 0.84,
+    "coverage": 0.9533762057877814,
+    "meanLength": 23.72,
+    "mix": {
+      "short": 12,
+      "medium": 13,
+      "long": 25
+    },
+    "attempt": 1,
+    "D": 7.65
+  },
+  {
+    "id": 247,
+    "title": "Crossroads 23",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 48,
+    "depth": 22,
+    "freeAtStart": 6,
+    "blockedStart": 0.875,
+    "coverage": 0.9536363636363636,
+    "meanLength": 21.854166666666668,
+    "mix": {
+      "short": 11,
+      "medium": 13,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.72
+  },
+  {
+    "id": 248,
+    "title": "Open courtyard 23",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 54,
+    "depth": 25,
+    "freeAtStart": 5,
+    "blockedStart": 0.9074074074074074,
+    "coverage": 0.9682539682539683,
+    "meanLength": 22.59259259259259,
+    "mix": {
+      "short": 13,
+      "medium": 14,
+      "long": 27
+    },
+    "attempt": 2,
+    "D": 7.89
+  },
+  {
+    "id": 249,
+    "title": "Stepped fortress 23",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 46,
+    "depth": 22,
+    "freeAtStart": 7,
+    "blockedStart": 0.8478260869565217,
+    "coverage": 0.9524647887323944,
+    "meanLength": 23.52173913043478,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.76
+  },
+  {
+    "id": 250,
+    "title": "Woven ring 23",
+    "tier": "Expert",
+    "grid": 36,
+    "arrows": 48,
+    "depth": 26,
+    "freeAtStart": 4,
+    "blockedStart": 0.9166666666666666,
+    "coverage": 0.9207119741100324,
+    "meanLength": 23.708333333333332,
+    "mix": {
+      "short": 11,
+      "medium": 13,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 8.03
+  },
+  {
+    "id": 251,
+    "title": "Square weave 24",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 58,
+    "depth": 23,
+    "freeAtStart": 5,
+    "blockedStart": 0.9137931034482758,
+    "coverage": 0.9549861495844876,
+    "meanLength": 23.775862068965516,
+    "mix": {
+      "short": 14,
+      "medium": 15,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.98
+  },
+  {
+    "id": 252,
+    "title": "Rounded square 24",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 56,
+    "depth": 24,
+    "freeAtStart": 7,
+    "blockedStart": 0.875,
+    "coverage": 0.9546130952380952,
+    "meanLength": 22.910714285714285,
+    "mix": {
+      "short": 13,
+      "medium": 15,
+      "long": 28
+    },
+    "attempt": 2,
+    "D": 7.77
+  },
+  {
+    "id": 253,
+    "title": "Diamond vault 24",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 46,
+    "depth": 21,
+    "freeAtStart": 6,
+    "blockedStart": 0.8695652173913043,
+    "coverage": 0.9501633986928104,
+    "meanLength": 25.282608695652176,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.74
+  },
+  {
+    "id": 254,
+    "title": "Circular maze 24",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 44,
+    "depth": 26,
+    "freeAtStart": 5,
+    "blockedStart": 0.8863636363636364,
+    "coverage": 0.9181494661921709,
+    "meanLength": 23.454545454545453,
+    "mix": {
+      "short": 10,
+      "medium": 12,
+      "long": 22
+    },
+    "attempt": 7,
+    "D": 7.64
+  },
+  {
+    "id": 255,
+    "title": "Twin chambers 24",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 60,
+    "depth": 28,
+    "freeAtStart": 8,
+    "blockedStart": 0.8666666666666667,
+    "coverage": 0.9644886363636364,
+    "meanLength": 22.633333333333333,
+    "mix": {
+      "short": 14,
+      "medium": 16,
+      "long": 30
+    },
+    "attempt": 0,
+    "D": 7.93
+  },
+  {
+    "id": 256,
+    "title": "Four chambers 24",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 58,
+    "depth": 27,
+    "freeAtStart": 10,
+    "blockedStart": 0.8275862068965517,
+    "coverage": 0.9595375722543352,
+    "meanLength": 22.896551724137932,
+    "mix": {
+      "short": 13,
+      "medium": 16,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.4
+  },
+  {
+    "id": 257,
+    "title": "Crossroads 24",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 48,
+    "depth": 21,
+    "freeAtStart": 9,
+    "blockedStart": 0.8125,
+    "coverage": 0.9663461538461539,
+    "meanLength": 25.125,
+    "mix": {
+      "short": 10,
+      "medium": 14,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.29
+  },
+  {
+    "id": 258,
+    "title": "Open courtyard 24",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 60,
+    "depth": 22,
+    "freeAtStart": 11,
+    "blockedStart": 0.8166666666666667,
+    "coverage": 0.9659090909090909,
+    "meanLength": 22.666666666666668,
+    "mix": {
+      "short": 15,
+      "medium": 15,
+      "long": 30
+    },
+    "attempt": 1,
+    "D": 7.49
+  },
+  {
+    "id": 259,
+    "title": "Stepped fortress 24",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 56,
+    "depth": 24,
+    "freeAtStart": 6,
+    "blockedStart": 0.8928571428571429,
+    "coverage": 0.9401840490797546,
+    "meanLength": 21.892857142857142,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 1,
+    "D": 7.69
+  },
+  {
+    "id": 260,
+    "title": "Woven ring 24",
+    "tier": "Expert",
+    "grid": 38,
+    "arrows": 54,
+    "depth": 24,
+    "freeAtStart": 8,
+    "blockedStart": 0.8518518518518519,
+    "coverage": 0.9287790697674417,
+    "meanLength": 23.666666666666668,
+    "mix": {
+      "short": 11,
+      "medium": 16,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.64
+  },
+  {
+    "id": 261,
+    "title": "Square weave 25",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 60,
+    "depth": 23,
+    "freeAtStart": 6,
+    "blockedStart": 0.9,
+    "coverage": 0.9714506172839507,
+    "meanLength": 20.983333333333334,
+    "mix": {
+      "short": 14,
+      "medium": 16,
+      "long": 30
+    },
+    "attempt": 0,
+    "D": 7.83
+  },
+  {
+    "id": 262,
+    "title": "Rounded square 25",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 48,
+    "depth": 23,
+    "freeAtStart": 7,
+    "blockedStart": 0.8541666666666666,
+    "coverage": 0.9489966555183946,
+    "meanLength": 23.645833333333332,
+    "mix": {
+      "short": 11,
+      "medium": 13,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.76
+  },
+  {
+    "id": 263,
+    "title": "Diamond vault 25",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 44,
+    "depth": 24,
+    "freeAtStart": 5,
+    "blockedStart": 0.8863636363636364,
+    "coverage": 0.9372759856630825,
+    "meanLength": 23.772727272727273,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.87
+  },
+  {
+    "id": 264,
+    "title": "Circular maze 25",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 40,
+    "depth": 24,
+    "freeAtStart": 6,
+    "blockedStart": 0.85,
+    "coverage": 0.9568627450980393,
+    "meanLength": 24.4,
+    "mix": {
+      "short": 8,
+      "medium": 12,
+      "long": 20
+    },
+    "attempt": 1,
+    "D": 7.66
+  },
+  {
+    "id": 265,
+    "title": "Twin chambers 25",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 60,
+    "depth": 25,
+    "freeAtStart": 10,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9626984126984127,
+    "meanLength": 20.216666666666665,
+    "mix": {
+      "short": 12,
+      "medium": 18,
+      "long": 30
+    },
+    "attempt": 3,
+    "D": 7.6
+  },
+  {
+    "id": 266,
+    "title": "Four chambers 25",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 54,
+    "depth": 23,
+    "freeAtStart": 9,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9622186495176849,
+    "meanLength": 22.166666666666668,
+    "mix": {
+      "short": 12,
+      "medium": 15,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.62
+  },
+  {
+    "id": 267,
+    "title": "Crossroads 25",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 46,
+    "depth": 23,
+    "freeAtStart": 8,
+    "blockedStart": 0.8260869565217391,
+    "coverage": 0.96,
+    "meanLength": 22.956521739130434,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 4,
+    "D": 7.44
+  },
+  {
+    "id": 268,
+    "title": "Open courtyard 25",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 48,
+    "depth": 23,
+    "freeAtStart": 8,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9277777777777778,
+    "meanLength": 24.354166666666668,
+    "mix": {
+      "short": 11,
+      "medium": 13,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.5
+  },
+  {
+    "id": 269,
+    "title": "Stepped fortress 25",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 40,
+    "depth": 23,
+    "freeAtStart": 7,
+    "blockedStart": 0.825,
+    "coverage": 0.9039115646258503,
+    "meanLength": 26.575,
+    "mix": {
+      "short": 9,
+      "medium": 11,
+      "long": 20
+    },
+    "attempt": 1,
+    "D": 7.52
+  },
+  {
+    "id": 270,
+    "title": "Woven ring 25",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 56,
+    "depth": 25,
+    "freeAtStart": 4,
+    "blockedStart": 0.9285714285714286,
+    "coverage": 0.9635922330097088,
+    "meanLength": 21.267857142857142,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 1,
+    "D": 7.91
+  },
+  {
+    "id": 271,
+    "title": "Square weave 26",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 62,
+    "depth": 24,
+    "freeAtStart": 9,
+    "blockedStart": 0.8548387096774194,
+    "coverage": 0.974376731301939,
+    "meanLength": 22.693548387096776,
+    "mix": {
+      "short": 13,
+      "medium": 18,
+      "long": 31
+    },
+    "attempt": 1,
+    "D": 7.6
+  },
+  {
+    "id": 272,
+    "title": "Rounded square 26",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 58,
+    "depth": 23,
+    "freeAtStart": 10,
+    "blockedStart": 0.8275862068965517,
+    "coverage": 0.953125,
+    "meanLength": 22.086206896551722,
+    "mix": {
+      "short": 13,
+      "medium": 16,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.29
+  },
+  {
+    "id": 273,
+    "title": "Diamond vault 26",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 54,
+    "depth": 26,
+    "freeAtStart": 5,
+    "blockedStart": 0.9074074074074074,
+    "coverage": 0.9558823529411765,
+    "meanLength": 21.666666666666668,
+    "mix": {
+      "short": 12,
+      "medium": 15,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.81
+  },
+  {
+    "id": 274,
+    "title": "Circular maze 26",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 50,
+    "depth": 25,
+    "freeAtStart": 7,
+    "blockedStart": 0.86,
+    "coverage": 0.9617437722419929,
+    "meanLength": 21.62,
+    "mix": {
+      "short": 11,
+      "medium": 14,
+      "long": 25
+    },
+    "attempt": 1,
+    "D": 7.69
+  },
+  {
+    "id": 275,
+    "title": "Twin chambers 26",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 54,
+    "depth": 25,
+    "freeAtStart": 9,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9240056818181818,
+    "meanLength": 24.09259259259259,
+    "mix": {
+      "short": 11,
+      "medium": 16,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.47
+  },
+  {
+    "id": 276,
+    "title": "Four chambers 26",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 60,
+    "depth": 23,
+    "freeAtStart": 9,
+    "blockedStart": 0.85,
+    "coverage": 0.963872832369942,
+    "meanLength": 22.233333333333334,
+    "mix": {
+      "short": 13,
+      "medium": 17,
+      "long": 30
+    },
+    "attempt": 1,
+    "D": 7.42
+  },
+  {
+    "id": 277,
+    "title": "Crossroads 26",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 48,
+    "depth": 24,
+    "freeAtStart": 6,
+    "blockedStart": 0.875,
+    "coverage": 0.9342948717948718,
+    "meanLength": 24.291666666666668,
+    "mix": {
+      "short": 11,
+      "medium": 13,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.84
+  },
+  {
+    "id": 278,
+    "title": "Open courtyard 26",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 60,
+    "depth": 26,
+    "freeAtStart": 7,
+    "blockedStart": 0.8833333333333333,
+    "coverage": 0.9460227272727273,
+    "meanLength": 22.2,
+    "mix": {
+      "short": 12,
+      "medium": 18,
+      "long": 30
+    },
+    "attempt": 0,
+    "D": 7.85
+  },
+  {
+    "id": 279,
+    "title": "Stepped fortress 26",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 56,
+    "depth": 23,
+    "freeAtStart": 8,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.955607476635514,
+    "meanLength": 21.910714285714285,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 2,
+    "D": 7.33
+  },
+  {
+    "id": 280,
+    "title": "Woven ring 26",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 58,
+    "depth": 24,
+    "freeAtStart": 10,
+    "blockedStart": 0.8275862068965517,
+    "coverage": 0.9520348837209303,
+    "meanLength": 22.586206896551722,
+    "mix": {
+      "short": 14,
+      "medium": 15,
+      "long": 29
+    },
+    "attempt": 2,
+    "D": 7.64
+  },
+  {
+    "id": 281,
+    "title": "Square weave 27",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 70,
+    "depth": 25,
+    "freeAtStart": 9,
+    "blockedStart": 0.8714285714285714,
+    "coverage": 0.93625,
+    "meanLength": 21.4,
+    "mix": {
+      "short": 16,
+      "medium": 19,
+      "long": 35
+    },
+    "attempt": 0,
+    "D": 7.53
+  },
+  {
+    "id": 282,
+    "title": "Rounded square 27",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 70,
+    "depth": 26,
+    "freeAtStart": 10,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.9746666666666667,
+    "meanLength": 20.885714285714286,
+    "mix": {
+      "short": 14,
+      "medium": 21,
+      "long": 35
+    },
+    "attempt": 0,
+    "D": 7.43
+  },
+  {
+    "id": 283,
+    "title": "Diamond vault 27",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 54,
+    "depth": 26,
+    "freeAtStart": 7,
+    "blockedStart": 0.8703703703703703,
+    "coverage": 0.9528443113772455,
+    "meanLength": 23.574074074074073,
+    "mix": {
+      "short": 12,
+      "medium": 15,
+      "long": 27
+    },
+    "attempt": 1,
+    "D": 7.66
+  },
+  {
+    "id": 284,
+    "title": "Circular maze 27",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 54,
+    "depth": 24,
+    "freeAtStart": 6,
+    "blockedStart": 0.8888888888888888,
+    "coverage": 0.9588607594936709,
+    "meanLength": 22.444444444444443,
+    "mix": {
+      "short": 12,
+      "medium": 15,
+      "long": 27
+    },
+    "attempt": 2,
+    "D": 7.76
+  },
+  {
+    "id": 285,
+    "title": "Twin chambers 27",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 68,
+    "depth": 25,
+    "freeAtStart": 6,
+    "blockedStart": 0.9117647058823529,
+    "coverage": 0.9602564102564103,
+    "meanLength": 22.029411764705884,
+    "mix": {
+      "short": 14,
+      "medium": 20,
+      "long": 34
+    },
+    "attempt": 1,
+    "D": 7.92
+  },
+  {
+    "id": 286,
+    "title": "Four chambers 27",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 66,
+    "depth": 27,
+    "freeAtStart": 8,
+    "blockedStart": 0.8787878787878788,
+    "coverage": 0.9564935064935065,
+    "meanLength": 22.318181818181817,
+    "mix": {
+      "short": 15,
+      "medium": 18,
+      "long": 33
+    },
+    "attempt": 1,
+    "D": 7.86
+  },
+  {
+    "id": 287,
+    "title": "Crossroads 27",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 58,
+    "depth": 27,
+    "freeAtStart": 7,
+    "blockedStart": 0.8793103448275862,
+    "coverage": 0.9248511904761905,
+    "meanLength": 21.43103448275862,
+    "mix": {
+      "short": 13,
+      "medium": 16,
+      "long": 29
+    },
+    "attempt": 1,
+    "D": 7.46
+  },
+  {
+    "id": 288,
+    "title": "Open courtyard 27",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 66,
+    "depth": 26,
+    "freeAtStart": 7,
+    "blockedStart": 0.8939393939393939,
+    "coverage": 0.9539641943734015,
+    "meanLength": 22.606060606060606,
+    "mix": {
+      "short": 15,
+      "medium": 18,
+      "long": 33
+    },
+    "attempt": 0,
+    "D": 7.84
+  },
+  {
+    "id": 289,
+    "title": "Stepped fortress 27",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 54,
+    "depth": 25,
+    "freeAtStart": 9,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9301675977653632,
+    "meanLength": 24.666666666666668,
+    "mix": {
+      "short": 11,
+      "medium": 16,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.65
+  },
+  {
+    "id": 290,
+    "title": "Woven ring 27",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 66,
+    "depth": 27,
+    "freeAtStart": 8,
+    "blockedStart": 0.8787878787878788,
+    "coverage": 0.9481627296587927,
+    "meanLength": 21.893939393939394,
+    "mix": {
+      "short": 14,
+      "medium": 19,
+      "long": 33
+    },
+    "attempt": 0,
+    "D": 7.91
+  },
+  {
+    "id": 291,
+    "title": "Square weave 28",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 60,
+    "depth": 23,
+    "freeAtStart": 9,
+    "blockedStart": 0.85,
+    "coverage": 0.9760802469135802,
+    "meanLength": 21.083333333333332,
+    "mix": {
+      "short": 14,
+      "medium": 16,
+      "long": 30
+    },
+    "attempt": 0,
+    "D": 7.45
+  },
+  {
+    "id": 292,
+    "title": "Rounded square 28",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 50,
+    "depth": 24,
+    "freeAtStart": 8,
+    "blockedStart": 0.84,
+    "coverage": 0.9464882943143813,
+    "meanLength": 22.64,
+    "mix": {
+      "short": 11,
+      "medium": 14,
+      "long": 25
+    },
+    "attempt": 1,
+    "D": 7.57
+  },
+  {
+    "id": 293,
+    "title": "Diamond vault 28",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 48,
+    "depth": 23,
+    "freeAtStart": 6,
+    "blockedStart": 0.875,
+    "coverage": 0.9525089605734767,
+    "meanLength": 22.145833333333332,
+    "mix": {
+      "short": 12,
+      "medium": 12,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.63
+  },
+  {
+    "id": 294,
+    "title": "Circular maze 28",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 46,
+    "depth": 23,
+    "freeAtStart": 8,
+    "blockedStart": 0.8260869565217391,
+    "coverage": 0.9686274509803923,
+    "meanLength": 21.47826086956522,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 7,
+    "D": 7.56
+  },
+  {
+    "id": 295,
+    "title": "Twin chambers 28",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 50,
+    "depth": 26,
+    "freeAtStart": 6,
+    "blockedStart": 0.88,
+    "coverage": 0.9365079365079365,
+    "meanLength": 23.6,
+    "mix": {
+      "short": 10,
+      "medium": 15,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.9
+  },
+  {
+    "id": 296,
+    "title": "Four chambers 28",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 52,
+    "depth": 23,
+    "freeAtStart": 8,
+    "blockedStart": 0.8461538461538461,
+    "coverage": 0.942926045016077,
+    "meanLength": 22.557692307692307,
+    "mix": {
+      "short": 12,
+      "medium": 14,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.56
+  },
+  {
+    "id": 297,
+    "title": "Crossroads 28",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 42,
+    "depth": 23,
+    "freeAtStart": 7,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9727272727272728,
+    "meanLength": 25.476190476190474,
+    "mix": {
+      "short": 9,
+      "medium": 12,
+      "long": 21
+    },
+    "attempt": 1,
+    "D": 7.69
+  },
+  {
+    "id": 298,
+    "title": "Open courtyard 28",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 56,
+    "depth": 23,
+    "freeAtStart": 9,
+    "blockedStart": 0.8392857142857143,
+    "coverage": 0.957936507936508,
+    "meanLength": 21.553571428571427,
+    "mix": {
+      "short": 13,
+      "medium": 15,
+      "long": 28
+    },
+    "attempt": 0,
+    "D": 7.64
+  },
+  {
+    "id": 299,
+    "title": "Stepped fortress 28",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 48,
+    "depth": 23,
+    "freeAtStart": 7,
+    "blockedStart": 0.8541666666666666,
+    "coverage": 0.9447278911564626,
+    "meanLength": 23.145833333333332,
+    "mix": {
+      "short": 10,
+      "medium": 14,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.71
+  },
+  {
+    "id": 300,
+    "title": "Woven ring 28",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 54,
+    "depth": 25,
+    "freeAtStart": 6,
+    "blockedStart": 0.8888888888888888,
+    "coverage": 0.9546925566343042,
+    "meanLength": 21.85185185185185,
+    "mix": {
+      "short": 12,
+      "medium": 15,
+      "long": 27
+    },
+    "attempt": 2,
+    "D": 7.87
+  },
+  {
+    "id": 301,
+    "title": "Square weave 29",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 54,
+    "depth": 24,
+    "freeAtStart": 8,
+    "blockedStart": 0.8518518518518519,
+    "coverage": 0.9016620498614959,
+    "meanLength": 24.11111111111111,
+    "mix": {
+      "short": 12,
+      "medium": 15,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.44
+  },
+  {
+    "id": 302,
+    "title": "Rounded square 29",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 58,
+    "depth": 25,
+    "freeAtStart": 8,
+    "blockedStart": 0.8620689655172413,
+    "coverage": 0.9665178571428571,
+    "meanLength": 22.396551724137932,
+    "mix": {
+      "short": 12,
+      "medium": 17,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.74
+  },
+  {
+    "id": 303,
+    "title": "Diamond vault 29",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 46,
+    "depth": 23,
+    "freeAtStart": 8,
+    "blockedStart": 0.8260869565217391,
+    "coverage": 0.9330065359477124,
+    "meanLength": 24.82608695652174,
+    "mix": {
+      "short": 11,
+      "medium": 12,
+      "long": 23
+    },
+    "attempt": 1,
+    "D": 7.5
+  },
+  {
+    "id": 304,
+    "title": "Circular maze 29",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 50,
+    "depth": 23,
+    "freeAtStart": 7,
+    "blockedStart": 0.86,
+    "coverage": 0.958185053380783,
+    "meanLength": 21.54,
+    "mix": {
+      "short": 11,
+      "medium": 14,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.65
+  },
+  {
+    "id": 305,
+    "title": "Twin chambers 29",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 56,
+    "depth": 27,
+    "freeAtStart": 9,
+    "blockedStart": 0.8392857142857143,
+    "coverage": 0.9389204545454546,
+    "meanLength": 23.607142857142858,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 4,
+    "D": 7.57
+  },
+  {
+    "id": 306,
+    "title": "Four chambers 29",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 52,
+    "depth": 27,
+    "freeAtStart": 9,
+    "blockedStart": 0.8269230769230769,
+    "coverage": 0.9104046242774566,
+    "meanLength": 24.23076923076923,
+    "mix": {
+      "short": 11,
+      "medium": 15,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.67
+  },
+  {
+    "id": 307,
+    "title": "Crossroads 29",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 52,
+    "depth": 26,
+    "freeAtStart": 8,
+    "blockedStart": 0.8461538461538461,
+    "coverage": 0.9375,
+    "meanLength": 22.5,
+    "mix": {
+      "short": 12,
+      "medium": 14,
+      "long": 26
+    },
+    "attempt": 1,
+    "D": 7.66
+  },
+  {
+    "id": 308,
+    "title": "Open courtyard 29",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 56,
+    "depth": 23,
+    "freeAtStart": 5,
+    "blockedStart": 0.9107142857142857,
+    "coverage": 0.9502840909090909,
+    "meanLength": 23.892857142857142,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 2,
+    "D": 7.88
+  },
+  {
+    "id": 309,
+    "title": "Stepped fortress 29",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 48,
+    "depth": 23,
+    "freeAtStart": 7,
+    "blockedStart": 0.8541666666666666,
+    "coverage": 0.9213395638629284,
+    "meanLength": 24.645833333333332,
+    "mix": {
+      "short": 11,
+      "medium": 13,
+      "long": 24
+    },
+    "attempt": 0,
+    "D": 7.6
+  },
+  {
+    "id": 310,
+    "title": "Woven ring 29",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 60,
+    "depth": 23,
+    "freeAtStart": 10,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9600290697674418,
+    "meanLength": 22.016666666666666,
+    "mix": {
+      "short": 12,
+      "medium": 18,
+      "long": 30
+    },
+    "attempt": 0,
+    "D": 7.58
+  },
+  {
+    "id": 311,
+    "title": "Square weave 30",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 58,
+    "depth": 24,
+    "freeAtStart": 7,
+    "blockedStart": 0.8793103448275862,
+    "coverage": 0.9243749999999998,
+    "meanLength": 25.5,
+    "mix": {
+      "short": 12,
+      "medium": 17,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.8
+  },
+  {
+    "id": 312,
+    "title": "Rounded square 30",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 66,
+    "depth": 26,
+    "freeAtStart": 10,
+    "blockedStart": 0.8484848484848485,
+    "coverage": 0.9666666666666667,
+    "meanLength": 21.96969696969697,
+    "mix": {
+      "short": 15,
+      "medium": 18,
+      "long": 33
+    },
+    "attempt": 0,
+    "D": 7.38
+  },
+  {
+    "id": 313,
+    "title": "Diamond vault 30",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 54,
+    "depth": 23,
+    "freeAtStart": 9,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9491017964071856,
+    "meanLength": 23.48148148148148,
+    "mix": {
+      "short": 12,
+      "medium": 15,
+      "long": 27
+    },
+    "attempt": 6,
+    "D": 7.5
+  },
+  {
+    "id": 314,
+    "title": "Circular maze 30",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 50,
+    "depth": 25,
+    "freeAtStart": 8,
+    "blockedStart": 0.84,
+    "coverage": 0.9295886075949367,
+    "meanLength": 23.5,
+    "mix": {
+      "short": 10,
+      "medium": 15,
+      "long": 25
+    },
+    "attempt": 2,
+    "D": 7.5
+  },
+  {
+    "id": 315,
+    "title": "Twin chambers 30",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 58,
+    "depth": 23,
+    "freeAtStart": 10,
+    "blockedStart": 0.8275862068965517,
+    "coverage": 0.9134615384615384,
+    "meanLength": 24.56896551724138,
+    "mix": {
+      "short": 13,
+      "medium": 16,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.55
+  },
+  {
+    "id": 316,
+    "title": "Four chambers 30",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 58,
+    "depth": 24,
+    "freeAtStart": 6,
+    "blockedStart": 0.896551724137931,
+    "coverage": 0.9331168831168831,
+    "meanLength": 24.775862068965516,
+    "mix": {
+      "short": 12,
+      "medium": 17,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.85
+  },
+  {
+    "id": 317,
+    "title": "Crossroads 30",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 54,
+    "depth": 25,
+    "freeAtStart": 8,
+    "blockedStart": 0.8518518518518519,
+    "coverage": 0.9561011904761905,
+    "meanLength": 23.796296296296298,
+    "mix": {
+      "short": 13,
+      "medium": 14,
+      "long": 27
+    },
+    "attempt": 1,
+    "D": 7.62
+  },
+  {
+    "id": 318,
+    "title": "Open courtyard 30",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 74,
+    "depth": 26,
+    "freeAtStart": 12,
+    "blockedStart": 0.8378378378378378,
+    "coverage": 0.9661125319693095,
+    "meanLength": 20.41891891891892,
+    "mix": {
+      "short": 16,
+      "medium": 21,
+      "long": 37
+    },
+    "attempt": 0,
+    "D": 7.55
+  },
+  {
+    "id": 319,
+    "title": "Stepped fortress 30",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 56,
+    "depth": 26,
+    "freeAtStart": 6,
+    "blockedStart": 0.8928571428571429,
+    "coverage": 0.9210893854748603,
+    "meanLength": 23.553571428571427,
+    "mix": {
+      "short": 13,
+      "medium": 15,
+      "long": 28
+    },
+    "attempt": 0,
+    "D": 7.81
+  },
+  {
+    "id": 320,
+    "title": "Woven ring 30",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 62,
+    "depth": 25,
+    "freeAtStart": 5,
+    "blockedStart": 0.9193548387096774,
+    "coverage": 0.9455380577427821,
+    "meanLength": 23.241935483870968,
+    "mix": {
+      "short": 13,
+      "medium": 18,
+      "long": 31
+    },
+    "attempt": 0,
+    "D": 7.92
+  },
+  {
+    "id": 321,
+    "title": "Square weave 31",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 64,
+    "depth": 23,
+    "freeAtStart": 11,
+    "blockedStart": 0.828125,
+    "coverage": 0.9699074074074076,
+    "meanLength": 19.640625,
+    "mix": {
+      "short": 15,
+      "medium": 17,
+      "long": 32
+    },
+    "attempt": 0,
+    "D": 7.59
+  },
+  {
+    "id": 322,
+    "title": "Rounded square 31",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 44,
+    "depth": 23,
+    "freeAtStart": 7,
+    "blockedStart": 0.8409090909090909,
+    "coverage": 0.9122073578595318,
+    "meanLength": 24.795454545454547,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.66
+  },
+  {
+    "id": 323,
+    "title": "Diamond vault 31",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 38,
+    "depth": 25,
+    "freeAtStart": 4,
+    "blockedStart": 0.8947368421052632,
+    "coverage": 0.900537634408602,
+    "meanLength": 26.44736842105263,
+    "mix": {
+      "short": 8,
+      "medium": 11,
+      "long": 19
+    },
+    "attempt": 1,
+    "D": 7.97
+  },
+  {
+    "id": 324,
+    "title": "Circular maze 31",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 44,
+    "depth": 27,
+    "freeAtStart": 4,
+    "blockedStart": 0.9090909090909091,
+    "coverage": 0.946078431372549,
+    "meanLength": 21.931818181818183,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.88
+  },
+  {
+    "id": 325,
+    "title": "Twin chambers 31",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 56,
+    "depth": 28,
+    "freeAtStart": 6,
+    "blockedStart": 0.8928571428571429,
+    "coverage": 0.9761904761904762,
+    "meanLength": 21.964285714285715,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 0,
+    "D": 7.98
+  },
+  {
+    "id": 326,
+    "title": "Four chambers 31",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 44,
+    "depth": 24,
+    "freeAtStart": 6,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.9686495176848875,
+    "meanLength": 27.386363636363637,
+    "mix": {
+      "short": 11,
+      "medium": 11,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.87
+  },
+  {
+    "id": 327,
+    "title": "Crossroads 31",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 58,
+    "depth": 23,
+    "freeAtStart": 10,
+    "blockedStart": 0.8275862068965517,
+    "coverage": 0.9736363636363636,
+    "meanLength": 18.46551724137931,
+    "mix": {
+      "short": 12,
+      "medium": 17,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.27
+  },
+  {
+    "id": 328,
+    "title": "Open courtyard 31",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 54,
+    "depth": 25,
+    "freeAtStart": 5,
+    "blockedStart": 0.9074074074074074,
+    "coverage": 0.9626984126984127,
+    "meanLength": 22.462962962962962,
+    "mix": {
+      "short": 11,
+      "medium": 16,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 8.05
+  },
+  {
+    "id": 329,
+    "title": "Stepped fortress 31",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 54,
+    "depth": 23,
+    "freeAtStart": 8,
+    "blockedStart": 0.8518518518518519,
+    "coverage": 0.9668367346938775,
+    "meanLength": 21.055555555555557,
+    "mix": {
+      "short": 12,
+      "medium": 15,
+      "long": 27
+    },
+    "attempt": 1,
+    "D": 7.62
+  },
+  {
+    "id": 330,
+    "title": "Woven ring 31",
+    "tier": "Expert+",
+    "grid": 36,
+    "arrows": 56,
+    "depth": 26,
+    "freeAtStart": 8,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.9271844660194175,
+    "meanLength": 20.464285714285715,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 0,
+    "D": 7.81
+  },
+  {
+    "id": 331,
+    "title": "Square weave 32",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 60,
+    "depth": 23,
+    "freeAtStart": 10,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9563711911357341,
+    "meanLength": 23.016666666666666,
+    "mix": {
+      "short": 13,
+      "medium": 17,
+      "long": 30
+    },
+    "attempt": 1,
+    "D": 7.48
+  },
+  {
+    "id": 332,
+    "title": "Rounded square 32",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 50,
+    "depth": 23,
+    "freeAtStart": 8,
+    "blockedStart": 0.84,
+    "coverage": 0.9471726190476191,
+    "meanLength": 25.46,
+    "mix": {
+      "short": 10,
+      "medium": 15,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.59
+  },
+  {
+    "id": 333,
+    "title": "Diamond vault 32",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 50,
+    "depth": 25,
+    "freeAtStart": 7,
+    "blockedStart": 0.86,
+    "coverage": 0.9485294117647058,
+    "meanLength": 23.22,
+    "mix": {
+      "short": 11,
+      "medium": 14,
+      "long": 25
+    },
+    "attempt": 2,
+    "D": 7.61
+  },
+  {
+    "id": 334,
+    "title": "Circular maze 32",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 44,
+    "depth": 23,
+    "freeAtStart": 6,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.9448398576512456,
+    "meanLength": 24.136363636363637,
+    "mix": {
+      "short": 9,
+      "medium": 13,
+      "long": 22
+    },
+    "attempt": 0,
+    "D": 7.54
+  },
+  {
+    "id": 335,
+    "title": "Twin chambers 32",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 58,
+    "depth": 24,
+    "freeAtStart": 10,
+    "blockedStart": 0.8275862068965517,
+    "coverage": 0.9446022727272727,
+    "meanLength": 22.93103448275862,
+    "mix": {
+      "short": 12,
+      "medium": 17,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.51
+  },
+  {
+    "id": 336,
+    "title": "Four chambers 32",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 54,
+    "depth": 25,
+    "freeAtStart": 7,
+    "blockedStart": 0.8703703703703703,
+    "coverage": 0.9364161849710981,
+    "meanLength": 24,
+    "mix": {
+      "short": 13,
+      "medium": 14,
+      "long": 27
+    },
+    "attempt": 2,
+    "D": 7.98
+  },
+  {
+    "id": 337,
+    "title": "Crossroads 32",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 56,
+    "depth": 26,
+    "freeAtStart": 9,
+    "blockedStart": 0.8392857142857143,
+    "coverage": 0.9086538461538461,
+    "meanLength": 20.25,
+    "mix": {
+      "short": 14,
+      "medium": 14,
+      "long": 28
+    },
+    "attempt": 0,
+    "D": 7.61
+  },
+  {
+    "id": 338,
+    "title": "Open courtyard 32",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 64,
+    "depth": 25,
+    "freeAtStart": 8,
+    "blockedStart": 0.875,
+    "coverage": 0.9701704545454546,
+    "meanLength": 21.34375,
+    "mix": {
+      "short": 13,
+      "medium": 19,
+      "long": 32
+    },
+    "attempt": 0,
+    "D": 7.74
+  },
+  {
+    "id": 339,
+    "title": "Stepped fortress 32",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 60,
+    "depth": 33,
+    "freeAtStart": 8,
+    "blockedStart": 0.8666666666666667,
+    "coverage": 0.9657320872274145,
+    "meanLength": 20.666666666666668,
+    "mix": {
+      "short": 13,
+      "medium": 17,
+      "long": 30
+    },
+    "attempt": 1,
+    "D": 7.72
+  },
+  {
+    "id": 340,
+    "title": "Woven ring 32",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 60,
+    "depth": 23,
+    "freeAtStart": 10,
+    "blockedStart": 0.8333333333333334,
+    "coverage": 0.9622093023255814,
+    "meanLength": 22.066666666666666,
+    "mix": {
+      "short": 13,
+      "medium": 17,
+      "long": 30
+    },
+    "attempt": 2,
+    "D": 7.41
+  },
+  {
+    "id": 341,
+    "title": "Square weave 33",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 62,
+    "depth": 27,
+    "freeAtStart": 8,
+    "blockedStart": 0.8709677419354839,
+    "coverage": 0.915532879818594,
+    "meanLength": 26.048387096774192,
+    "mix": {
+      "short": 14,
+      "medium": 17,
+      "long": 31
+    },
+    "attempt": 1,
+    "D": 7.6
+  },
+  {
+    "id": 342,
+    "title": "Rounded square 33",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 66,
+    "depth": 27,
+    "freeAtStart": 8,
+    "blockedStart": 0.8787878787878788,
+    "coverage": 0.9320987654320986,
+    "meanLength": 22.87878787878788,
+    "mix": {
+      "short": 15,
+      "medium": 18,
+      "long": 33
+    },
+    "attempt": 0,
+    "D": 7.71
+  },
+  {
+    "id": 343,
+    "title": "Diamond vault 33",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 60,
+    "depth": 29,
+    "freeAtStart": 9,
+    "blockedStart": 0.85,
+    "coverage": 0.9373333333333334,
+    "meanLength": 23.433333333333334,
+    "mix": {
+      "short": 13,
+      "medium": 17,
+      "long": 30
+    },
+    "attempt": 0,
+    "D": 7.44
+  },
+  {
+    "id": 344,
+    "title": "Circular maze 33",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 54,
+    "depth": 25,
+    "freeAtStart": 7,
+    "blockedStart": 0.8703703703703703,
+    "coverage": 0.9541547277936963,
+    "meanLength": 24.666666666666668,
+    "mix": {
+      "short": 11,
+      "medium": 16,
+      "long": 27
+    },
+    "attempt": 3,
+    "D": 7.75
+  },
+  {
+    "id": 345,
+    "title": "Twin chambers 33",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 64,
+    "depth": 28,
+    "freeAtStart": 6,
+    "blockedStart": 0.90625,
+    "coverage": 0.9228538283062645,
+    "meanLength": 24.859375,
+    "mix": {
+      "short": 14,
+      "medium": 18,
+      "long": 32
+    },
+    "attempt": 0,
+    "D": 7.79
+  },
+  {
+    "id": 346,
+    "title": "Four chambers 33",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 66,
+    "depth": 28,
+    "freeAtStart": 7,
+    "blockedStart": 0.8939393939393939,
+    "coverage": 0.9495305164319248,
+    "meanLength": 24.515151515151516,
+    "mix": {
+      "short": 15,
+      "medium": 18,
+      "long": 33
+    },
+    "attempt": 5,
+    "D": 7.72
+  },
+  {
+    "id": 347,
+    "title": "Crossroads 33",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 62,
+    "depth": 27,
+    "freeAtStart": 8,
+    "blockedStart": 0.8709677419354839,
+    "coverage": 0.963527851458886,
+    "meanLength": 23.43548387096774,
+    "mix": {
+      "short": 14,
+      "medium": 17,
+      "long": 31
+    },
+    "attempt": 0,
+    "D": 7.64
+  },
+  {
+    "id": 348,
+    "title": "Open courtyard 33",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 68,
+    "depth": 31,
+    "freeAtStart": 8,
+    "blockedStart": 0.8823529411764706,
+    "coverage": 0.9217647058823529,
+    "meanLength": 23.044117647058822,
+    "mix": {
+      "short": 15,
+      "medium": 19,
+      "long": 34
+    },
+    "attempt": 0,
+    "D": 7.85
+  },
+  {
+    "id": 349,
+    "title": "Stepped fortress 33",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 60,
+    "depth": 25,
+    "freeAtStart": 8,
+    "blockedStart": 0.8666666666666667,
+    "coverage": 0.94529262086514,
+    "meanLength": 24.766666666666666,
+    "mix": {
+      "short": 13,
+      "medium": 17,
+      "long": 30
+    },
+    "attempt": 2,
+    "D": 7.67
+  },
+  {
+    "id": 350,
+    "title": "Woven ring 33",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 64,
+    "depth": 27,
+    "freeAtStart": 8,
+    "blockedStart": 0.875,
+    "coverage": 0.9560570071258907,
+    "meanLength": 25.15625,
+    "mix": {
+      "short": 13,
+      "medium": 19,
+      "long": 32
+    },
+    "attempt": 1,
+    "D": 7.67
+  },
+  {
+    "id": 351,
+    "title": "Square weave 34",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 70,
+    "depth": 26,
+    "freeAtStart": 8,
+    "blockedStart": 0.8857142857142857,
+    "coverage": 0.9619113573407202,
+    "meanLength": 19.84285714285714,
+    "mix": {
+      "short": 15,
+      "medium": 20,
+      "long": 35
+    },
+    "attempt": 0,
+    "D": 7.74
+  },
+  {
+    "id": 352,
+    "title": "Rounded square 34",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 60,
+    "depth": 31,
+    "freeAtStart": 9,
+    "blockedStart": 0.85,
+    "coverage": 0.9709821428571427,
+    "meanLength": 21.75,
+    "mix": {
+      "short": 12,
+      "medium": 18,
+      "long": 30
+    },
+    "attempt": 2,
+    "D": 7.76
+  },
+  {
+    "id": 353,
+    "title": "Diamond vault 34",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 52,
+    "depth": 25,
+    "freeAtStart": 8,
+    "blockedStart": 0.8461538461538461,
+    "coverage": 0.9354575163398693,
+    "meanLength": 22.01923076923077,
+    "mix": {
+      "short": 12,
+      "medium": 14,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.71
+  },
+  {
+    "id": 354,
+    "title": "Circular maze 34",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 46,
+    "depth": 25,
+    "freeAtStart": 7,
+    "blockedStart": 0.8478260869565217,
+    "coverage": 0.9457295373665481,
+    "meanLength": 23.108695652173914,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 2,
+    "D": 7.57
+  },
+  {
+    "id": 355,
+    "title": "Twin chambers 34",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 56,
+    "depth": 26,
+    "freeAtStart": 9,
+    "blockedStart": 0.8392857142857143,
+    "coverage": 0.9602272727272727,
+    "meanLength": 24.142857142857142,
+    "mix": {
+      "short": 14,
+      "medium": 14,
+      "long": 28
+    },
+    "attempt": 0,
+    "D": 7.72
+  },
+  {
+    "id": 356,
+    "title": "Four chambers 34",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 62,
+    "depth": 25,
+    "freeAtStart": 9,
+    "blockedStart": 0.8548387096774194,
+    "coverage": 0.940028901734104,
+    "meanLength": 20.983870967741936,
+    "mix": {
+      "short": 13,
+      "medium": 18,
+      "long": 31
+    },
+    "attempt": 4,
+    "D": 7.71
+  },
+  {
+    "id": 357,
+    "title": "Crossroads 34",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 58,
+    "depth": 25,
+    "freeAtStart": 9,
+    "blockedStart": 0.8448275862068966,
+    "coverage": 0.9639423076923077,
+    "meanLength": 20.74137931034483,
+    "mix": {
+      "short": 13,
+      "medium": 16,
+      "long": 29
+    },
+    "attempt": 1,
+    "D": 7.52
+  },
+  {
+    "id": 358,
+    "title": "Open courtyard 34",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 54,
+    "depth": 27,
+    "freeAtStart": 7,
+    "blockedStart": 0.8703703703703703,
+    "coverage": 0.9403409090909091,
+    "meanLength": 24.51851851851852,
+    "mix": {
+      "short": 11,
+      "medium": 16,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.85
+  },
+  {
+    "id": 359,
+    "title": "Stepped fortress 34",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 56,
+    "depth": 25,
+    "freeAtStart": 8,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.9652567975830814,
+    "meanLength": 22.821428571428573,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 1,
+    "D": 7.77
+  },
+  {
+    "id": 360,
+    "title": "Woven ring 34",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 64,
+    "depth": 25,
+    "freeAtStart": 8,
+    "blockedStart": 0.875,
+    "coverage": 0.971656976744186,
+    "meanLength": 20.890625,
+    "mix": {
+      "short": 14,
+      "medium": 18,
+      "long": 32
+    },
+    "attempt": 2,
+    "D": 7.64
+  },
+  {
+    "id": 361,
+    "title": "Square weave 35",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 66,
+    "depth": 29,
+    "freeAtStart": 10,
+    "blockedStart": 0.8484848484848485,
+    "coverage": 0.93625,
+    "meanLength": 22.696969696969695,
+    "mix": {
+      "short": 15,
+      "medium": 18,
+      "long": 33
+    },
+    "attempt": 4,
+    "D": 7.73
+  },
+  {
+    "id": 362,
+    "title": "Rounded square 35",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 58,
+    "depth": 27,
+    "freeAtStart": 8,
+    "blockedStart": 0.8620689655172413,
+    "coverage": 0.912,
+    "meanLength": 23.586206896551722,
+    "mix": {
+      "short": 12,
+      "medium": 17,
+      "long": 29
+    },
+    "attempt": 2,
+    "D": 7.77
+  },
+  {
+    "id": 363,
+    "title": "Diamond vault 35",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 58,
+    "depth": 27,
+    "freeAtStart": 7,
+    "blockedStart": 0.8793103448275862,
+    "coverage": 0.9498502994011976,
+    "meanLength": 21.879310344827587,
+    "mix": {
+      "short": 12,
+      "medium": 17,
+      "long": 29
+    },
+    "attempt": 2,
+    "D": 7.74
+  },
+  {
+    "id": 364,
+    "title": "Circular maze 35",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 50,
+    "depth": 26,
+    "freeAtStart": 7,
+    "blockedStart": 0.86,
+    "coverage": 0.9549050632911392,
+    "meanLength": 24.14,
+    "mix": {
+      "short": 10,
+      "medium": 15,
+      "long": 25
+    },
+    "attempt": 0,
+    "D": 7.66
+  },
+  {
+    "id": 365,
+    "title": "Twin chambers 35",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 58,
+    "depth": 26,
+    "freeAtStart": 8,
+    "blockedStart": 0.8620689655172413,
+    "coverage": 0.9012820512820513,
+    "meanLength": 24.24137931034483,
+    "mix": {
+      "short": 13,
+      "medium": 16,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.72
+  },
+  {
+    "id": 366,
+    "title": "Four chambers 35",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 64,
+    "depth": 28,
+    "freeAtStart": 8,
+    "blockedStart": 0.875,
+    "coverage": 0.9422077922077922,
+    "meanLength": 22.671875,
+    "mix": {
+      "short": 14,
+      "medium": 18,
+      "long": 32
+    },
+    "attempt": 0,
+    "D": 7.87
+  },
+  {
+    "id": 367,
+    "title": "Crossroads 35",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 52,
+    "depth": 25,
+    "freeAtStart": 8,
+    "blockedStart": 0.8461538461538461,
+    "coverage": 0.9069940476190477,
+    "meanLength": 23.442307692307693,
+    "mix": {
+      "short": 12,
+      "medium": 14,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.72
+  },
+  {
+    "id": 368,
+    "title": "Open courtyard 35",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 66,
+    "depth": 25,
+    "freeAtStart": 9,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.9405370843989771,
+    "meanLength": 22.28787878787879,
+    "mix": {
+      "short": 15,
+      "medium": 18,
+      "long": 33
+    },
+    "attempt": 0,
+    "D": 7.44
+  },
+  {
+    "id": 369,
+    "title": "Stepped fortress 35",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 58,
+    "depth": 26,
+    "freeAtStart": 6,
+    "blockedStart": 0.896551724137931,
+    "coverage": 0.943181818181818,
+    "meanLength": 22.896551724137932,
+    "mix": {
+      "short": 12,
+      "medium": 17,
+      "long": 29
+    },
+    "attempt": 2,
+    "D": 7.74
+  },
+  {
+    "id": 370,
+    "title": "Woven ring 35",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 70,
+    "depth": 25,
+    "freeAtStart": 11,
+    "blockedStart": 0.8428571428571429,
+    "coverage": 0.9711286089238845,
+    "meanLength": 21.142857142857142,
+    "mix": {
+      "short": 15,
+      "medium": 20,
+      "long": 35
+    },
+    "attempt": 3,
+    "D": 7.31
+  },
+  {
+    "id": 371,
+    "title": "Square weave 36",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 70,
+    "depth": 26,
+    "freeAtStart": 11,
+    "blockedStart": 0.8428571428571429,
+    "coverage": 0.9620181405895691,
+    "meanLength": 24.242857142857144,
+    "mix": {
+      "short": 16,
+      "medium": 19,
+      "long": 35
+    },
+    "attempt": 0,
+    "D": 7.43
+  },
+  {
+    "id": 372,
+    "title": "Rounded square 36",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 68,
+    "depth": 33,
+    "freeAtStart": 11,
+    "blockedStart": 0.8382352941176471,
+    "coverage": 0.9395061728395062,
+    "meanLength": 22.38235294117647,
+    "mix": {
+      "short": 15,
+      "medium": 19,
+      "long": 34
+    },
+    "attempt": 2,
+    "D": 7.63
+  },
+  {
+    "id": 373,
+    "title": "Diamond vault 36",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 60,
+    "depth": 29,
+    "freeAtStart": 8,
+    "blockedStart": 0.8666666666666667,
+    "coverage": 0.9333333333333332,
+    "meanLength": 23.333333333333332,
+    "mix": {
+      "short": 13,
+      "medium": 17,
+      "long": 30
+    },
+    "attempt": 0,
+    "D": 7.75
+  },
+  {
+    "id": 374,
+    "title": "Circular maze 36",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 68,
+    "depth": 29,
+    "freeAtStart": 11,
+    "blockedStart": 0.8382352941176471,
+    "coverage": 0.9570200573065902,
+    "meanLength": 19.647058823529413,
+    "mix": {
+      "short": 14,
+      "medium": 20,
+      "long": 34
+    },
+    "attempt": 4,
+    "D": 7.41
+  },
+  {
+    "id": 375,
+    "title": "Twin chambers 36",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 76,
+    "depth": 27,
+    "freeAtStart": 9,
+    "blockedStart": 0.881578947368421,
+    "coverage": 0.962877030162413,
+    "meanLength": 21.842105263157894,
+    "mix": {
+      "short": 17,
+      "medium": 21,
+      "long": 38
+    },
+    "attempt": 1,
+    "D": 7.66
+  },
+  {
+    "id": 376,
+    "title": "Four chambers 36",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 68,
+    "depth": 26,
+    "freeAtStart": 11,
+    "blockedStart": 0.8382352941176471,
+    "coverage": 0.9424882629107981,
+    "meanLength": 23.61764705882353,
+    "mix": {
+      "short": 14,
+      "medium": 20,
+      "long": 34
+    },
+    "attempt": 1,
+    "D": 7.59
+  },
+  {
+    "id": 377,
+    "title": "Crossroads 36",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 62,
+    "depth": 25,
+    "freeAtStart": 8,
+    "blockedStart": 0.8709677419354839,
+    "coverage": 0.9177718832891248,
+    "meanLength": 22.322580645161292,
+    "mix": {
+      "short": 14,
+      "medium": 17,
+      "long": 31
+    },
+    "attempt": 0,
+    "D": 7.51
+  },
+  {
+    "id": 378,
+    "title": "Open courtyard 36",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 72,
+    "depth": 27,
+    "freeAtStart": 7,
+    "blockedStart": 0.9027777777777778,
+    "coverage": 0.9470588235294117,
+    "meanLength": 22.36111111111111,
+    "mix": {
+      "short": 16,
+      "medium": 20,
+      "long": 36
+    },
+    "attempt": 0,
+    "D": 7.95
+  },
+  {
+    "id": 379,
+    "title": "Stepped fortress 36",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 62,
+    "depth": 28,
+    "freeAtStart": 7,
+    "blockedStart": 0.8870967741935484,
+    "coverage": 0.928117048346056,
+    "meanLength": 23.532258064516128,
+    "mix": {
+      "short": 13,
+      "medium": 18,
+      "long": 31
+    },
+    "attempt": 2,
+    "D": 7.83
+  },
+  {
+    "id": 380,
+    "title": "Woven ring 36",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 68,
+    "depth": 32,
+    "freeAtStart": 8,
+    "blockedStart": 0.8823529411764706,
+    "coverage": 0.9293349168646081,
+    "meanLength": 23.014705882352942,
+    "mix": {
+      "short": 15,
+      "medium": 19,
+      "long": 34
+    },
+    "attempt": 3,
+    "D": 7.86
+  },
+  {
+    "id": 381,
+    "title": "Square weave 37",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 56,
+    "depth": 29,
+    "freeAtStart": 6,
+    "blockedStart": 0.8928571428571429,
+    "coverage": 0.9162049861495845,
+    "meanLength": 23.625,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 0,
+    "D": 7.93
+  },
+  {
+    "id": 382,
+    "title": "Rounded square 37",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 52,
+    "depth": 29,
+    "freeAtStart": 6,
+    "blockedStart": 0.8846153846153846,
+    "coverage": 0.9620535714285714,
+    "meanLength": 24.865384615384617,
+    "mix": {
+      "short": 11,
+      "medium": 15,
+      "long": 26
+    },
+    "attempt": 3,
+    "D": 7.93
+  },
+  {
+    "id": 383,
+    "title": "Diamond vault 37",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 50,
+    "depth": 28,
+    "freeAtStart": 5,
+    "blockedStart": 0.9,
+    "coverage": 0.9542483660130721,
+    "meanLength": 23.36,
+    "mix": {
+      "short": 10,
+      "medium": 15,
+      "long": 25
+    },
+    "attempt": 4,
+    "D": 7.92
+  },
+  {
+    "id": 384,
+    "title": "Circular maze 37",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 54,
+    "depth": 27,
+    "freeAtStart": 8,
+    "blockedStart": 0.8518518518518519,
+    "coverage": 0.9626334519572953,
+    "meanLength": 20.037037037037038,
+    "mix": {
+      "short": 13,
+      "medium": 14,
+      "long": 27
+    },
+    "attempt": 1,
+    "D": 7.59
+  },
+  {
+    "id": 385,
+    "title": "Twin chambers 37",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 66,
+    "depth": 26,
+    "freeAtStart": 10,
+    "blockedStart": 0.8484848484848485,
+    "coverage": 0.9715909090909091,
+    "meanLength": 20.727272727272727,
+    "mix": {
+      "short": 14,
+      "medium": 19,
+      "long": 33
+    },
+    "attempt": 1,
+    "D": 7.59
+  },
+  {
+    "id": 386,
+    "title": "Four chambers 37",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 58,
+    "depth": 25,
+    "freeAtStart": 9,
+    "blockedStart": 0.8448275862068966,
+    "coverage": 0.9501445086705202,
+    "meanLength": 22.67241379310345,
+    "mix": {
+      "short": 12,
+      "medium": 17,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.64
+  },
+  {
+    "id": 387,
+    "title": "Crossroads 37",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 46,
+    "depth": 27,
+    "freeAtStart": 2,
+    "blockedStart": 0.9565217391304348,
+    "coverage": 0.9214743589743588,
+    "meanLength": 25,
+    "mix": {
+      "short": 10,
+      "medium": 13,
+      "long": 23
+    },
+    "attempt": 5,
+    "D": 8.13
+  },
+  {
+    "id": 388,
+    "title": "Open courtyard 37",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 56,
+    "depth": 25,
+    "freeAtStart": 7,
+    "blockedStart": 0.875,
+    "coverage": 0.9602272727272727,
+    "meanLength": 24.142857142857142,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 0,
+    "D": 7.8
+  },
+  {
+    "id": 389,
+    "title": "Stepped fortress 37",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 52,
+    "depth": 26,
+    "freeAtStart": 7,
+    "blockedStart": 0.8653846153846154,
+    "coverage": 0.9206948640483383,
+    "meanLength": 23.442307692307693,
+    "mix": {
+      "short": 11,
+      "medium": 15,
+      "long": 26
+    },
+    "attempt": 2,
+    "D": 7.64
+  },
+  {
+    "id": 390,
+    "title": "Woven ring 37",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 54,
+    "depth": 26,
+    "freeAtStart": 8,
+    "blockedStart": 0.8518518518518519,
+    "coverage": 0.9375,
+    "meanLength": 23.88888888888889,
+    "mix": {
+      "short": 12,
+      "medium": 15,
+      "long": 27
+    },
+    "attempt": 0,
+    "D": 7.75
+  },
+  {
+    "id": 391,
+    "title": "Square weave 38",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 74,
+    "depth": 29,
+    "freeAtStart": 10,
+    "blockedStart": 0.8648648648648649,
+    "coverage": 0.975625,
+    "meanLength": 21.094594594594593,
+    "mix": {
+      "short": 17,
+      "medium": 20,
+      "long": 37
+    },
+    "attempt": 0,
+    "D": 7.84
+  },
+  {
+    "id": 392,
+    "title": "Rounded square 38",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 60,
+    "depth": 27,
+    "freeAtStart": 9,
+    "blockedStart": 0.85,
+    "coverage": 0.9586666666666667,
+    "meanLength": 23.966666666666665,
+    "mix": {
+      "short": 13,
+      "medium": 17,
+      "long": 30
+    },
+    "attempt": 0,
+    "D": 7.69
+  },
+  {
+    "id": 393,
+    "title": "Diamond vault 38",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 56,
+    "depth": 26,
+    "freeAtStart": 9,
+    "blockedStart": 0.8392857142857143,
+    "coverage": 0.9221556886227545,
+    "meanLength": 22,
+    "mix": {
+      "short": 13,
+      "medium": 15,
+      "long": 28
+    },
+    "attempt": 4,
+    "D": 7.31
+  },
+  {
+    "id": 394,
+    "title": "Circular maze 38",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 52,
+    "depth": 25,
+    "freeAtStart": 8,
+    "blockedStart": 0.8461538461538461,
+    "coverage": 0.9082278481012658,
+    "meanLength": 22.076923076923077,
+    "mix": {
+      "short": 11,
+      "medium": 15,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.54
+  },
+  {
+    "id": 395,
+    "title": "Twin chambers 38",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 72,
+    "depth": 29,
+    "freeAtStart": 9,
+    "blockedStart": 0.875,
+    "coverage": 0.9717948717948718,
+    "meanLength": 21.055555555555557,
+    "mix": {
+      "short": 16,
+      "medium": 20,
+      "long": 36
+    },
+    "attempt": 1,
+    "D": 7.64
+  },
+  {
+    "id": 396,
+    "title": "Four chambers 38",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 62,
+    "depth": 25,
+    "freeAtStart": 9,
+    "blockedStart": 0.8548387096774194,
+    "coverage": 0.9110389610389609,
+    "meanLength": 22.629032258064516,
+    "mix": {
+      "short": 13,
+      "medium": 18,
+      "long": 31
+    },
+    "attempt": 0,
+    "D": 7.71
+  },
+  {
+    "id": 397,
+    "title": "Crossroads 38",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 64,
+    "depth": 25,
+    "freeAtStart": 10,
+    "blockedStart": 0.84375,
+    "coverage": 0.9732142857142857,
+    "meanLength": 20.4375,
+    "mix": {
+      "short": 16,
+      "medium": 16,
+      "long": 32
+    },
+    "attempt": 0,
+    "D": 7.16
+  },
+  {
+    "id": 398,
+    "title": "Open courtyard 38",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 76,
+    "depth": 27,
+    "freeAtStart": 9,
+    "blockedStart": 0.881578947368421,
+    "coverage": 0.9629156010230179,
+    "meanLength": 19.81578947368421,
+    "mix": {
+      "short": 18,
+      "medium": 20,
+      "long": 38
+    },
+    "attempt": 2,
+    "D": 7.91
+  },
+  {
+    "id": 399,
+    "title": "Stepped fortress 38",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 60,
+    "depth": 28,
+    "freeAtStart": 6,
+    "blockedStart": 0.9,
+    "coverage": 0.9708806818181818,
+    "meanLength": 22.783333333333335,
+    "mix": {
+      "short": 13,
+      "medium": 17,
+      "long": 30
+    },
+    "attempt": 1,
+    "D": 7.86
+  },
+  {
+    "id": 400,
+    "title": "Woven ring 38",
+    "tier": "Expert+",
+    "grid": 40,
+    "arrows": 62,
+    "depth": 27,
+    "freeAtStart": 8,
+    "blockedStart": 0.8709677419354839,
+    "coverage": 0.9468503937007874,
+    "meanLength": 23.274193548387096,
+    "mix": {
+      "short": 15,
+      "medium": 16,
+      "long": 31
+    },
+    "attempt": 1,
+    "D": 7.69
+  },
+  {
+    "id": 401,
+    "title": "Square weave 39",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 80,
+    "depth": 29,
+    "freeAtStart": 8,
+    "blockedStart": 0.9,
+    "coverage": 0.9676870748299321,
+    "meanLength": 21.3375,
+    "mix": {
+      "short": 17,
+      "medium": 23,
+      "long": 40
+    },
+    "attempt": 0,
+    "D": 7.9
+  },
+  {
+    "id": 402,
+    "title": "Rounded square 39",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 62,
+    "depth": 26,
+    "freeAtStart": 10,
+    "blockedStart": 0.8387096774193549,
+    "coverage": 0.9104938271604939,
+    "meanLength": 23.79032258064516,
+    "mix": {
+      "short": 14,
+      "medium": 17,
+      "long": 31
+    },
+    "attempt": 0,
+    "D": 7.16
+  },
+  {
+    "id": 403,
+    "title": "Diamond vault 39",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 60,
+    "depth": 25,
+    "freeAtStart": 9,
+    "blockedStart": 0.85,
+    "coverage": 0.9626666666666667,
+    "meanLength": 24.066666666666666,
+    "mix": {
+      "short": 12,
+      "medium": 18,
+      "long": 30
+    },
+    "attempt": 3,
+    "D": 7.61
+  },
+  {
+    "id": 404,
+    "title": "Circular maze 39",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 62,
+    "depth": 26,
+    "freeAtStart": 10,
+    "blockedStart": 0.8387096774193549,
+    "coverage": 0.9627507163323782,
+    "meanLength": 21.677419354838708,
+    "mix": {
+      "short": 14,
+      "medium": 17,
+      "long": 31
+    },
+    "attempt": 2,
+    "D": 7.48
+  },
+  {
+    "id": 405,
+    "title": "Twin chambers 39",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 70,
+    "depth": 25,
+    "freeAtStart": 10,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.9466357308584689,
+    "meanLength": 23.314285714285713,
+    "mix": {
+      "short": 16,
+      "medium": 19,
+      "long": 35
+    },
+    "attempt": 0,
+    "D": 7.64
+  },
+  {
+    "id": 406,
+    "title": "Four chambers 39",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 70,
+    "depth": 27,
+    "freeAtStart": 11,
+    "blockedStart": 0.8428571428571429,
+    "coverage": 0.9553990610328639,
+    "meanLength": 23.257142857142856,
+    "mix": {
+      "short": 16,
+      "medium": 19,
+      "long": 35
+    },
+    "attempt": 1,
+    "D": 7.59
+  },
+  {
+    "id": 407,
+    "title": "Crossroads 39",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 66,
+    "depth": 25,
+    "freeAtStart": 6,
+    "blockedStart": 0.9090909090909091,
+    "coverage": 0.9157824933687002,
+    "meanLength": 20.924242424242426,
+    "mix": {
+      "short": 15,
+      "medium": 18,
+      "long": 33
+    },
+    "attempt": 0,
+    "D": 7.69
+  },
+  {
+    "id": 408,
+    "title": "Open courtyard 39",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 70,
+    "depth": 26,
+    "freeAtStart": 11,
+    "blockedStart": 0.8428571428571429,
+    "coverage": 0.9447058823529412,
+    "meanLength": 22.942857142857143,
+    "mix": {
+      "short": 16,
+      "medium": 19,
+      "long": 35
+    },
+    "attempt": 0,
+    "D": 7.65
+  },
+  {
+    "id": 409,
+    "title": "Stepped fortress 39",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 72,
+    "depth": 30,
+    "freeAtStart": 11,
+    "blockedStart": 0.8472222222222222,
+    "coverage": 0.9573791348600508,
+    "meanLength": 20.90277777777778,
+    "mix": {
+      "short": 15,
+      "medium": 21,
+      "long": 36
+    },
+    "attempt": 1,
+    "D": 7.76
+  },
+  {
+    "id": 410,
+    "title": "Woven ring 39",
+    "tier": "Expert+",
+    "grid": 42,
+    "arrows": 66,
+    "depth": 25,
+    "freeAtStart": 8,
+    "blockedStart": 0.8787878787878788,
+    "coverage": 0.9115201900237528,
+    "meanLength": 23.257575757575758,
+    "mix": {
+      "short": 14,
+      "medium": 19,
+      "long": 33
+    },
+    "attempt": 2,
+    "D": 7.53
+  },
+  {
+    "id": 411,
+    "title": "Square weave 40",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 56,
+    "depth": 27,
+    "freeAtStart": 7,
+    "blockedStart": 0.875,
+    "coverage": 0.9009695290858726,
+    "meanLength": 23.232142857142858,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 0,
+    "D": 7.74
+  },
+  {
+    "id": 412,
+    "title": "Rounded square 40",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 58,
+    "depth": 25,
+    "freeAtStart": 8,
+    "blockedStart": 0.8620689655172413,
+    "coverage": 0.953125,
+    "meanLength": 22.086206896551722,
+    "mix": {
+      "short": 13,
+      "medium": 16,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.69
+  },
+  {
+    "id": 413,
+    "title": "Diamond vault 40",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 54,
+    "depth": 26,
+    "freeAtStart": 6,
+    "blockedStart": 0.8888888888888888,
+    "coverage": 0.9428104575163399,
+    "meanLength": 21.37037037037037,
+    "mix": {
+      "short": 11,
+      "medium": 16,
+      "long": 27
+    },
+    "attempt": 2,
+    "D": 7.78
+  },
+  {
+    "id": 414,
+    "title": "Circular maze 40",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 46,
+    "depth": 26,
+    "freeAtStart": 7,
+    "blockedStart": 0.8478260869565217,
+    "coverage": 0.9181494661921709,
+    "meanLength": 22.434782608695652,
+    "mix": {
+      "short": 11,
+      "medium": 12,
+      "long": 23
+    },
+    "attempt": 0,
+    "D": 7.56
+  },
+  {
+    "id": 415,
+    "title": "Twin chambers 40",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 64,
+    "depth": 26,
+    "freeAtStart": 10,
+    "blockedStart": 0.84375,
+    "coverage": 0.955255681818182,
+    "meanLength": 21.015625,
+    "mix": {
+      "short": 13,
+      "medium": 19,
+      "long": 32
+    },
+    "attempt": 4,
+    "D": 7.58
+  },
+  {
+    "id": 416,
+    "title": "Four chambers 40",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 56,
+    "depth": 25,
+    "freeAtStart": 9,
+    "blockedStart": 0.8392857142857143,
+    "coverage": 0.9573699421965316,
+    "meanLength": 23.660714285714285,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 6,
+    "D": 7.57
+  },
+  {
+    "id": 417,
+    "title": "Crossroads 40",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 58,
+    "depth": 27,
+    "freeAtStart": 8,
+    "blockedStart": 0.8620689655172413,
+    "coverage": 0.9575320512820513,
+    "meanLength": 20.603448275862068,
+    "mix": {
+      "short": 14,
+      "medium": 15,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.57
+  },
+  {
+    "id": 418,
+    "title": "Open courtyard 40",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 58,
+    "depth": 25,
+    "freeAtStart": 8,
+    "blockedStart": 0.8620689655172413,
+    "coverage": 0.9517045454545454,
+    "meanLength": 23.103448275862068,
+    "mix": {
+      "short": 13,
+      "medium": 16,
+      "long": 29
+    },
+    "attempt": 2,
+    "D": 7.73
+  },
+  {
+    "id": 419,
+    "title": "Stepped fortress 40",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 52,
+    "depth": 27,
+    "freeAtStart": 6,
+    "blockedStart": 0.8846153846153846,
+    "coverage": 0.9388217522658611,
+    "meanLength": 23.903846153846153,
+    "mix": {
+      "short": 11,
+      "medium": 15,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.74
+  },
+  {
+    "id": 420,
+    "title": "Woven ring 40",
+    "tier": "Expert+",
+    "grid": 38,
+    "arrows": 64,
+    "depth": 25,
+    "freeAtStart": 10,
+    "blockedStart": 0.84375,
+    "coverage": 0.9236918604651163,
+    "meanLength": 19.859375,
+    "mix": {
+      "short": 15,
+      "medium": 17,
+      "long": 32
+    },
+    "attempt": 0,
+    "D": 7.57
+  },
+  {
+    "id": 421,
+    "title": "Square weave 41",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 80,
+    "depth": 28,
+    "freeAtStart": 8,
+    "blockedStart": 0.9,
+    "coverage": 0.9608843537414967,
+    "meanLength": 21.1875,
+    "mix": {
+      "short": 18,
+      "medium": 22,
+      "long": 40
+    },
+    "attempt": 0,
+    "D": 7.67
+  },
+  {
+    "id": 422,
+    "title": "Rounded square 41",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 66,
+    "depth": 27,
+    "freeAtStart": 8,
+    "blockedStart": 0.8787878787878788,
+    "coverage": 0.9154320987654321,
+    "meanLength": 22.46969696969697,
+    "mix": {
+      "short": 15,
+      "medium": 18,
+      "long": 33
+    },
+    "attempt": 1,
+    "D": 7.78
+  },
+  {
+    "id": 423,
+    "title": "Diamond vault 41",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 52,
+    "depth": 27,
+    "freeAtStart": 7,
+    "blockedStart": 0.8653846153846154,
+    "coverage": 0.904,
+    "meanLength": 26.076923076923077,
+    "mix": {
+      "short": 12,
+      "medium": 14,
+      "long": 26
+    },
+    "attempt": 3,
+    "D": 7.73
+  },
+  {
+    "id": 424,
+    "title": "Circular maze 41",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 56,
+    "depth": 29,
+    "freeAtStart": 8,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.9040114613180515,
+    "meanLength": 22.535714285714285,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 2,
+    "D": 7.74
+  },
+  {
+    "id": 425,
+    "title": "Twin chambers 41",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 68,
+    "depth": 32,
+    "freeAtStart": 8,
+    "blockedStart": 0.8823529411764706,
+    "coverage": 0.947215777262181,
+    "meanLength": 24.014705882352942,
+    "mix": {
+      "short": 14,
+      "medium": 20,
+      "long": 34
+    },
+    "attempt": 1,
+    "D": 8.03
+  },
+  {
+    "id": 426,
+    "title": "Four chambers 41",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 70,
+    "depth": 30,
+    "freeAtStart": 8,
+    "blockedStart": 0.8857142857142857,
+    "coverage": 0.9360328638497653,
+    "meanLength": 22.785714285714285,
+    "mix": {
+      "short": 16,
+      "medium": 19,
+      "long": 35
+    },
+    "attempt": 0,
+    "D": 7.98
+  },
+  {
+    "id": 427,
+    "title": "Crossroads 41",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 62,
+    "depth": 28,
+    "freeAtStart": 9,
+    "blockedStart": 0.8548387096774194,
+    "coverage": 0.9542440318302389,
+    "meanLength": 23.20967741935484,
+    "mix": {
+      "short": 14,
+      "medium": 17,
+      "long": 31
+    },
+    "attempt": 3,
+    "D": 7.72
+  },
+  {
+    "id": 428,
+    "title": "Open courtyard 41",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 68,
+    "depth": 27,
+    "freeAtStart": 6,
+    "blockedStart": 0.9117647058823529,
+    "coverage": 0.9511764705882353,
+    "meanLength": 23.779411764705884,
+    "mix": {
+      "short": 15,
+      "medium": 19,
+      "long": 34
+    },
+    "attempt": 0,
+    "D": 7.76
+  },
+  {
+    "id": 429,
+    "title": "Stepped fortress 41",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 66,
+    "depth": 31,
+    "freeAtStart": 9,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.9289405684754521,
+    "meanLength": 21.78787878787879,
+    "mix": {
+      "short": 14,
+      "medium": 19,
+      "long": 33
+    },
+    "attempt": 1,
+    "D": 7.63
+  },
+  {
+    "id": 430,
+    "title": "Woven ring 41",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 68,
+    "depth": 27,
+    "freeAtStart": 8,
+    "blockedStart": 0.8823529411764706,
+    "coverage": 0.9103325415676959,
+    "meanLength": 22.544117647058822,
+    "mix": {
+      "short": 15,
+      "medium": 19,
+      "long": 34
+    },
+    "attempt": 0,
+    "D": 7.7
+  },
+  {
+    "id": 431,
+    "title": "Square weave 42",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 76,
+    "depth": 29,
+    "freeAtStart": 9,
+    "blockedStart": 0.881578947368421,
+    "coverage": 0.9699546485260769,
+    "meanLength": 22.513157894736842,
+    "mix": {
+      "short": 17,
+      "medium": 21,
+      "long": 38
+    },
+    "attempt": 1,
+    "D": 7.88
+  },
+  {
+    "id": 432,
+    "title": "Rounded square 42",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 60,
+    "depth": 27,
+    "freeAtStart": 9,
+    "blockedStart": 0.85,
+    "coverage": 0.9314814814814815,
+    "meanLength": 25.15,
+    "mix": {
+      "short": 13,
+      "medium": 17,
+      "long": 30
+    },
+    "attempt": 0,
+    "D": 7.64
+  },
+  {
+    "id": 433,
+    "title": "Diamond vault 42",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 56,
+    "depth": 28,
+    "freeAtStart": 8,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.9426666666666668,
+    "meanLength": 25.25,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 3,
+    "D": 7.53
+  },
+  {
+    "id": 434,
+    "title": "Circular maze 42",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 62,
+    "depth": 27,
+    "freeAtStart": 8,
+    "blockedStart": 0.8709677419354839,
+    "coverage": 0.9312320916905444,
+    "meanLength": 20.967741935483872,
+    "mix": {
+      "short": 14,
+      "medium": 17,
+      "long": 31
+    },
+    "attempt": 3,
+    "D": 7.46
+  },
+  {
+    "id": 435,
+    "title": "Twin chambers 42",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 70,
+    "depth": 29,
+    "freeAtStart": 9,
+    "blockedStart": 0.8714285714285714,
+    "coverage": 0.9321345707656614,
+    "meanLength": 22.957142857142856,
+    "mix": {
+      "short": 16,
+      "medium": 19,
+      "long": 35
+    },
+    "attempt": 0,
+    "D": 7.77
+  },
+  {
+    "id": 436,
+    "title": "Four chambers 42",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 70,
+    "depth": 27,
+    "freeAtStart": 6,
+    "blockedStart": 0.9142857142857143,
+    "coverage": 0.9653755868544601,
+    "meanLength": 23.5,
+    "mix": {
+      "short": 14,
+      "medium": 21,
+      "long": 35
+    },
+    "attempt": 0,
+    "D": 7.87
+  },
+  {
+    "id": 437,
+    "title": "Crossroads 42",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 60,
+    "depth": 28,
+    "freeAtStart": 9,
+    "blockedStart": 0.85,
+    "coverage": 0.9529177718832891,
+    "meanLength": 23.95,
+    "mix": {
+      "short": 12,
+      "medium": 18,
+      "long": 30
+    },
+    "attempt": 0,
+    "D": 7.77
+  },
+  {
+    "id": 438,
+    "title": "Open courtyard 42",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 70,
+    "depth": 33,
+    "freeAtStart": 8,
+    "blockedStart": 0.8857142857142857,
+    "coverage": 0.9382352941176471,
+    "meanLength": 22.785714285714285,
+    "mix": {
+      "short": 15,
+      "medium": 20,
+      "long": 35
+    },
+    "attempt": 0,
+    "D": 7.81
+  },
+  {
+    "id": 439,
+    "title": "Stepped fortress 42",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 60,
+    "depth": 31,
+    "freeAtStart": 6,
+    "blockedStart": 0.9,
+    "coverage": 0.9402035623409669,
+    "meanLength": 24.633333333333333,
+    "mix": {
+      "short": 13,
+      "medium": 17,
+      "long": 30
+    },
+    "attempt": 0,
+    "D": 7.85
+  },
+  {
+    "id": 440,
+    "title": "Woven ring 42",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 70,
+    "depth": 28,
+    "freeAtStart": 9,
+    "blockedStart": 0.8714285714285714,
+    "coverage": 0.9144893111638955,
+    "meanLength": 22,
+    "mix": {
+      "short": 16,
+      "medium": 19,
+      "long": 35
+    },
+    "attempt": 0,
+    "D": 7.72
+  },
+  {
+    "id": 441,
+    "title": "Square weave 43",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 78,
+    "depth": 31,
+    "freeAtStart": 7,
+    "blockedStart": 0.9102564102564102,
+    "coverage": 0.9712499999999998,
+    "meanLength": 19.923076923076923,
+    "mix": {
+      "short": 17,
+      "medium": 22,
+      "long": 39
+    },
+    "attempt": 5,
+    "D": 7.91
+  },
+  {
+    "id": 442,
+    "title": "Rounded square 43",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 60,
+    "depth": 31,
+    "freeAtStart": 5,
+    "blockedStart": 0.9166666666666666,
+    "coverage": 0.938,
+    "meanLength": 23.45,
+    "mix": {
+      "short": 12,
+      "medium": 18,
+      "long": 30
+    },
+    "attempt": 0,
+    "D": 7.92
+  },
+  {
+    "id": 443,
+    "title": "Diamond vault 43",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 56,
+    "depth": 27,
+    "freeAtStart": 7,
+    "blockedStart": 0.875,
+    "coverage": 0.9513473053892215,
+    "meanLength": 22.696428571428573,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 1,
+    "D": 7.8
+  },
+  {
+    "id": 444,
+    "title": "Circular maze 43",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 56,
+    "depth": 28,
+    "freeAtStart": 8,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.9596518987341772,
+    "meanLength": 21.660714285714285,
+    "mix": {
+      "short": 13,
+      "medium": 15,
+      "long": 28
+    },
+    "attempt": 5,
+    "D": 7.66
+  },
+  {
+    "id": 445,
+    "title": "Twin chambers 43",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 74,
+    "depth": 31,
+    "freeAtStart": 10,
+    "blockedStart": 0.8648648648648649,
+    "coverage": 0.964102564102564,
+    "meanLength": 20.324324324324323,
+    "mix": {
+      "short": 17,
+      "medium": 20,
+      "long": 37
+    },
+    "attempt": 3,
+    "D": 7.48
+  },
+  {
+    "id": 446,
+    "title": "Four chambers 43",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 66,
+    "depth": 28,
+    "freeAtStart": 9,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.9655844155844155,
+    "meanLength": 22.53030303030303,
+    "mix": {
+      "short": 14,
+      "medium": 19,
+      "long": 33
+    },
+    "attempt": 1,
+    "D": 7.56
+  },
+  {
+    "id": 447,
+    "title": "Crossroads 43",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 56,
+    "depth": 27,
+    "freeAtStart": 6,
+    "blockedStart": 0.8928571428571429,
+    "coverage": 0.9285714285714286,
+    "meanLength": 22.285714285714285,
+    "mix": {
+      "short": 12,
+      "medium": 16,
+      "long": 28
+    },
+    "attempt": 0,
+    "D": 7.78
+  },
+  {
+    "id": 448,
+    "title": "Open courtyard 43",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 78,
+    "depth": 29,
+    "freeAtStart": 9,
+    "blockedStart": 0.8846153846153846,
+    "coverage": 0.9661125319693095,
+    "meanLength": 19.371794871794872,
+    "mix": {
+      "short": 18,
+      "medium": 21,
+      "long": 39
+    },
+    "attempt": 2,
+    "D": 7.8
+  },
+  {
+    "id": 449,
+    "title": "Stepped fortress 43",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 58,
+    "depth": 29,
+    "freeAtStart": 7,
+    "blockedStart": 0.8793103448275862,
+    "coverage": 0.948489010989011,
+    "meanLength": 23.810344827586206,
+    "mix": {
+      "short": 12,
+      "medium": 17,
+      "long": 29
+    },
+    "attempt": 5,
+    "D": 7.84
+  },
+  {
+    "id": 450,
+    "title": "Woven ring 43",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 58,
+    "depth": 29,
+    "freeAtStart": 8,
+    "blockedStart": 0.8620689655172413,
+    "coverage": 0.9146981627296588,
+    "meanLength": 24.03448275862069,
+    "mix": {
+      "short": 13,
+      "medium": 16,
+      "long": 29
+    },
+    "attempt": 1,
+    "D": 7.73
+  },
+  {
+    "id": 451,
+    "title": "Square weave 44",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 70,
+    "depth": 35,
+    "freeAtStart": 7,
+    "blockedStart": 0.9,
+    "coverage": 0.9183673469387755,
+    "meanLength": 23.142857142857142,
+    "mix": {
+      "short": 14,
+      "medium": 21,
+      "long": 35
+    },
+    "attempt": 1,
+    "D": 8.11
+  },
+  {
+    "id": 452,
+    "title": "Rounded square 44",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 58,
+    "depth": 27,
+    "freeAtStart": 7,
+    "blockedStart": 0.8793103448275862,
+    "coverage": 0.9055555555555556,
+    "meanLength": 25.29310344827586,
+    "mix": {
+      "short": 13,
+      "medium": 16,
+      "long": 29
+    },
+    "attempt": 4,
+    "D": 7.56
+  },
+  {
+    "id": 453,
+    "title": "Diamond vault 44",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 58,
+    "depth": 29,
+    "freeAtStart": 8,
+    "blockedStart": 0.8620689655172413,
+    "coverage": 0.9173333333333334,
+    "meanLength": 23.724137931034484,
+    "mix": {
+      "short": 13,
+      "medium": 16,
+      "long": 29
+    },
+    "attempt": 2,
+    "D": 7.78
+  },
+  {
+    "id": 454,
+    "title": "Circular maze 44",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 54,
+    "depth": 30,
+    "freeAtStart": 8,
+    "blockedStart": 0.8518518518518519,
+    "coverage": 0.9469914040114613,
+    "meanLength": 24.48148148148148,
+    "mix": {
+      "short": 13,
+      "medium": 14,
+      "long": 27
+    },
+    "attempt": 1,
+    "D": 7.68
+  },
+  {
+    "id": 455,
+    "title": "Twin chambers 44",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 62,
+    "depth": 28,
+    "freeAtStart": 7,
+    "blockedStart": 0.8870967741935484,
+    "coverage": 0.9216937354988399,
+    "meanLength": 25.629032258064516,
+    "mix": {
+      "short": 14,
+      "medium": 17,
+      "long": 31
+    },
+    "attempt": 2,
+    "D": 7.86
+  },
+  {
+    "id": 456,
+    "title": "Four chambers 44",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 66,
+    "depth": 29,
+    "freeAtStart": 8,
+    "blockedStart": 0.8787878787878788,
+    "coverage": 0.9284037558685447,
+    "meanLength": 23.96969696969697,
+    "mix": {
+      "short": 15,
+      "medium": 18,
+      "long": 33
+    },
+    "attempt": 0,
+    "D": 7.75
+  },
+  {
+    "id": 457,
+    "title": "Crossroads 44",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 62,
+    "depth": 28,
+    "freeAtStart": 8,
+    "blockedStart": 0.8709677419354839,
+    "coverage": 0.9217506631299734,
+    "meanLength": 22.419354838709676,
+    "mix": {
+      "short": 14,
+      "medium": 17,
+      "long": 31
+    },
+    "attempt": 0,
+    "D": 7.68
+  },
+  {
+    "id": 458,
+    "title": "Open courtyard 44",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 78,
+    "depth": 30,
+    "freeAtStart": 9,
+    "blockedStart": 0.8846153846153846,
+    "coverage": 0.9711764705882353,
+    "meanLength": 21.166666666666668,
+    "mix": {
+      "short": 19,
+      "medium": 20,
+      "long": 39
+    },
+    "attempt": 0,
+    "D": 7.64
+  },
+  {
+    "id": 459,
+    "title": "Stepped fortress 44",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 60,
+    "depth": 30,
+    "freeAtStart": 9,
+    "blockedStart": 0.85,
+    "coverage": 0.9657622739018088,
+    "meanLength": 24.916666666666668,
+    "mix": {
+      "short": 14,
+      "medium": 16,
+      "long": 30
+    },
+    "attempt": 1,
+    "D": 7.69
+  },
+  {
+    "id": 460,
+    "title": "Woven ring 44",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 62,
+    "depth": 28,
+    "freeAtStart": 8,
+    "blockedStart": 0.8709677419354839,
+    "coverage": 0.9055819477434679,
+    "meanLength": 24.596774193548388,
+    "mix": {
+      "short": 13,
+      "medium": 18,
+      "long": 31
+    },
+    "attempt": 1,
+    "D": 7.6
+  },
+  {
+    "id": 461,
+    "title": "Square weave 45",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 66,
+    "depth": 28,
+    "freeAtStart": 8,
+    "blockedStart": 0.8787878787878788,
+    "coverage": 0.9002267573696145,
+    "meanLength": 24.060606060606062,
+    "mix": {
+      "short": 15,
+      "medium": 18,
+      "long": 33
+    },
+    "attempt": 1,
+    "D": 7.79
+  },
+  {
+    "id": 462,
+    "title": "Rounded square 45",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 68,
+    "depth": 30,
+    "freeAtStart": 9,
+    "blockedStart": 0.8676470588235294,
+    "coverage": 0.9419753086419753,
+    "meanLength": 22.441176470588236,
+    "mix": {
+      "short": 15,
+      "medium": 19,
+      "long": 34
+    },
+    "attempt": 0,
+    "D": 7.69
+  },
+  {
+    "id": 463,
+    "title": "Diamond vault 45",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 68,
+    "depth": 28,
+    "freeAtStart": 10,
+    "blockedStart": 0.8529411764705882,
+    "coverage": 0.9606666666666667,
+    "meanLength": 21.191176470588236,
+    "mix": {
+      "short": 14,
+      "medium": 20,
+      "long": 34
+    },
+    "attempt": 0,
+    "D": 7.32
+  },
+  {
+    "id": 464,
+    "title": "Circular maze 45",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 54,
+    "depth": 29,
+    "freeAtStart": 8,
+    "blockedStart": 0.8518518518518519,
+    "coverage": 0.9527220630372493,
+    "meanLength": 24.62962962962963,
+    "mix": {
+      "short": 11,
+      "medium": 16,
+      "long": 27
+    },
+    "attempt": 2,
+    "D": 7.62
+  },
+  {
+    "id": 465,
+    "title": "Twin chambers 45",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 74,
+    "depth": 29,
+    "freeAtStart": 11,
+    "blockedStart": 0.8513513513513513,
+    "coverage": 0.9286542923433875,
+    "meanLength": 21.635135135135137,
+    "mix": {
+      "short": 16,
+      "medium": 21,
+      "long": 37
+    },
+    "attempt": 3,
+    "D": 7.57
+  },
+  {
+    "id": 466,
+    "title": "Four chambers 45",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 66,
+    "depth": 27,
+    "freeAtStart": 9,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.9008215962441313,
+    "meanLength": 23.257575757575758,
+    "mix": {
+      "short": 15,
+      "medium": 18,
+      "long": 33
+    },
+    "attempt": 0,
+    "D": 7.27
+  },
+  {
+    "id": 467,
+    "title": "Crossroads 45",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 60,
+    "depth": 28,
+    "freeAtStart": 8,
+    "blockedStart": 0.8666666666666667,
+    "coverage": 0.9363395225464191,
+    "meanLength": 23.533333333333335,
+    "mix": {
+      "short": 12,
+      "medium": 18,
+      "long": 30
+    },
+    "attempt": 0,
+    "D": 7.53
+  },
+  {
+    "id": 468,
+    "title": "Open courtyard 45",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 70,
+    "depth": 27,
+    "freeAtStart": 6,
+    "blockedStart": 0.9142857142857143,
+    "coverage": 0.9441176470588235,
+    "meanLength": 22.928571428571427,
+    "mix": {
+      "short": 15,
+      "medium": 20,
+      "long": 35
+    },
+    "attempt": 4,
+    "D": 7.93
+  },
+  {
+    "id": 469,
+    "title": "Stepped fortress 45",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 66,
+    "depth": 28,
+    "freeAtStart": 8,
+    "blockedStart": 0.8787878787878788,
+    "coverage": 0.9440203562340967,
+    "meanLength": 22.484848484848484,
+    "mix": {
+      "short": 14,
+      "medium": 19,
+      "long": 33
+    },
+    "attempt": 2,
+    "D": 7.69
+  },
+  {
+    "id": 470,
+    "title": "Woven ring 45",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 60,
+    "depth": 28,
+    "freeAtStart": 8,
+    "blockedStart": 0.8666666666666667,
+    "coverage": 0.9180522565320665,
+    "meanLength": 25.766666666666666,
+    "mix": {
+      "short": 13,
+      "medium": 17,
+      "long": 30
+    },
+    "attempt": 5,
+    "D": 7.82
+  },
+  {
+    "id": 471,
+    "title": "Square weave 46",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 66,
+    "depth": 29,
+    "freeAtStart": 8,
+    "blockedStart": 0.8787878787878788,
+    "coverage": 0.934375,
+    "meanLength": 22.651515151515152,
+    "mix": {
+      "short": 15,
+      "medium": 18,
+      "long": 33
+    },
+    "attempt": 0,
+    "D": 7.89
+  },
+  {
+    "id": 472,
+    "title": "Rounded square 46",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 62,
+    "depth": 27,
+    "freeAtStart": 6,
+    "blockedStart": 0.9032258064516129,
+    "coverage": 0.9593333333333334,
+    "meanLength": 23.20967741935484,
+    "mix": {
+      "short": 14,
+      "medium": 17,
+      "long": 31
+    },
+    "attempt": 1,
+    "D": 7.84
+  },
+  {
+    "id": 473,
+    "title": "Diamond vault 46",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 58,
+    "depth": 27,
+    "freeAtStart": 6,
+    "blockedStart": 0.896551724137931,
+    "coverage": 0.9595808383233533,
+    "meanLength": 22.103448275862068,
+    "mix": {
+      "short": 12,
+      "medium": 17,
+      "long": 29
+    },
+    "attempt": 15,
+    "D": 7.81
+  },
+  {
+    "id": 474,
+    "title": "Circular maze 46",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 56,
+    "depth": 27,
+    "freeAtStart": 4,
+    "blockedStart": 0.9285714285714286,
+    "coverage": 0.9454113924050633,
+    "meanLength": 21.339285714285715,
+    "mix": {
+      "short": 13,
+      "medium": 15,
+      "long": 28
+    },
+    "attempt": 0,
+    "D": 7.9
+  },
+  {
+    "id": 475,
+    "title": "Twin chambers 46",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 60,
+    "depth": 31,
+    "freeAtStart": 6,
+    "blockedStart": 0.9,
+    "coverage": 0.9288461538461539,
+    "meanLength": 24.15,
+    "mix": {
+      "short": 13,
+      "medium": 17,
+      "long": 30
+    },
+    "attempt": 3,
+    "D": 7.96
+  },
+  {
+    "id": 476,
+    "title": "Four chambers 46",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 58,
+    "depth": 30,
+    "freeAtStart": 7,
+    "blockedStart": 0.8793103448275862,
+    "coverage": 0.9162337662337663,
+    "meanLength": 24.32758620689655,
+    "mix": {
+      "short": 13,
+      "medium": 16,
+      "long": 29
+    },
+    "attempt": 2,
+    "D": 7.88
+  },
+  {
+    "id": 477,
+    "title": "Crossroads 46",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 60,
+    "depth": 27,
+    "freeAtStart": 9,
+    "blockedStart": 0.85,
+    "coverage": 0.9613095238095238,
+    "meanLength": 21.533333333333335,
+    "mix": {
+      "short": 15,
+      "medium": 15,
+      "long": 30
+    },
+    "attempt": 0,
+    "D": 7.51
+  },
+  {
+    "id": 478,
+    "title": "Open courtyard 46",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 62,
+    "depth": 28,
+    "freeAtStart": 8,
+    "blockedStart": 0.8709677419354839,
+    "coverage": 0.94693094629156,
+    "meanLength": 23.887096774193548,
+    "mix": {
+      "short": 13,
+      "medium": 18,
+      "long": 31
+    },
+    "attempt": 0,
+    "D": 7.73
+  },
+  {
+    "id": 479,
+    "title": "Stepped fortress 46",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 66,
+    "depth": 27,
+    "freeAtStart": 7,
+    "blockedStart": 0.8939393939393939,
+    "coverage": 0.9690934065934066,
+    "meanLength": 21.37878787878788,
+    "mix": {
+      "short": 14,
+      "medium": 19,
+      "long": 33
+    },
+    "attempt": 1,
+    "D": 7.55
+  },
+  {
+    "id": 480,
+    "title": "Woven ring 46",
+    "tier": "Master",
+    "grid": 40,
+    "arrows": 70,
+    "depth": 27,
+    "freeAtStart": 10,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.9448818897637795,
+    "meanLength": 20.571428571428573,
+    "mix": {
+      "short": 17,
+      "medium": 18,
+      "long": 35
+    },
+    "attempt": 1,
+    "D": 7.77
+  },
+  {
+    "id": 481,
+    "title": "Square weave 47",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 66,
+    "depth": 29,
+    "freeAtStart": 9,
+    "blockedStart": 0.8636363636363636,
+    "coverage": 0.9087301587301587,
+    "meanLength": 24.28787878787879,
+    "mix": {
+      "short": 14,
+      "medium": 19,
+      "long": 33
+    },
+    "attempt": 4,
+    "D": 7.79
+  },
+  {
+    "id": 482,
+    "title": "Rounded square 47",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 64,
+    "depth": 31,
+    "freeAtStart": 8,
+    "blockedStart": 0.875,
+    "coverage": 0.9592592592592593,
+    "meanLength": 24.28125,
+    "mix": {
+      "short": 13,
+      "medium": 19,
+      "long": 32
+    },
+    "attempt": 0,
+    "D": 7.71
+  },
+  {
+    "id": 483,
+    "title": "Diamond vault 47",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 64,
+    "depth": 27,
+    "freeAtStart": 9,
+    "blockedStart": 0.859375,
+    "coverage": 0.944,
+    "meanLength": 22.125,
+    "mix": {
+      "short": 13,
+      "medium": 19,
+      "long": 32
+    },
+    "attempt": 11,
+    "D": 7.66
+  },
+  {
+    "id": 484,
+    "title": "Circular maze 47",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 52,
+    "depth": 27,
+    "freeAtStart": 6,
+    "blockedStart": 0.8846153846153846,
+    "coverage": 0.9333810888252149,
+    "meanLength": 25.057692307692307,
+    "mix": {
+      "short": 12,
+      "medium": 14,
+      "long": 26
+    },
+    "attempt": 0,
+    "D": 7.79
+  },
+  {
+    "id": 485,
+    "title": "Twin chambers 47",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 70,
+    "depth": 27,
+    "freeAtStart": 9,
+    "blockedStart": 0.8714285714285714,
+    "coverage": 0.9448955916473318,
+    "meanLength": 23.271428571428572,
+    "mix": {
+      "short": 14,
+      "medium": 21,
+      "long": 35
+    },
+    "attempt": 3,
+    "D": 7.45
+  },
+  {
+    "id": 486,
+    "title": "Four chambers 47",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 60,
+    "depth": 27,
+    "freeAtStart": 9,
+    "blockedStart": 0.85,
+    "coverage": 0.9125586854460094,
+    "meanLength": 25.916666666666668,
+    "mix": {
+      "short": 14,
+      "medium": 16,
+      "long": 30
+    },
+    "attempt": 1,
+    "D": 7.68
+  },
+  {
+    "id": 487,
+    "title": "Crossroads 47",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 66,
+    "depth": 28,
+    "freeAtStart": 7,
+    "blockedStart": 0.8939393939393939,
+    "coverage": 0.96684350132626,
+    "meanLength": 22.09090909090909,
+    "mix": {
+      "short": 15,
+      "medium": 18,
+      "long": 33
+    },
+    "attempt": 4,
+    "D": 7.89
+  },
+  {
+    "id": 488,
+    "title": "Open courtyard 47",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 64,
+    "depth": 28,
+    "freeAtStart": 7,
+    "blockedStart": 0.890625,
+    "coverage": 0.9052941176470589,
+    "meanLength": 24.046875,
+    "mix": {
+      "short": 14,
+      "medium": 18,
+      "long": 32
+    },
+    "attempt": 0,
+    "D": 7.69
+  },
+  {
+    "id": 489,
+    "title": "Stepped fortress 47",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 62,
+    "depth": 27,
+    "freeAtStart": 7,
+    "blockedStart": 0.8870967741935484,
+    "coverage": 0.9483204134366924,
+    "meanLength": 23.677419354838708,
+    "mix": {
+      "short": 15,
+      "medium": 16,
+      "long": 31
+    },
+    "attempt": 3,
+    "D": 7.68
+  },
+  {
+    "id": 490,
+    "title": "Woven ring 47",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 70,
+    "depth": 27,
+    "freeAtStart": 10,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.9483372921615202,
+    "meanLength": 22.814285714285713,
+    "mix": {
+      "short": 16,
+      "medium": 19,
+      "long": 35
+    },
+    "attempt": 0,
+    "D": 7.47
+  },
+  {
+    "id": 491,
+    "title": "Square weave 48",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 80,
+    "depth": 27,
+    "freeAtStart": 10,
+    "blockedStart": 0.875,
+    "coverage": 0.9586167800453514,
+    "meanLength": 21.1375,
+    "mix": {
+      "short": 17,
+      "medium": 23,
+      "long": 40
+    },
+    "attempt": 0,
+    "D": 7.51
+  },
+  {
+    "id": 492,
+    "title": "Rounded square 48",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 60,
+    "depth": 27,
+    "freeAtStart": 9,
+    "blockedStart": 0.85,
+    "coverage": 0.9197530864197531,
+    "meanLength": 24.833333333333332,
+    "mix": {
+      "short": 15,
+      "medium": 15,
+      "long": 30
+    },
+    "attempt": 1,
+    "D": 7.58
+  },
+  {
+    "id": 493,
+    "title": "Diamond vault 48",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 56,
+    "depth": 27,
+    "freeAtStart": 7,
+    "blockedStart": 0.875,
+    "coverage": 0.9146666666666666,
+    "meanLength": 24.5,
+    "mix": {
+      "short": 13,
+      "medium": 15,
+      "long": 28
+    },
+    "attempt": 1,
+    "D": 7.57
+  },
+  {
+    "id": 494,
+    "title": "Circular maze 48",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 56,
+    "depth": 28,
+    "freeAtStart": 8,
+    "blockedStart": 0.8571428571428572,
+    "coverage": 0.9383954154727794,
+    "meanLength": 23.392857142857142,
+    "mix": {
+      "short": 13,
+      "medium": 15,
+      "long": 28
+    },
+    "attempt": 7,
+    "D": 7.65
+  },
+  {
+    "id": 495,
+    "title": "Twin chambers 48",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 72,
+    "depth": 29,
+    "freeAtStart": 10,
+    "blockedStart": 0.8611111111111112,
+    "coverage": 0.947215777262181,
+    "meanLength": 22.680555555555557,
+    "mix": {
+      "short": 16,
+      "medium": 20,
+      "long": 36
+    },
+    "attempt": 0,
+    "D": 7.76
+  },
+  {
+    "id": 496,
+    "title": "Four chambers 48",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 72,
+    "depth": 34,
+    "freeAtStart": 6,
+    "blockedStart": 0.9166666666666666,
+    "coverage": 0.9501173708920189,
+    "meanLength": 22.48611111111111,
+    "mix": {
+      "short": 17,
+      "medium": 19,
+      "long": 36
+    },
+    "attempt": 6,
+    "D": 8.01
+  },
+  {
+    "id": 497,
+    "title": "Crossroads 48",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 58,
+    "depth": 27,
+    "freeAtStart": 8,
+    "blockedStart": 0.8620689655172413,
+    "coverage": 0.9462864721485411,
+    "meanLength": 24.603448275862068,
+    "mix": {
+      "short": 12,
+      "medium": 17,
+      "long": 29
+    },
+    "attempt": 0,
+    "D": 7.56
+  },
+  {
+    "id": 498,
+    "title": "Open courtyard 48",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 62,
+    "depth": 31,
+    "freeAtStart": 8,
+    "blockedStart": 0.8709677419354839,
+    "coverage": 0.9188235294117647,
+    "meanLength": 25.193548387096776,
+    "mix": {
+      "short": 14,
+      "medium": 17,
+      "long": 31
+    },
+    "attempt": 0,
+    "D": 7.92
+  },
+  {
+    "id": 499,
+    "title": "Stepped fortress 48",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 72,
+    "depth": 31,
+    "freeAtStart": 7,
+    "blockedStart": 0.9027777777777778,
+    "coverage": 0.9599236641221374,
+    "meanLength": 20.958333333333332,
+    "mix": {
+      "short": 15,
+      "medium": 21,
+      "long": 36
+    },
+    "attempt": 1,
+    "D": 7.84
+  },
+  {
+    "id": 500,
+    "title": "Woven ring 48",
+    "tier": "Master",
+    "grid": 42,
+    "arrows": 74,
+    "depth": 31,
+    "freeAtStart": 10,
+    "blockedStart": 0.8648648648648649,
+    "coverage": 0.9507125890736342,
+    "meanLength": 21.635135135135137,
+    "mix": {
+      "short": 16,
+      "medium": 21,
+      "long": 37
+    },
+    "attempt": 1,
+    "D": 7.64
+  }
+]

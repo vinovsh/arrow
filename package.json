@@ -8,8 +8,9 @@
     "lint": "eslint .",
     "test": "jest",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tools/tsconfig.json",
-    "levels:generate": "node --import ./tools/register.mjs tools/designFirst20.ts",
-    "levels:validate": "node --import ./tools/register.mjs tools/validateFirst20.ts",
+    "levels:generate": "node --import ./tools/register.mjs tools/design500.ts",
+    "levels:generate:first20": "node --import ./tools/register.mjs tools/designFirst20.ts",
+    "levels:validate": "node --import ./tools/register.mjs tools/validateFirst20.ts && node --import ./tools/register.mjs tools/validate500.ts",
     "levels:curve": "node -e \"console.table(require('./mock/review-first-20.json'))\"",
     "levels:contactsheet": "node --import ./tools/register.mjs tools/renderFirst20.ts",
     "verify": "npm run typecheck && npm run lint && npm test && npm run levels:validate"

@@ -97,3 +97,45 @@ it('help Next advances through all five lessons before returning', () => {
   press('Got it');
   expect(navigation.goBack).toHaveBeenCalledTimes(1);
 });
+
+it('pages through the campaign without unlocking locked levels', () => {
+  act(() => {
+    renderer = create(
+      <LevelSelectionScreen
+        {...(props as unknown as React.ComponentProps<
+          typeof LevelSelectionScreen
+        >)}
+      />,
+    );
+  });
+  press('Next');
+  const locked = renderer.root
+    .findAllByProps({accessibilityLabel: 'Level 26, locked'})
+    .find(n => typeof n.props.onPress === 'function');
+  expect(locked?.props.disabled).toBe(true);
+  press('Previous');
+  expect(
+    renderer.root.findAllByProps({accessibilityLabel: 'Level 1, 0 stars'})
+      .length,
+  ).toBeGreaterThan(0);
+  expect(navigation.navigate).not.toHaveBeenCalled();
+});
+it('opens the pack containing saved progress and reaches level 500', () => {
+  SaveStore.update({currentLevel: 500, completedLevels: [499]});
+  act(() => {
+    renderer = create(
+      <LevelSelectionScreen
+        {...(props as unknown as React.ComponentProps<
+          typeof LevelSelectionScreen
+        >)}
+      />,
+    );
+  });
+  press('Level 500, 0 stars');
+  expect(navigation.navigate).toHaveBeenCalledWith('Game', {levelId: 500});
+  expect(
+    renderer.root
+      .findAllByProps({accessibilityLabel: 'Next'})
+      .some(n => n.props.disabled === true),
+  ).toBe(true);
+});

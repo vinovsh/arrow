@@ -1,4 +1,23 @@
-/** First 20 replacement levels, awaiting design review. */
+/** Campaign: 500 levels in 20 lazy-loaded packs. */
 export const PACK_LOADERS: (() => unknown)[] = [
-  () => require('./packs/pack_001_020.json'),
+  () => require('./packs/pack_001_025.json'),
+  () => require('./packs/pack_026_050.json'),
+  () => require('./packs/pack_051_075.json'),
+  () => require('./packs/pack_076_100.json'),
+  () => require('./packs/pack_101_125.json'),
+  () => require('./packs/pack_126_150.json'),
+  () => require('./packs/pack_151_175.json'),
+  () => require('./packs/pack_176_200.json'),
+  () => require('./packs/pack_201_225.json'),
+  () => require('./packs/pack_226_250.json'),
+  () => require('./packs/pack_251_275.json'),
+  () => require('./packs/pack_276_300.json'),
+  () => require('./packs/pack_301_325.json'),
+  () => require('./packs/pack_326_350.json'),
+  () => require('./packs/pack_351_375.json'),
+  () => require('./packs/pack_376_400.json'),
+  () => require('./packs/pack_401_425.json'),
+  () => require('./packs/pack_426_450.json'),
+  () => require('./packs/pack_451_475.json'),
+  () => require('./packs/pack_476_500.json'),
 ];

@@ -12,7 +12,7 @@ import {REVIEW_PLAN, hasLengthMix} from './designFirst20.ts';
 import {headFacesOwnBody} from '../src/game/models/types.ts';
 const root = join(import.meta.dirname, '..');
 const pack = JSON.parse(
-  readFileSync(join(root, 'src/game/levels/packs/pack_001_020.json'), 'utf8'),
+  readFileSync(join(root, 'tools/fixtures/approved-first-20.json'), 'utf8'),
 ) as LevelPack;
 if (pack.levels.length !== 20 || pack.from !== 1 || pack.to !== 20) {
   throw Error('Expected exactly levels 1–20');

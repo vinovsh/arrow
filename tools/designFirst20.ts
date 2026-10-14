@@ -16,7 +16,7 @@ import {packLevel} from '../src/game/levels/codec.ts';
 import {createRng, hashSeed} from '../src/utils/rng.ts';
 import type {Rng} from '../src/utils/rng.ts';
 const root = join(import.meta.dirname, '..');
-interface Design {
+export interface Design {
   id: number;
   title: string;
   grid: number;
@@ -28,6 +28,10 @@ interface Design {
   minLength: number;
   meanLength: number;
   maxLength: number;
+  allows?: (x: number, y: number) => boolean;
+  straightRun?: number;
+  trials?: number;
+  refineIterations?: number;
 }
 const rows: [string, number, Band][] = [
   ['Tap to remove', 12, 'Tutorial'],
@@ -118,12 +122,13 @@ function turns(cells: GridPoint[]): number {
   return count;
 }
 /** Place in reverse solve order: every new head initially has a clear exit. */
-function carve(d: Design, rng: Rng): ArrowPath[] {
+export function carve(d: Design, rng: Rng): ArrowPath[] {
   const n = d.grid,
     used = new Uint8Array(n * n),
     arrows: ArrowPath[] = [];
   const inside = (x: number, y: number) => x >= 0 && y >= 0 && x < n && y < n;
-  const empty = (x: number, y: number) => inside(x, y) && !used[y * n + x];
+  const empty = (x: number, y: number) =>
+    inside(x, y) && (!d.allows || d.allows(x, y)) && !used[y * n + x];
   const degree = (p: GridPoint) =>
     steps.filter(s => empty(p.x + s.x, p.y + s.y)).length;
   for (let round = 0; round < (n * n) / 8; round++) {
@@ -158,7 +163,11 @@ function carve(d: Design, rng: Rng): ArrowPath[] {
     }
     let best: GridPoint[] = [];
     let bestScore = -Infinity;
-    for (let trial = 0; trial < Math.min(starts.length, 90); trial++) {
+    for (
+      let trial = 0;
+      trial < Math.min(starts.length, d.trials ?? 90);
+      trial++
+    ) {
       const {p, s} = rng.pick(starts),
         path = [p, {x: p.x - s.x, y: p.y - s.y}];
       for (const q of path) {
@@ -182,7 +191,13 @@ function carve(d: Design, rng: Rng): ArrowPath[] {
             const p2 = {x: head.x + v.x, y: head.y + v.y},
               straight = v.x === prev.x && v.y === prev.y;
             const weight =
-              (straight ? (run < 5 ? 5 : 1.8) : run < 2 ? 0.15 : 1.3) /
+              (straight
+                ? run < (d.straightRun ?? 5)
+                  ? 5
+                  : 1.8
+                : run < 2
+                ? 0.15
+                : 1.3) /
               (1 + degree(p2));
             return {v, p: p2, weight};
           });
@@ -230,14 +245,23 @@ function carve(d: Design, rng: Rng): ArrowPath[] {
   return arrows;
 }
 /** Fill empty lanes by extending existing bodies, never by adding tiny arrows. */
-function fillLanes(input: ArrowPath[], d: Design, rng: Rng): ArrowPath[] {
+export function fillLanes(
+  input: ArrowPath[],
+  d: Design,
+  rng: Rng,
+): ArrowPath[] {
   let arrows = input;
   const n = d.grid;
   for (let pass = 0; pass < 4; pass++) {
     const used = new Uint8Array(n * n);
     arrows.forEach(a => a.cells.forEach(p => (used[key(p, n)] = 1)));
     const empty = (p: GridPoint) =>
-      p.x >= 0 && p.y >= 0 && p.x < n && p.y < n && !used[key(p, n)];
+      p.x >= 0 &&
+      p.y >= 0 &&
+      p.x < n &&
+      p.y < n &&
+      (!d.allows || d.allows(p.x, p.y)) &&
+      !used[key(p, n)];
     let changes = 0;
     for (const ix of rng.shuffle(arrows.map((_, i) => i))) {
       for (let j = 0; j < arrows[ix].cells.length - 1; j++) {
@@ -319,7 +343,11 @@ function fillLanes(input: ArrowPath[], d: Design, rng: Rng): ArrowPath[] {
   return arrows;
 }
 /** Divide selected lanes into readable short and medium arrows, preserving coverage. */
-function mixLengths(input: ArrowPath[], d: Design, rng: Rng): ArrowPath[] {
+export function mixLengths(
+  input: ArrowPath[],
+  d: Design,
+  rng: Rng,
+): ArrowPath[] {
   let arrows = input;
   for (let round = 0; round < 80 && !hasLengthMix(arrows); round++) {
     let best = arrows,
@@ -393,10 +421,10 @@ function score(arrows: ArrowPath[], d: Design): number {
     Math.max(0, d.meanLength - mean) * 3
   );
 }
-function refine(arrows: ArrowPath[], d: Design, rng: Rng): ArrowPath[] {
+export function refine(arrows: ArrowPath[], d: Design, rng: Rng): ArrowPath[] {
   let best = arrows,
     bestScore = score(arrows, d);
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < (d.refineIterations ?? 1000); i++) {
     const ix = rng.int(best.length),
       cells = [...best[ix].cells].reverse(),
       next = best.slice();
@@ -517,7 +545,7 @@ export function main(): void {
   }
   if (!only) {
     writeFileSync(
-      join(root, 'src/game/levels/packs/pack_001_020.json'),
+      join(root, 'tools/fixtures/approved-first-20.json'),
       JSON.stringify({v: 1, from: 1, to: 20, levels: levels.map(packLevel)}) +
         '\n',
     );
